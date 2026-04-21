@@ -1,0 +1,6 @@
+{
+  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task4_linear_surrogate",
+  "run_metadata_path": "outputs/runs/task4_linear_surrogate_run_metadata.json",
+  "ridge_alpha": 1.0e-6
+}

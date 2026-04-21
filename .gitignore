@@ -5,6 +5,9 @@ __pycache__/
 .ruff_cache/
 
 outputs/checkpoints/*
+!outputs/checkpoints/.gitkeep
+!outputs/checkpoints/task4_linear_surrogate/
+!outputs/checkpoints/task4_linear_surrogate/**
 outputs/experiments/*
 outputs/inverse/*
 
@@ -21,3 +24,4 @@ outputs/runs/*
 !outputs/runs/task1_forward_smoke_run_metadata.json
 !outputs/runs/task2_smoke_dataset_run_metadata.json
 !outputs/runs/task3_dataset_generation_run_metadata.json
+!outputs/runs/task4_linear_surrogate_run_metadata.json
