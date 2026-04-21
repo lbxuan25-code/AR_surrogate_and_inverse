@@ -1,0 +1,593 @@
+{
+  "candidate_families": [
+    {
+      "candidate_family_id": "compatible_train_like_000",
+      "candidate_family_schema_version": "ar_inverse_candidate_family_v1",
+      "forward_recheck": {
+        "metadata": {
+          "allow_weak_delta_zx_s": false,
+          "fit_layer_policy": {
+            "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+            "free_channels": [
+              "delta_zz_s",
+              "delta_xx_s",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x"
+            ],
+            "strongly_regularized_channels": [
+              "delta_zz_d",
+              "delta_xx_d"
+            ],
+            "weak_optional_channels": [
+              "delta_zx_s"
+            ]
+          },
+          "fit_layer_request_label": "compatible_train_like_000",
+          "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+          "formal_baseline_role": "authoritative_formal_round2_baseline",
+          "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+          "forward_interface_version": "ar_forward_v1",
+          "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+          "git_dirty": false,
+          "normal_state_family": "base",
+          "normal_state_policy": "repository_fixed_base_normal_state",
+          "output_schema_version": "ar_forward_output_v1",
+          "pairing_control_mode": "delta_from_baseline_meV",
+          "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+          "pairing_source": "task_h_fit_layer_controls",
+          "projection_config": {
+            "ar_interface_angles": [
+              0.0,
+              0.7853981633974483
+            ],
+            "ar_reference_nk": 61,
+            "ar_supported_entry_weight_floor": 0.75,
+            "ar_unsupported_entry_weight": 0.15,
+            "block_weights": {
+              "delta_x": 1.0,
+              "delta_y": 1.0,
+              "delta_z": 1.15
+            },
+            "channel_regularization": {
+              "delta_perp_x": 0.00075,
+              "delta_perp_z": 0.0001,
+              "delta_xx_d": 0.0001,
+              "delta_xx_s": 0.0001,
+              "delta_zx_d": 0.00075,
+              "delta_zx_s": 0.005,
+              "delta_zz_d": 0.0002,
+              "delta_zz_s": 0.0001
+            },
+            "core_channels": [
+              "delta_zz_s",
+              "delta_zz_d",
+              "delta_xx_s",
+              "delta_xx_d",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x"
+            ],
+            "freeze_optional_weak_channel_by_default": true,
+            "gauge_anchor_priority": [
+              "delta_zz_s",
+              "delta_zz_d",
+              "delta_xx_s",
+              "delta_xx_d",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x",
+              "delta_zx_s"
+            ],
+            "gauge_min_anchor_abs": 1e-10,
+            "optional_channel_activation_min_relative_magnitude": 0.08,
+            "optional_channel_activation_min_residual_reduction": 0.01,
+            "optional_channels": [
+              "delta_zx_s"
+            ],
+            "optional_weak_channel_name": "delta_zx_s",
+            "source_entry_weight_mode": "uniform"
+          },
+          "truth_layer": "round2_physical_pairing_channels",
+          "weak_channel_policy": {
+            "channel": "delta_zx_s",
+            "default_task_c_freeze_applied": true,
+            "default_value": {
+              "im": 0.0,
+              "re": 0.0
+            }
+          }
+        },
+        "objective": {
+          "mae": 0.0,
+          "max_abs_error": 0.0,
+          "score": 0.0,
+          "score_kind": "spectrum_rmse"
+        },
+        "output_ref": {
+          "path": "forward_rechecks/compatible_train_like_000.json",
+          "payload_kind": "forward_spectrum",
+          "sha256": "2fbdbc80808b682b41e3e08edb3fc14bf7ea26219d7bd3b86af3ad44841fcf26",
+          "storage": "local_json"
+        },
+        "request": {
+          "allow_weak_delta_zx_s": false,
+          "bias_grid": {
+            "bias_max_mev": 20.0,
+            "bias_min_mev": -20.0,
+            "num_bias": 41
+          },
+          "pairing_control_mode": "delta_from_baseline_meV",
+          "pairing_controls": {
+            "delta_perp_x": -0.08,
+            "delta_zz_s": 0.18
+          },
+          "request_kind": "fit_layer",
+          "request_label": "compatible_train_like_000",
+          "schema_version": "ar_forward_input_v1",
+          "transport": {
+            "barrier_z": 0.5,
+            "gamma": 1.0,
+            "interface_angle": 0.0,
+            "nk": 11,
+            "temperature_kelvin": 3.0
+          }
+        }
+      },
+      "interpretation": "the AR data are compatible with these feature families",
+      "objective": {
+        "mae": 0.0,
+        "max_abs_error": 0.0,
+        "score": 0.0,
+        "score_kind": "spectrum_rmse"
+      },
+      "pairing_controls": {
+        "center": {
+          "delta_perp_x": -0.08,
+          "delta_zz_s": 0.18
+        },
+        "control_mode": "delta_from_baseline_meV",
+        "ranges": {
+          "delta_perp_x": {
+            "max": -0.04,
+            "min": -0.12
+          },
+          "delta_zz_s": {
+            "max": 0.22,
+            "min": 0.13999999999999999
+          }
+        }
+      },
+      "surrogate_usage": {
+        "fallback_policy_id": "task5_direct_forward_fallback_v1",
+        "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
+        "used": false
+      },
+      "transport_nuisance_controls": {
+        "center": {
+          "barrier_z": 0.5,
+          "gamma": 1.0,
+          "interface_angle": 0.0,
+          "nk": 11,
+          "temperature_kelvin": 3.0
+        },
+        "ranges": {
+          "barrier_z": {
+            "max": 0.53,
+            "min": 0.47
+          },
+          "gamma": {
+            "max": 1.05,
+            "min": 0.95
+          },
+          "interface_angle": {
+            "max": 0.02,
+            "min": -0.02
+          },
+          "nk": {
+            "max": 11.0,
+            "min": 11.0
+          },
+          "temperature_kelvin": {
+            "max": 3.25,
+            "min": 2.75
+          }
+        }
+      },
+      "uncertainty_ranges": {
+        "pairing_controls": {
+          "delta_perp_x": {
+            "max": -0.04,
+            "min": -0.12
+          },
+          "delta_zz_s": {
+            "max": 0.22,
+            "min": 0.13999999999999999
+          }
+        },
+        "transport_nuisance_controls": {
+          "barrier_z": {
+            "max": 0.53,
+            "min": 0.47
+          },
+          "gamma": {
+            "max": 1.05,
+            "min": 0.95
+          },
+          "interface_angle": {
+            "max": 0.02,
+            "min": -0.02
+          },
+          "nk": {
+            "max": 11.0,
+            "min": 11.0
+          },
+          "temperature_kelvin": {
+            "max": 3.25,
+            "min": 2.75
+          }
+        }
+      }
+    },
+    {
+      "candidate_family_id": "nearby_barrier_shift_001",
+      "candidate_family_schema_version": "ar_inverse_candidate_family_v1",
+      "forward_recheck": {
+        "metadata": {
+          "allow_weak_delta_zx_s": false,
+          "fit_layer_policy": {
+            "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+            "free_channels": [
+              "delta_zz_s",
+              "delta_xx_s",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x"
+            ],
+            "strongly_regularized_channels": [
+              "delta_zz_d",
+              "delta_xx_d"
+            ],
+            "weak_optional_channels": [
+              "delta_zx_s"
+            ]
+          },
+          "fit_layer_request_label": "nearby_barrier_shift_001",
+          "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+          "formal_baseline_role": "authoritative_formal_round2_baseline",
+          "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+          "forward_interface_version": "ar_forward_v1",
+          "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+          "git_dirty": false,
+          "normal_state_family": "base",
+          "normal_state_policy": "repository_fixed_base_normal_state",
+          "output_schema_version": "ar_forward_output_v1",
+          "pairing_control_mode": "delta_from_baseline_meV",
+          "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+          "pairing_source": "task_h_fit_layer_controls",
+          "projection_config": {
+            "ar_interface_angles": [
+              0.0,
+              0.7853981633974483
+            ],
+            "ar_reference_nk": 61,
+            "ar_supported_entry_weight_floor": 0.75,
+            "ar_unsupported_entry_weight": 0.15,
+            "block_weights": {
+              "delta_x": 1.0,
+              "delta_y": 1.0,
+              "delta_z": 1.15
+            },
+            "channel_regularization": {
+              "delta_perp_x": 0.00075,
+              "delta_perp_z": 0.0001,
+              "delta_xx_d": 0.0001,
+              "delta_xx_s": 0.0001,
+              "delta_zx_d": 0.00075,
+              "delta_zx_s": 0.005,
+              "delta_zz_d": 0.0002,
+              "delta_zz_s": 0.0001
+            },
+            "core_channels": [
+              "delta_zz_s",
+              "delta_zz_d",
+              "delta_xx_s",
+              "delta_xx_d",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x"
+            ],
+            "freeze_optional_weak_channel_by_default": true,
+            "gauge_anchor_priority": [
+              "delta_zz_s",
+              "delta_zz_d",
+              "delta_xx_s",
+              "delta_xx_d",
+              "delta_zx_d",
+              "delta_perp_z",
+              "delta_perp_x",
+              "delta_zx_s"
+            ],
+            "gauge_min_anchor_abs": 1e-10,
+            "optional_channel_activation_min_relative_magnitude": 0.08,
+            "optional_channel_activation_min_residual_reduction": 0.01,
+            "optional_channels": [
+              "delta_zx_s"
+            ],
+            "optional_weak_channel_name": "delta_zx_s",
+            "source_entry_weight_mode": "uniform"
+          },
+          "truth_layer": "round2_physical_pairing_channels",
+          "weak_channel_policy": {
+            "channel": "delta_zx_s",
+            "default_task_c_freeze_applied": true,
+            "default_value": {
+              "im": 0.0,
+              "re": 0.0
+            }
+          }
+        },
+        "objective": {
+          "mae": 0.03356808304131581,
+          "max_abs_error": 0.05788004894536547,
+          "score": 0.0383773943279586,
+          "score_kind": "spectrum_rmse"
+        },
+        "output_ref": {
+          "path": "forward_rechecks/nearby_barrier_shift_001.json",
+          "payload_kind": "forward_spectrum",
+          "sha256": "d199b73083b6c4d3cd3763bf3448335d61bbe5666d66159eb9de5071ee6362aa",
+          "storage": "local_json"
+        },
+        "request": {
+          "allow_weak_delta_zx_s": false,
+          "bias_grid": {
+            "bias_max_mev": 20.0,
+            "bias_min_mev": -20.0,
+            "num_bias": 41
+          },
+          "pairing_control_mode": "delta_from_baseline_meV",
+          "pairing_controls": {
+            "delta_perp_x": -0.06,
+            "delta_zz_s": 0.16
+          },
+          "request_kind": "fit_layer",
+          "request_label": "nearby_barrier_shift_001",
+          "schema_version": "ar_forward_input_v1",
+          "transport": {
+            "barrier_z": 0.55,
+            "gamma": 1.0,
+            "interface_angle": 0.02,
+            "nk": 11,
+            "temperature_kelvin": 3.0
+          }
+        }
+      },
+      "interpretation": "the AR data are compatible with these feature families",
+      "objective": {
+        "mae": 0.03356808304131581,
+        "max_abs_error": 0.05788004894536547,
+        "score": 0.0383773943279586,
+        "score_kind": "spectrum_rmse"
+      },
+      "pairing_controls": {
+        "center": {
+          "delta_perp_x": -0.06,
+          "delta_zz_s": 0.16
+        },
+        "control_mode": "delta_from_baseline_meV",
+        "ranges": {
+          "delta_perp_x": {
+            "max": -0.009999999999999995,
+            "min": -0.11
+          },
+          "delta_zz_s": {
+            "max": 0.21000000000000002,
+            "min": 0.11
+          }
+        }
+      },
+      "surrogate_usage": {
+        "fallback_policy_id": "task5_direct_forward_fallback_v1",
+        "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
+        "used": false
+      },
+      "transport_nuisance_controls": {
+        "center": {
+          "barrier_z": 0.55,
+          "gamma": 1.0,
+          "interface_angle": 0.02,
+          "nk": 11,
+          "temperature_kelvin": 3.0
+        },
+        "ranges": {
+          "barrier_z": {
+            "max": 0.6000000000000001,
+            "min": 0.5
+          },
+          "gamma": {
+            "max": 1.05,
+            "min": 0.95
+          },
+          "interface_angle": {
+            "max": 0.05,
+            "min": -0.009999999999999998
+          },
+          "nk": {
+            "max": 11.0,
+            "min": 11.0
+          },
+          "temperature_kelvin": {
+            "max": 3.25,
+            "min": 2.75
+          }
+        }
+      },
+      "uncertainty_ranges": {
+        "pairing_controls": {
+          "delta_perp_x": {
+            "max": -0.009999999999999995,
+            "min": -0.11
+          },
+          "delta_zz_s": {
+            "max": 0.21000000000000002,
+            "min": 0.11
+          }
+        },
+        "transport_nuisance_controls": {
+          "barrier_z": {
+            "max": 0.6000000000000001,
+            "min": 0.5
+          },
+          "gamma": {
+            "max": 1.05,
+            "min": 0.95
+          },
+          "interface_angle": {
+            "max": 0.05,
+            "min": -0.009999999999999998
+          },
+          "nk": {
+            "max": 11.0,
+            "min": 11.0
+          },
+          "temperature_kelvin": {
+            "max": 3.25,
+            "min": 2.75
+          }
+        }
+      }
+    }
+  ],
+  "interpretation": "the AR data are compatible with these feature families",
+  "report_schema_version": "ar_inverse_smoke_inverse_report_v1",
+  "run_kind": "task6_inverse_search_prototype",
+  "search": {
+    "candidate_count": 3,
+    "fallback_policy": {
+      "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
+      "policy_id": "task5_direct_forward_fallback_v1",
+      "safe_error_thresholds": {
+        "max_abs_error": 0.1,
+        "rmse": 0.05
+      },
+      "safe_transport_regimes": [],
+      "summary": "Surrogate acceleration is disabled for unsafe transport regimes. Inverse workflows must use direct external forward calls there.",
+      "unsafe_transport_regimes": [
+        "high_barrier|high_gamma|high_temp",
+        "high_barrier|low_gamma|low_temp"
+      ]
+    },
+    "objective": "spectrum_rmse",
+    "reported_candidate_count": 2,
+    "surrogate_usage": {
+      "fallback_policy_id": "task5_direct_forward_fallback_v1",
+      "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
+      "used": false
+    }
+  },
+  "target": {
+    "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+    "forward_metadata": {
+      "allow_weak_delta_zx_s": false,
+      "fit_layer_policy": {
+        "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+        "free_channels": [
+          "delta_zz_s",
+          "delta_xx_s",
+          "delta_zx_d",
+          "delta_perp_z",
+          "delta_perp_x"
+        ],
+        "strongly_regularized_channels": [
+          "delta_zz_d",
+          "delta_xx_d"
+        ],
+        "weak_optional_channels": [
+          "delta_zx_s"
+        ]
+      },
+      "fit_layer_request_label": "task3_smoke_train_000",
+      "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+      "formal_baseline_role": "authoritative_formal_round2_baseline",
+      "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+      "forward_interface_version": "ar_forward_v1",
+      "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+      "git_dirty": false,
+      "normal_state_family": "base",
+      "normal_state_policy": "repository_fixed_base_normal_state",
+      "output_schema_version": "ar_forward_output_v1",
+      "pairing_control_mode": "delta_from_baseline_meV",
+      "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+      "pairing_source": "task_h_fit_layer_controls",
+      "projection_config": {
+        "ar_interface_angles": [
+          0.0,
+          0.7853981633974483
+        ],
+        "ar_reference_nk": 61,
+        "ar_supported_entry_weight_floor": 0.75,
+        "ar_unsupported_entry_weight": 0.15,
+        "block_weights": {
+          "delta_x": 1.0,
+          "delta_y": 1.0,
+          "delta_z": 1.15
+        },
+        "channel_regularization": {
+          "delta_perp_x": 0.00075,
+          "delta_perp_z": 0.0001,
+          "delta_xx_d": 0.0001,
+          "delta_xx_s": 0.0001,
+          "delta_zx_d": 0.00075,
+          "delta_zx_s": 0.005,
+          "delta_zz_d": 0.0002,
+          "delta_zz_s": 0.0001
+        },
+        "core_channels": [
+          "delta_zz_s",
+          "delta_zz_d",
+          "delta_xx_s",
+          "delta_xx_d",
+          "delta_zx_d",
+          "delta_perp_z",
+          "delta_perp_x"
+        ],
+        "freeze_optional_weak_channel_by_default": true,
+        "gauge_anchor_priority": [
+          "delta_zz_s",
+          "delta_zz_d",
+          "delta_xx_s",
+          "delta_xx_d",
+          "delta_zx_d",
+          "delta_perp_z",
+          "delta_perp_x",
+          "delta_zx_s"
+        ],
+        "gauge_min_anchor_abs": 1e-10,
+        "optional_channel_activation_min_relative_magnitude": 0.08,
+        "optional_channel_activation_min_residual_reduction": 0.01,
+        "optional_channels": [
+          "delta_zx_s"
+        ],
+        "optional_weak_channel_name": "delta_zx_s",
+        "source_entry_weight_mode": "uniform"
+      },
+      "truth_layer": "round2_physical_pairing_channels",
+      "weak_channel_policy": {
+        "channel": "delta_zx_s",
+        "default_task_c_freeze_applied": true,
+        "default_value": {
+          "im": 0.0,
+          "re": 0.0
+        }
+      }
+    },
+    "forward_output_ref": {
+      "path": "forward_outputs/task3_smoke_train_000.json",
+      "payload_kind": "forward_spectrum",
+      "sha256": "d91bb584c870227612ce7c43ff72b70229e4753996828a9d6fe74ce31573de35",
+      "storage": "local_json"
+    },
+    "row_id": "task3_smoke_train_000"
+  }
+}

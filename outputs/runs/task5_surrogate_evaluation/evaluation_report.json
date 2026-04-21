@@ -1,0 +1,211 @@
+{
+  "calibration_diagnostics": {
+    "max_abs_error": 0.3088382561603701,
+    "max_abs_error_threshold": 0.1,
+    "max_rmse": 0.19309576093618588,
+    "mean_max_abs_error": 0.2286724703520368,
+    "mean_rmse": 0.1457544840216746,
+    "num_rows": 2,
+    "rmse_threshold": 0.05,
+    "unsafe_fraction": 1.0
+  },
+  "dataset": {
+    "dataset_id": "task3_orchestration_smoke_v1",
+    "manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+    "sampling_policy_id": "fit_layer_transport_smoke_v1"
+  },
+  "evaluation_scope": {
+    "held_out_splits": [
+      "validation",
+      "test"
+    ],
+    "num_held_out_rows": 2
+  },
+  "fallback_policy": {
+    "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
+    "policy_id": "task5_direct_forward_fallback_v1",
+    "safe_error_thresholds": {
+      "max_abs_error": 0.1,
+      "rmse": 0.05
+    },
+    "safe_transport_regimes": [],
+    "summary": "Surrogate acceleration is disabled for unsafe transport regimes. Inverse workflows must use direct external forward calls there.",
+    "unsafe_transport_regimes": [
+      "high_barrier|high_gamma|high_temp",
+      "high_barrier|low_gamma|low_temp"
+    ]
+  },
+  "forward_metadata_family": {
+    "allow_weak_delta_zx_s": false,
+    "fit_layer_policy": {
+      "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+      "free_channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "strongly_regularized_channels": [
+        "delta_zz_d",
+        "delta_xx_d"
+      ],
+      "weak_optional_channels": [
+        "delta_zx_s"
+      ]
+    },
+    "fit_layer_request_label": "task3_smoke_train_000",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_role": "authoritative_formal_round2_baseline",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "forward_interface_version": "ar_forward_v1",
+    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_dirty": false,
+    "normal_state_family": "base",
+    "normal_state_policy": "repository_fixed_base_normal_state",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_control_mode": "delta_from_baseline_meV",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "pairing_source": "task_h_fit_layer_controls",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "truth_layer": "round2_physical_pairing_channels",
+    "weak_channel_policy": {
+      "channel": "delta_zx_s",
+      "default_task_c_freeze_applied": true,
+      "default_value": {
+        "im": 0.0,
+        "re": 0.0
+      }
+    }
+  },
+  "model": {
+    "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
+    "model_type": "ridge_linear_spectrum_surrogate"
+  },
+  "row_errors": [
+    {
+      "metrics": {
+        "mae": 0.08575334231212861,
+        "max_abs_error": 0.14850668454370353,
+        "rmse": 0.09841320710716331
+      },
+      "row_id": "task3_smoke_validation_000",
+      "safe_for_inverse_acceleration": false,
+      "split": "validation",
+      "transport_controls": {
+        "barrier_z": 0.65,
+        "gamma": 1.1,
+        "interface_angle": 0.12,
+        "nk": 11,
+        "temperature_kelvin": 3.5
+      },
+      "transport_regime": "high_barrier|high_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "metrics": {
+        "mae": 0.1627956119960935,
+        "max_abs_error": 0.3088382561603701,
+        "rmse": 0.19309576093618588
+      },
+      "row_id": "task3_smoke_test_000",
+      "safe_for_inverse_acceleration": false,
+      "split": "test",
+      "transport_controls": {
+        "barrier_z": 0.8,
+        "gamma": 0.95,
+        "interface_angle": -0.08,
+        "nk": 11,
+        "temperature_kelvin": 2.5
+      },
+      "transport_regime": "high_barrier|low_gamma|low_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    }
+  ],
+  "run_kind": "task5_surrogate_evaluation_and_calibration",
+  "transport_regime_report": {
+    "high_barrier|high_gamma|high_temp": {
+      "max_abs_error": 0.14850668454370353,
+      "max_rmse": 0.09841320710716331,
+      "mean_rmse": 0.09841320710716331,
+      "num_rows": 1,
+      "row_ids": [
+        "task3_smoke_validation_000"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task3_smoke_validation_000"
+      ]
+    },
+    "high_barrier|low_gamma|low_temp": {
+      "max_abs_error": 0.3088382561603701,
+      "max_rmse": 0.19309576093618588,
+      "mean_rmse": 0.19309576093618588,
+      "num_rows": 1,
+      "row_ids": [
+        "task3_smoke_test_000"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task3_smoke_test_000"
+      ]
+    }
+  }
+}

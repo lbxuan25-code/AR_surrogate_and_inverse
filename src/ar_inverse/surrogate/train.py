@@ -10,7 +10,7 @@ import numpy as np
 
 from ar_inverse.datasets.schema import file_sha256, validate_dataset_manifest
 from ar_inverse.metadata import assert_forward_metadata_complete
-from ar_inverse.surrogate.evaluate import regression_metrics
+from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import DEFAULT_FEATURE_SPEC, RidgeLinearSpectrumSurrogate
 
 DEFAULT_TASK4_CONFIG_PATH = Path("configs/surrogate/task4_linear_surrogate.json")

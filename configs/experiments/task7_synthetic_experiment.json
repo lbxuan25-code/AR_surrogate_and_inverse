@@ -1,0 +1,16 @@
+{
+  "experiment_spectrum": "outputs/experiments/task7_synthetic_fit/synthetic_experiment_spectrum.json",
+  "inverse_report": "outputs/inverse/task6_smoke_inverse/inverse_report.json",
+  "surrogate_evaluation_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
+  "output_dir": "outputs/experiments/task7_synthetic_fit",
+  "run_metadata_path": "outputs/runs/task7_experiment_fit_run_metadata.json",
+  "preprocessing": {
+    "preprocessing_schema_version": "ar_inverse_experiment_preprocessing_v1",
+    "operations": [
+      {
+        "operation": "identity",
+        "description": "Synthetic smoke data are already on the forward bias grid and conductance scale."
+      }
+    ]
+  }
+}

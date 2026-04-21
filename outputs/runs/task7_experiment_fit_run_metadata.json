@@ -1,0 +1,10 @@
+{
+  "best_candidate_family_id": "compatible_train_like_000",
+  "candidate_family_count": 2,
+  "claim_policy": "candidate_families_not_unique_microscopic_truth",
+  "config": "configs/experiments/task7_synthetic_experiment.json",
+  "experiment_id": "synthetic_task7_forward_perturbation_v1",
+  "markdown_report": "outputs/experiments/task7_synthetic_fit/experiment_fit_report.md",
+  "report": "outputs/experiments/task7_synthetic_fit/experiment_fit_report.json",
+  "run_kind": "task7_experiment_fitting_report"
+}

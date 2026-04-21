@@ -9,7 +9,13 @@ outputs/checkpoints/*
 !outputs/checkpoints/task4_linear_surrogate/
 !outputs/checkpoints/task4_linear_surrogate/**
 outputs/experiments/*
+!outputs/experiments/.gitkeep
+!outputs/experiments/task7_synthetic_fit/
+!outputs/experiments/task7_synthetic_fit/**
 outputs/inverse/*
+!outputs/inverse/.gitkeep
+!outputs/inverse/task6_smoke_inverse/
+!outputs/inverse/task6_smoke_inverse/**
 
 outputs/datasets/*
 !outputs/datasets/.gitkeep
@@ -25,3 +31,8 @@ outputs/runs/*
 !outputs/runs/task2_smoke_dataset_run_metadata.json
 !outputs/runs/task3_dataset_generation_run_metadata.json
 !outputs/runs/task4_linear_surrogate_run_metadata.json
+!outputs/runs/task5_surrogate_evaluation_run_metadata.json
+!outputs/runs/task5_surrogate_evaluation/
+!outputs/runs/task5_surrogate_evaluation/**
+!outputs/runs/task6_smoke_inverse_run_metadata.json
+!outputs/runs/task7_experiment_fit_run_metadata.json
