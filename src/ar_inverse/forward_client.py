@@ -5,9 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from forward import BiasGrid, FitLayerSpectrumRequest, TransportControls, generate_spectrum_from_fit_layer
-from forward.schema import FORWARD_OUTPUT_SCHEMA_VERSION
-
+from ar_inverse.forward_dependency import import_forward_module
 from ar_inverse.metadata import assert_forward_metadata_complete
 
 DEFAULT_SMOKE_PAYLOAD_PATH = Path("outputs/datasets/fit_layer_forward_smoke_payload.json")
@@ -17,10 +15,17 @@ DEFAULT_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task1_forward_smoke_run_met
 def build_smoke_fit_layer_request() -> FitLayerSpectrumRequest:
     """Build a small deterministic fit-layer request for dependency smoke tests."""
 
-    return FitLayerSpectrumRequest(
+    forward = import_forward_module("forward")
+    return forward.FitLayerSpectrumRequest(
         pairing_controls={"delta_zz_s": 0.25, "delta_perp_x": -0.1},
-        transport=TransportControls(interface_angle=0.0, barrier_z=0.5, gamma=1.0, temperature_kelvin=3.0, nk=11),
-        bias_grid=BiasGrid(bias_min_mev=-20.0, bias_max_mev=20.0, num_bias=41),
+        transport=forward.TransportControls(
+            interface_angle=0.0,
+            barrier_z=0.5,
+            gamma=1.0,
+            temperature_kelvin=3.0,
+            nk=11,
+        ),
+        bias_grid=forward.BiasGrid(bias_min_mev=-20.0, bias_max_mev=20.0, num_bias=41),
         request_label="ar_inverse_task1_fit_layer_smoke",
     )
 
@@ -28,14 +33,16 @@ def build_smoke_fit_layer_request() -> FitLayerSpectrumRequest:
 def generate_fit_layer_smoke_payload() -> dict[str, object]:
     """Generate one fit-layer spectrum and validate required forward metadata."""
 
+    forward = import_forward_module("forward")
+    forward_schema = import_forward_module("forward.schema")
     request = build_smoke_fit_layer_request()
-    result = generate_spectrum_from_fit_layer(request)
+    result = forward.generate_spectrum_from_fit_layer(request)
     payload = result.to_dict()
 
-    if payload["schema_version"] != FORWARD_OUTPUT_SCHEMA_VERSION:
+    if payload["schema_version"] != forward_schema.FORWARD_OUTPUT_SCHEMA_VERSION:
         raise ValueError(
             f"Unexpected forward output schema: {payload['schema_version']!r}; "
-            f"expected {FORWARD_OUTPUT_SCHEMA_VERSION!r}."
+            f"expected {forward_schema.FORWARD_OUTPUT_SCHEMA_VERSION!r}."
         )
     metadata = payload.get("metadata")
     if not isinstance(metadata, dict):
