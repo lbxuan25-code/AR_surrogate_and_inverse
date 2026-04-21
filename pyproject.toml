@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ar-surrogate-and-inverse"
+version = "0.1.0"
+description = "AR surrogate training, inverse search, and experiment-fitting orchestration."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "lno327-ar-forward-truth @ file:///home/liubx25/Ni_Research/Projects/AR",
+  "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "../AR/src"]
+testpaths = ["tests"]
+addopts = "-ra"

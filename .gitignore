@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+outputs/checkpoints/*
+outputs/experiments/*
+outputs/inverse/*
+
+outputs/datasets/*
+!outputs/datasets/.gitkeep
+!outputs/datasets/fit_layer_forward_smoke_payload.json
+
+outputs/runs/*
+!outputs/runs/.gitkeep
+!outputs/runs/task1_forward_smoke_run_metadata.json
