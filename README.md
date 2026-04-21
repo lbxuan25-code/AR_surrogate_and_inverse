@@ -26,6 +26,34 @@ python scripts/datasets/build_forward_smoke_payload.py
 pytest
 ```
 
+## Task 2 Smoke Dataset
+
+After configuring the forward dependency, generate the canonical schema smoke
+dataset with:
+
+```bash
+python scripts/datasets/build_task2_smoke_dataset.py
+pytest
+```
+
+This writes a tiny deterministic manifest to
+`outputs/datasets/task2_smoke_fit_layer/dataset.json`. The rows point to local
+forward-output JSON files and record complete forward-interface metadata.
+
+## Task 3 Dataset CLI
+
+The forward-backed dataset generation CLI is:
+
+```bash
+python scripts/datasets/build_dataset.py --config configs/datasets/task3_smoke_dataset.json
+```
+
+It writes a resumable manifest to
+`outputs/datasets/task3_orchestration_smoke/dataset.json` and run metadata to
+`outputs/runs/task3_dataset_generation_run_metadata.json`. Re-running the same
+command reuses completed rows when the referenced forward-output file still
+matches its recorded SHA-256 digest. Pass `--force` to regenerate all rows.
+
 You can also set `LNO327_FORWARD_REPO=/path/to/forward-repo`; the loader will
 use its `src` directory. The normal package import is tried first, and source
 paths are added only when one of these environment variables is explicitly set.

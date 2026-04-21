@@ -1,0 +1,477 @@
+{
+  "dataset_id": "task2_smoke_fit_layer_v1",
+  "dataset_manifest_schema_version": "ar_inverse_dataset_manifest_v1",
+  "description": "Small deterministic smoke dataset for Task 2 schema validation.",
+  "rows": [
+    {
+      "controls": {
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "fit_layer_pairing_controls": {
+          "delta_perp_x": -0.1,
+          "delta_zz_s": 0.2
+        },
+        "transport_controls": {
+          "barrier_z": 0.45,
+          "gamma": 1.0,
+          "interface_angle": 0.0,
+          "nk": 11,
+          "temperature_kelvin": 3.0
+        }
+      },
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "forward_metadata": {
+        "allow_weak_delta_zx_s": false,
+        "fit_layer_policy": {
+          "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+          "free_channels": [
+            "delta_zz_s",
+            "delta_xx_s",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "strongly_regularized_channels": [
+            "delta_zz_d",
+            "delta_xx_d"
+          ],
+          "weak_optional_channels": [
+            "delta_zx_s"
+          ]
+        },
+        "fit_layer_request_label": "smoke_train_000",
+        "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+        "formal_baseline_role": "authoritative_formal_round2_baseline",
+        "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+        "forward_interface_version": "ar_forward_v1",
+        "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+        "git_dirty": false,
+        "normal_state_family": "base",
+        "normal_state_policy": "repository_fixed_base_normal_state",
+        "output_schema_version": "ar_forward_output_v1",
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+        "pairing_source": "task_h_fit_layer_controls",
+        "projection_config": {
+          "ar_interface_angles": [
+            0.0,
+            0.7853981633974483
+          ],
+          "ar_reference_nk": 61,
+          "ar_supported_entry_weight_floor": 0.75,
+          "ar_unsupported_entry_weight": 0.15,
+          "block_weights": {
+            "delta_x": 1.0,
+            "delta_y": 1.0,
+            "delta_z": 1.15
+          },
+          "channel_regularization": {
+            "delta_perp_x": 0.00075,
+            "delta_perp_z": 0.0001,
+            "delta_xx_d": 0.0001,
+            "delta_xx_s": 0.0001,
+            "delta_zx_d": 0.00075,
+            "delta_zx_s": 0.005,
+            "delta_zz_d": 0.0002,
+            "delta_zz_s": 0.0001
+          },
+          "core_channels": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "freeze_optional_weak_channel_by_default": true,
+          "gauge_anchor_priority": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x",
+            "delta_zx_s"
+          ],
+          "gauge_min_anchor_abs": 1e-10,
+          "optional_channel_activation_min_relative_magnitude": 0.08,
+          "optional_channel_activation_min_residual_reduction": 0.01,
+          "optional_channels": [
+            "delta_zx_s"
+          ],
+          "optional_weak_channel_name": "delta_zx_s",
+          "source_entry_weight_mode": "uniform"
+        },
+        "truth_layer": "round2_physical_pairing_channels",
+        "weak_channel_policy": {
+          "channel": "delta_zx_s",
+          "default_task_c_freeze_applied": true,
+          "default_value": {
+            "im": 0.0,
+            "re": 0.0
+          }
+        }
+      },
+      "forward_output_ref": {
+        "path": "forward_outputs/smoke_train_000.json",
+        "payload_kind": "forward_spectrum",
+        "sha256": "3e1d92c8ab3aee0d3f091bd1f058101e6fb5bd1fb987b672e85d19ce282a7482",
+        "storage": "local_json"
+      },
+      "forward_request": {
+        "allow_weak_delta_zx_s": false,
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_controls": {
+          "delta_perp_x": -0.1,
+          "delta_zz_s": 0.2
+        },
+        "request_kind": "fit_layer",
+        "request_label": "smoke_train_000",
+        "schema_version": "ar_forward_input_v1",
+        "transport": {
+          "barrier_z": 0.45,
+          "gamma": 1.0,
+          "interface_angle": 0.0,
+          "nk": 11,
+          "temperature_kelvin": 3.0
+        }
+      },
+      "row_id": "smoke_train_000",
+      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "split": "train"
+    },
+    {
+      "controls": {
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "fit_layer_pairing_controls": {
+          "delta_xx_s": -0.15,
+          "delta_zx_d": 0.12
+        },
+        "transport_controls": {
+          "barrier_z": 0.6,
+          "gamma": 1.2,
+          "interface_angle": 0.15,
+          "nk": 11,
+          "temperature_kelvin": 4.0
+        }
+      },
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "forward_metadata": {
+        "allow_weak_delta_zx_s": false,
+        "fit_layer_policy": {
+          "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+          "free_channels": [
+            "delta_zz_s",
+            "delta_xx_s",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "strongly_regularized_channels": [
+            "delta_zz_d",
+            "delta_xx_d"
+          ],
+          "weak_optional_channels": [
+            "delta_zx_s"
+          ]
+        },
+        "fit_layer_request_label": "smoke_validation_000",
+        "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+        "formal_baseline_role": "authoritative_formal_round2_baseline",
+        "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+        "forward_interface_version": "ar_forward_v1",
+        "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+        "git_dirty": false,
+        "normal_state_family": "base",
+        "normal_state_policy": "repository_fixed_base_normal_state",
+        "output_schema_version": "ar_forward_output_v1",
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+        "pairing_source": "task_h_fit_layer_controls",
+        "projection_config": {
+          "ar_interface_angles": [
+            0.0,
+            0.7853981633974483
+          ],
+          "ar_reference_nk": 61,
+          "ar_supported_entry_weight_floor": 0.75,
+          "ar_unsupported_entry_weight": 0.15,
+          "block_weights": {
+            "delta_x": 1.0,
+            "delta_y": 1.0,
+            "delta_z": 1.15
+          },
+          "channel_regularization": {
+            "delta_perp_x": 0.00075,
+            "delta_perp_z": 0.0001,
+            "delta_xx_d": 0.0001,
+            "delta_xx_s": 0.0001,
+            "delta_zx_d": 0.00075,
+            "delta_zx_s": 0.005,
+            "delta_zz_d": 0.0002,
+            "delta_zz_s": 0.0001
+          },
+          "core_channels": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "freeze_optional_weak_channel_by_default": true,
+          "gauge_anchor_priority": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x",
+            "delta_zx_s"
+          ],
+          "gauge_min_anchor_abs": 1e-10,
+          "optional_channel_activation_min_relative_magnitude": 0.08,
+          "optional_channel_activation_min_residual_reduction": 0.01,
+          "optional_channels": [
+            "delta_zx_s"
+          ],
+          "optional_weak_channel_name": "delta_zx_s",
+          "source_entry_weight_mode": "uniform"
+        },
+        "truth_layer": "round2_physical_pairing_channels",
+        "weak_channel_policy": {
+          "channel": "delta_zx_s",
+          "default_task_c_freeze_applied": true,
+          "default_value": {
+            "im": 0.0,
+            "re": 0.0
+          }
+        }
+      },
+      "forward_output_ref": {
+        "path": "forward_outputs/smoke_validation_000.json",
+        "payload_kind": "forward_spectrum",
+        "sha256": "1435dc59433231ec15c2bd0c88a4870a55fc893243aa5d082af5179d9d1b2b85",
+        "storage": "local_json"
+      },
+      "forward_request": {
+        "allow_weak_delta_zx_s": false,
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_controls": {
+          "delta_xx_s": -0.15,
+          "delta_zx_d": 0.12
+        },
+        "request_kind": "fit_layer",
+        "request_label": "smoke_validation_000",
+        "schema_version": "ar_forward_input_v1",
+        "transport": {
+          "barrier_z": 0.6,
+          "gamma": 1.2,
+          "interface_angle": 0.15,
+          "nk": 11,
+          "temperature_kelvin": 4.0
+        }
+      },
+      "row_id": "smoke_validation_000",
+      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "split": "validation"
+    },
+    {
+      "controls": {
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "fit_layer_pairing_controls": {
+          "delta_perp_x": 0.05,
+          "delta_perp_z": 0.1
+        },
+        "transport_controls": {
+          "barrier_z": 0.75,
+          "gamma": 0.9,
+          "interface_angle": -0.1,
+          "nk": 11,
+          "temperature_kelvin": 2.5
+        }
+      },
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "forward_metadata": {
+        "allow_weak_delta_zx_s": false,
+        "fit_layer_policy": {
+          "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+          "free_channels": [
+            "delta_zz_s",
+            "delta_xx_s",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "strongly_regularized_channels": [
+            "delta_zz_d",
+            "delta_xx_d"
+          ],
+          "weak_optional_channels": [
+            "delta_zx_s"
+          ]
+        },
+        "fit_layer_request_label": "smoke_test_000",
+        "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+        "formal_baseline_role": "authoritative_formal_round2_baseline",
+        "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+        "forward_interface_version": "ar_forward_v1",
+        "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+        "git_dirty": false,
+        "normal_state_family": "base",
+        "normal_state_policy": "repository_fixed_base_normal_state",
+        "output_schema_version": "ar_forward_output_v1",
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+        "pairing_source": "task_h_fit_layer_controls",
+        "projection_config": {
+          "ar_interface_angles": [
+            0.0,
+            0.7853981633974483
+          ],
+          "ar_reference_nk": 61,
+          "ar_supported_entry_weight_floor": 0.75,
+          "ar_unsupported_entry_weight": 0.15,
+          "block_weights": {
+            "delta_x": 1.0,
+            "delta_y": 1.0,
+            "delta_z": 1.15
+          },
+          "channel_regularization": {
+            "delta_perp_x": 0.00075,
+            "delta_perp_z": 0.0001,
+            "delta_xx_d": 0.0001,
+            "delta_xx_s": 0.0001,
+            "delta_zx_d": 0.00075,
+            "delta_zx_s": 0.005,
+            "delta_zz_d": 0.0002,
+            "delta_zz_s": 0.0001
+          },
+          "core_channels": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x"
+          ],
+          "freeze_optional_weak_channel_by_default": true,
+          "gauge_anchor_priority": [
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x",
+            "delta_zx_s"
+          ],
+          "gauge_min_anchor_abs": 1e-10,
+          "optional_channel_activation_min_relative_magnitude": 0.08,
+          "optional_channel_activation_min_residual_reduction": 0.01,
+          "optional_channels": [
+            "delta_zx_s"
+          ],
+          "optional_weak_channel_name": "delta_zx_s",
+          "source_entry_weight_mode": "uniform"
+        },
+        "truth_layer": "round2_physical_pairing_channels",
+        "weak_channel_policy": {
+          "channel": "delta_zx_s",
+          "default_task_c_freeze_applied": true,
+          "default_value": {
+            "im": 0.0,
+            "re": 0.0
+          }
+        }
+      },
+      "forward_output_ref": {
+        "path": "forward_outputs/smoke_test_000.json",
+        "payload_kind": "forward_spectrum",
+        "sha256": "a1e189f86d240f268adde0a09a92649e5d5deb1cbfc7c50caa2e55fcd6cd7683",
+        "storage": "local_json"
+      },
+      "forward_request": {
+        "allow_weak_delta_zx_s": false,
+        "bias_grid": {
+          "bias_max_mev": 20.0,
+          "bias_min_mev": -20.0,
+          "num_bias": 41
+        },
+        "pairing_control_mode": "delta_from_baseline_meV",
+        "pairing_controls": {
+          "delta_perp_x": 0.05,
+          "delta_perp_z": 0.1
+        },
+        "request_kind": "fit_layer",
+        "request_label": "smoke_test_000",
+        "schema_version": "ar_forward_input_v1",
+        "transport": {
+          "barrier_z": 0.75,
+          "gamma": 0.9,
+          "interface_angle": -0.1,
+          "nk": 11,
+          "temperature_kelvin": 2.5
+        }
+      },
+      "row_id": "smoke_test_000",
+      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "split": "test"
+    }
+  ],
+  "sampling_policy": {
+    "description": "Three fixed fit-layer samples for schema and metadata validation.",
+    "fit_layer_pairing_controls": {
+      "channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "mode": "delta_from_baseline_meV",
+      "weak_delta_zx_s": "closed"
+    },
+    "policy_kind": "deterministic_smoke",
+    "sampling_policy_id": "fit_layer_transport_smoke_v1",
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ],
+    "transport_controls": {
+      "barrier_z": "fixed smoke values",
+      "gamma": "fixed positive broadening in meV",
+      "interface_angle": "fixed small set in radians",
+      "nk": "small odd grid for fast smoke checks",
+      "temperature_kelvin": "fixed non-negative smoke values"
+    }
+  },
+  "sampling_policy_id": "fit_layer_transport_smoke_v1"
+}

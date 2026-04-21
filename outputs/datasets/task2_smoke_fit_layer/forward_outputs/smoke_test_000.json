@@ -1,0 +1,299 @@
+{
+  "bias_mev": [
+    -20.0,
+    -19.0,
+    -18.0,
+    -17.0,
+    -16.0,
+    -15.0,
+    -14.0,
+    -13.0,
+    -12.0,
+    -11.0,
+    -10.0,
+    -9.0,
+    -8.0,
+    -7.0,
+    -6.0,
+    -5.0,
+    -4.0,
+    -3.0,
+    -2.0,
+    -1.0,
+    0.0,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0,
+    6.0,
+    7.0,
+    8.0,
+    9.0,
+    10.0,
+    11.0,
+    12.0,
+    13.0,
+    14.0,
+    15.0,
+    16.0,
+    17.0,
+    18.0,
+    19.0,
+    20.0
+  ],
+  "conductance": [
+    0.9527505968468837,
+    0.994109536993671,
+    1.0531398661594455,
+    1.1417299731879806,
+    1.252684576212715,
+    1.2966968195379076,
+    1.2837932376439845,
+    1.2432953481634397,
+    1.1724456724771697,
+    1.0757147156932398,
+    0.9814365198757667,
+    0.8873866131068557,
+    0.7892615723046442,
+    0.7147931267156732,
+    0.6624566972723088,
+    0.6248514460442183,
+    0.59760290697993,
+    0.5782190152300118,
+    0.5652197062268408,
+    0.5577292203127451,
+    0.5552812767262147,
+    0.5577292203127451,
+    0.5652197062268408,
+    0.5782190152300117,
+    0.59760290697993,
+    0.6248514460442183,
+    0.6624566972723088,
+    0.7147931267156731,
+    0.7892615723046442,
+    0.8873866131068556,
+    0.9814365198757666,
+    1.0757147156932398,
+    1.1724456724771697,
+    1.2432953481634397,
+    1.2837932376439845,
+    1.2966968195379076,
+    1.252684576212715,
+    1.1417299731879806,
+    1.0531398661594455,
+    0.994109536993671,
+    0.9527505968468837
+  ],
+  "conductance_unbroadened": [
+    0.7624272950714791,
+    0.7953361683789704,
+    0.8422276539424061,
+    0.9133048795741394,
+    1.0048970195619635,
+    1.039769486958674,
+    1.0285401210764271,
+    0.9962326383700014,
+    0.9393960667918569,
+    0.8610818088113994,
+    0.7856949500400439,
+    0.7105566163519265,
+    0.6311379782024382,
+    0.5715862216793147,
+    0.5299108695633651,
+    0.49993234246486595,
+    0.4781903799672148,
+    0.4627153233514516,
+    0.45233401556207237,
+    0.4463509738269982,
+    0.444395508292053,
+    0.4463509738269982,
+    0.45233401556207237,
+    0.4627153233514516,
+    0.4781903799672148,
+    0.49993234246486595,
+    0.5299108695633651,
+    0.5715862216793147,
+    0.6311379782024382,
+    0.7105566163519265,
+    0.7856949500400439,
+    0.8610818088113994,
+    0.9393960667918569,
+    0.9962326383700014,
+    1.0285401210764271,
+    1.039769486958674,
+    1.0048970195619635,
+    0.9133048795741394,
+    0.8422276539424061,
+    0.7953361683789704,
+    0.7624272950714791
+  ],
+  "metadata": {
+    "allow_weak_delta_zx_s": false,
+    "fit_layer_policy": {
+      "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+      "free_channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "strongly_regularized_channels": [
+        "delta_zz_d",
+        "delta_xx_d"
+      ],
+      "weak_optional_channels": [
+        "delta_zx_s"
+      ]
+    },
+    "fit_layer_request_label": "smoke_test_000",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_role": "authoritative_formal_round2_baseline",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "forward_interface_version": "ar_forward_v1",
+    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_dirty": false,
+    "normal_state_family": "base",
+    "normal_state_policy": "repository_fixed_base_normal_state",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_control_mode": "delta_from_baseline_meV",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "pairing_source": "task_h_fit_layer_controls",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "truth_layer": "round2_physical_pairing_channels",
+    "weak_channel_policy": {
+      "channel": "delta_zx_s",
+      "default_task_c_freeze_applied": true,
+      "default_value": {
+        "im": 0.0,
+        "re": 0.0
+      }
+    }
+  },
+  "pairing_channels": {
+    "delta_perp_x": {
+      "im": -1.733867852682211e-14,
+      "re": -10.127615214844031
+    },
+    "delta_perp_z": {
+      "im": 4.192049956675495e-13,
+      "re": -63.4131723333877
+    },
+    "delta_xx_d": {
+      "im": 2.5302036891064664e-07,
+      "re": -1.3049740214993564e-07
+    },
+    "delta_xx_s": {
+      "im": 1.2994633925908852e-12,
+      "re": -1.7820360737854517
+    },
+    "delta_zx_d": {
+      "im": 4.107408423357123e-14,
+      "re": -3.5075801360800885
+    },
+    "delta_zx_s": {
+      "im": 0.0,
+      "re": 0.0
+    },
+    "delta_zz_d": {
+      "im": 1.2953226292173953e-07,
+      "re": -6.466862302353315e-08
+    },
+    "delta_zz_s": {
+      "im": -5.990118039475454e-16,
+      "re": 43.47120957876886
+    }
+  },
+  "request": {
+    "allow_weak_delta_zx_s": false,
+    "bias_grid": {
+      "bias_max_mev": 20.0,
+      "bias_min_mev": -20.0,
+      "num_bias": 41
+    },
+    "pairing_control_mode": "delta_from_baseline_meV",
+    "pairing_controls": {
+      "delta_perp_x": 0.05,
+      "delta_perp_z": 0.1
+    },
+    "request_kind": "fit_layer",
+    "request_label": "smoke_test_000",
+    "schema_version": "ar_forward_input_v1",
+    "transport": {
+      "barrier_z": 0.75,
+      "gamma": 0.9,
+      "interface_angle": -0.1,
+      "nk": 11,
+      "temperature_kelvin": 2.5
+    }
+  },
+  "request_kind": "fit_layer",
+  "schema_version": "ar_forward_output_v1",
+  "transport_summary": {
+    "approximation": "2D specular-reflection, band-projected, multichannel phase-sensitive BTK/generalized-KT style solver; still not a full exact coupled multiband interface-scattering theory.",
+    "barrier_z": 0.75,
+    "gamma": 0.9,
+    "interface_angle": -0.1,
+    "mean_mismatch_penalty": 0.9221001228441619,
+    "mean_normal_transparency": 0.6399999999999999,
+    "nk": 11,
+    "num_channels": 17,
+    "num_contours": 5,
+    "num_filtered_channels": 0,
+    "num_input_channels": 17,
+    "num_same_band_channels": 17,
+    "temperature_kelvin": 2.5
+  }
+}

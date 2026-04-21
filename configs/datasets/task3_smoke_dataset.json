@@ -1,0 +1,78 @@
+{
+  "dataset_id": "task3_orchestration_smoke_v1",
+  "description": "Small resumable smoke dataset for Task 3 dataset generation orchestration.",
+  "output_dir": "outputs/datasets/task3_orchestration_smoke",
+  "sampling_policy_id": "fit_layer_transport_smoke_v1",
+  "sampling_policy": {
+    "sampling_policy_id": "fit_layer_transport_smoke_v1",
+    "policy_kind": "deterministic_smoke",
+    "description": "Three fixed fit-layer samples for resumable orchestration validation.",
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ]
+  },
+  "samples": [
+    {
+      "row_id": "task3_smoke_train_000",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.18,
+        "delta_perp_x": -0.08
+      },
+      "transport_controls": {
+        "interface_angle": 0.0,
+        "barrier_z": 0.50,
+        "gamma": 1.0,
+        "temperature_kelvin": 3.0,
+        "nk": 11
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 41
+      }
+    },
+    {
+      "row_id": "task3_smoke_validation_000",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_xx_s": -0.12,
+        "delta_zx_d": 0.10
+      },
+      "transport_controls": {
+        "interface_angle": 0.12,
+        "barrier_z": 0.65,
+        "gamma": 1.1,
+        "temperature_kelvin": 3.5,
+        "nk": 11
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 41
+      }
+    },
+    {
+      "row_id": "task3_smoke_test_000",
+      "split": "test",
+      "pairing_controls": {
+        "delta_perp_z": 0.08,
+        "delta_perp_x": 0.04
+      },
+      "transport_controls": {
+        "interface_angle": -0.08,
+        "barrier_z": 0.80,
+        "gamma": 0.95,
+        "temperature_kelvin": 2.5,
+        "nk": 11
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 41
+      }
+    }
+  ]
+}

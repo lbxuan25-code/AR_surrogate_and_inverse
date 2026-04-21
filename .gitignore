@@ -11,7 +11,13 @@ outputs/inverse/*
 outputs/datasets/*
 !outputs/datasets/.gitkeep
 !outputs/datasets/fit_layer_forward_smoke_payload.json
+!outputs/datasets/task2_smoke_fit_layer/
+!outputs/datasets/task2_smoke_fit_layer/**
+!outputs/datasets/task3_orchestration_smoke/
+!outputs/datasets/task3_orchestration_smoke/**
 
 outputs/runs/*
 !outputs/runs/.gitkeep
 !outputs/runs/task1_forward_smoke_run_metadata.json
+!outputs/runs/task2_smoke_dataset_run_metadata.json
+!outputs/runs/task3_dataset_generation_run_metadata.json
