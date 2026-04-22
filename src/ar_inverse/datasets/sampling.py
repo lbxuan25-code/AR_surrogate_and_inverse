@@ -1,10 +1,11 @@
-"""Deterministic smoke sampling policy for Task 2."""
+"""Deterministic smoke sampling policies for forward-backed datasets."""
 
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 
 SMOKE_SAMPLING_POLICY_ID = "fit_layer_transport_smoke_v1"
+DIRECTIONAL_SMOKE_SAMPLING_POLICY_ID = "directional_fit_layer_transport_smoke_v1"
 
 
 @dataclass(frozen=True, slots=True)
@@ -15,6 +16,7 @@ class SmokeSampleSpec:
     split: str
     pairing_controls: dict[str, float]
     transport_controls: dict[str, float | int]
+    direction: dict[str, object] | None = None
     bias_grid: dict[str, float | int] = field(
         default_factory=lambda: {
             "bias_min_mev": -20.0,
@@ -47,6 +49,41 @@ def smoke_sampling_policy() -> dict[str, object]:
         },
         "transport_controls": {
             "interface_angle": "fixed small set in radians",
+            "barrier_z": "fixed smoke values",
+            "gamma": "fixed positive broadening in meV",
+            "temperature_kelvin": "fixed non-negative smoke values",
+            "nk": "small odd grid for fast smoke checks",
+        },
+        "splits": ["train", "validation", "test"],
+    }
+
+
+def directional_smoke_sampling_policy() -> dict[str, object]:
+    """Return the Task 8 direction-aware smoke policy descriptor."""
+
+    return {
+        "sampling_policy_id": DIRECTIONAL_SMOKE_SAMPLING_POLICY_ID,
+        "policy_kind": "directional_contract_smoke",
+        "description": "Three smoke samples covering supported named modes and narrow spread.",
+        "direction_regimes": {
+            "primary_supported_regime": {
+                "direction_modes": ["inplane_100", "inplane_110"],
+                "directional_spread": None,
+                "generic_raw_angles": "excluded",
+            },
+            "secondary_supported_regime": {
+                "direction_modes": ["inplane_100", "inplane_110"],
+                "directional_spread": "narrow named-mode-centered, half_width <= pi/32",
+            },
+            "diagnostic_only_regime": {
+                "generic_raw_angles": "explicit opt-in only; excluded from primary training",
+            },
+            "unsupported_regime": {
+                "c_axis": "rejected at config validation time",
+            },
+        },
+        "fit_layer_pairing_controls": smoke_sampling_policy()["fit_layer_pairing_controls"],
+        "transport_controls": {
             "barrier_z": "fixed smoke values",
             "gamma": "fixed positive broadening in meV",
             "temperature_kelvin": "fixed non-negative smoke values",
@@ -94,6 +131,56 @@ def deterministic_smoke_samples() -> tuple[SmokeSampleSpec, ...]:
                 "gamma": 0.9,
                 "temperature_kelvin": 2.5,
                 "nk": 11,
+            },
+        ),
+    )
+
+
+def deterministic_directional_smoke_samples() -> tuple[SmokeSampleSpec, ...]:
+    """Return a tiny Task 8 sample set exercising supported direction regimes."""
+
+    return (
+        SmokeSampleSpec(
+            row_id="task8_direction_train_inplane_100",
+            split="train",
+            pairing_controls={"delta_zz_s": 0.18, "delta_perp_x": -0.08},
+            transport_controls={
+                "barrier_z": 0.50,
+                "gamma": 1.0,
+                "temperature_kelvin": 3.0,
+                "nk": 11,
+            },
+            direction={"direction_mode": "inplane_100"},
+        ),
+        SmokeSampleSpec(
+            row_id="task8_direction_validation_inplane_110",
+            split="validation",
+            pairing_controls={"delta_xx_s": -0.12, "delta_zx_d": 0.10},
+            transport_controls={
+                "barrier_z": 0.65,
+                "gamma": 1.1,
+                "temperature_kelvin": 3.5,
+                "nk": 11,
+            },
+            direction={"direction_mode": "inplane_110"},
+        ),
+        SmokeSampleSpec(
+            row_id="task8_direction_test_inplane_110_spread",
+            split="test",
+            pairing_controls={"delta_perp_z": 0.08, "delta_perp_x": 0.04},
+            transport_controls={
+                "barrier_z": 0.80,
+                "gamma": 0.95,
+                "temperature_kelvin": 2.5,
+                "nk": 11,
+            },
+            direction={
+                "direction_mode": "inplane_110",
+                "directional_spread": {
+                    "direction_mode": "inplane_110",
+                    "half_width": 0.02454369260617026,
+                    "num_samples": 3,
+                },
             },
         ),
     )

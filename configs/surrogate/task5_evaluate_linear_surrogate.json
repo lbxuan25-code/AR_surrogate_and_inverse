@@ -1,6 +1,6 @@
 {
   "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
-  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "report_dir": "outputs/runs/task5_surrogate_evaluation",
   "run_metadata_path": "outputs/runs/task5_surrogate_evaluation_run_metadata.json",
   "held_out_splits": [

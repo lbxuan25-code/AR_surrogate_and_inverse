@@ -1,18 +1,46 @@
 {
   "calibration_diagnostics": {
-    "max_abs_error": 0.3088382561603701,
+    "max_abs_error": 0.29266713002648115,
     "max_abs_error_threshold": 0.1,
-    "max_rmse": 0.19309576093618588,
-    "mean_max_abs_error": 0.2286724703520368,
-    "mean_rmse": 0.1457544840216746,
+    "max_rmse": 0.20015870049896514,
+    "mean_max_abs_error": 0.21432102037363554,
+    "mean_rmse": 0.1472180399502929,
     "num_rows": 2,
     "rmse_threshold": 0.05,
     "unsafe_fraction": 1.0
   },
   "dataset": {
-    "dataset_id": "task3_orchestration_smoke_v1",
-    "manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
-    "sampling_policy_id": "fit_layer_transport_smoke_v1"
+    "dataset_id": "task8_directional_smoke_v1",
+    "manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+    "sampling_policy_id": "directional_fit_layer_transport_smoke_v1"
+  },
+  "direction_regime_report": {
+    "inplane_110_no_spread": {
+      "max_abs_error": 0.13597491072078993,
+      "max_rmse": 0.09427737940162063,
+      "mean_rmse": 0.09427737940162063,
+      "num_rows": 1,
+      "row_ids": [
+        "task8_direction_validation_inplane_110"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task8_direction_validation_inplane_110"
+      ]
+    },
+    "named_mode_narrow_spread": {
+      "max_abs_error": 0.29266713002648115,
+      "max_rmse": 0.20015870049896514,
+      "mean_rmse": 0.20015870049896514,
+      "num_rows": 1,
+      "row_ids": [
+        "task8_direction_test_inplane_110_spread"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task8_direction_test_inplane_110_spread"
+      ]
+    }
   },
   "evaluation_scope": {
     "held_out_splits": [
@@ -24,12 +52,17 @@
   "fallback_policy": {
     "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
     "policy_id": "task5_direct_forward_fallback_v1",
+    "safe_direction_regimes": [],
     "safe_error_thresholds": {
       "max_abs_error": 0.1,
       "rmse": 0.05
     },
     "safe_transport_regimes": [],
     "summary": "Surrogate acceleration is disabled for unsafe transport regimes. Inverse workflows must use direct external forward calls there.",
+    "unsafe_direction_regimes": [
+      "inplane_110_no_spread",
+      "named_mode_narrow_spread"
+    ],
     "unsafe_transport_regimes": [
       "high_barrier|high_gamma|high_temp",
       "high_barrier|low_gamma|low_temp"
@@ -54,12 +87,12 @@
         "delta_zx_s"
       ]
     },
-    "fit_layer_request_label": "task3_smoke_train_000",
+    "fit_layer_request_label": "task8_direction_train_inplane_100",
     "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
     "formal_baseline_role": "authoritative_formal_round2_baseline",
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
-    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
     "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",
@@ -135,18 +168,44 @@
   },
   "row_errors": [
     {
-      "metrics": {
-        "mae": 0.08575334231212861,
-        "max_abs_error": 0.14850668454370353,
-        "rmse": 0.09841320710716331
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "inplane_110_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
       },
-      "row_id": "task3_smoke_validation_000",
+      "direction_regime": "inplane_110_no_spread",
+      "metrics": {
+        "mae": 0.07672855408984616,
+        "max_abs_error": 0.13597491072078993,
+        "rmse": 0.09427737940162063
+      },
+      "row_id": "task8_direction_validation_inplane_110",
       "safe_for_inverse_acceleration": false,
       "split": "validation",
       "transport_controls": {
         "barrier_z": 0.65,
         "gamma": 1.1,
-        "interface_angle": 0.12,
         "nk": 11,
         "temperature_kelvin": 3.5
       },
@@ -157,18 +216,104 @@
       ]
     },
     {
-      "metrics": {
-        "mae": 0.1627956119960935,
-        "max_abs_error": 0.3088382561603701,
-        "rmse": 0.19309576093618588
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 3,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.7853981633974483,
+            "crystal_label": "110",
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 3,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.7853981633974483,
+              "crystal_label": "110",
+              "direction_mode": "inplane_110",
+              "half_width": 0.02454369260617026,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 3,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": 0.760854470791278,
+                "mean_mismatch_penalty": 0.8373864493579123,
+                "num_channels": 28,
+                "num_filtered_channels": 0,
+                "num_input_channels": 28,
+                "num_same_band_channels": 28,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.3333333333333333
+              },
+              {
+                "interface_angle": 0.7853981633974483,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 41,
+                "num_filtered_channels": 0,
+                "num_input_channels": 41,
+                "num_same_band_channels": 41,
+                "relative_angle": 0.0,
+                "weight": 0.3333333333333333
+              },
+              {
+                "interface_angle": 0.8099418560036186,
+                "mean_mismatch_penalty": 0.8372555584747762,
+                "num_channels": 28,
+                "num_filtered_channels": 0,
+                "num_input_channels": 28,
+                "num_same_band_channels": 28,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.3333333333333333
+              }
+            ],
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
       },
-      "row_id": "task3_smoke_test_000",
+      "direction_regime": "named_mode_narrow_spread",
+      "metrics": {
+        "mae": 0.16258976994012278,
+        "max_abs_error": 0.29266713002648115,
+        "rmse": 0.20015870049896514
+      },
+      "row_id": "task8_direction_test_inplane_110_spread",
       "safe_for_inverse_acceleration": false,
       "split": "test",
       "transport_controls": {
         "barrier_z": 0.8,
         "gamma": 0.95,
-        "interface_angle": -0.08,
         "nk": 11,
         "temperature_kelvin": 2.5
       },
@@ -182,29 +327,29 @@
   "run_kind": "task5_surrogate_evaluation_and_calibration",
   "transport_regime_report": {
     "high_barrier|high_gamma|high_temp": {
-      "max_abs_error": 0.14850668454370353,
-      "max_rmse": 0.09841320710716331,
-      "mean_rmse": 0.09841320710716331,
+      "max_abs_error": 0.13597491072078993,
+      "max_rmse": 0.09427737940162063,
+      "mean_rmse": 0.09427737940162063,
       "num_rows": 1,
       "row_ids": [
-        "task3_smoke_validation_000"
+        "task8_direction_validation_inplane_110"
       ],
       "safe_for_inverse_acceleration": false,
       "unsafe_row_ids": [
-        "task3_smoke_validation_000"
+        "task8_direction_validation_inplane_110"
       ]
     },
     "high_barrier|low_gamma|low_temp": {
-      "max_abs_error": 0.3088382561603701,
-      "max_rmse": 0.19309576093618588,
-      "mean_rmse": 0.19309576093618588,
+      "max_abs_error": 0.29266713002648115,
+      "max_rmse": 0.20015870049896514,
+      "mean_rmse": 0.20015870049896514,
       "num_rows": 1,
       "row_ids": [
-        "task3_smoke_test_000"
+        "task8_direction_test_inplane_110_spread"
       ],
       "safe_for_inverse_acceleration": false,
       "unsafe_row_ids": [
-        "task3_smoke_test_000"
+        "task8_direction_test_inplane_110_spread"
       ]
     }
   }

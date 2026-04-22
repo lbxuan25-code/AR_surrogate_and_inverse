@@ -28,8 +28,19 @@ Every candidate family must include:
 
 `pairing_controls` includes a center and uncertainty ranges for fit-layer
 controls. `transport_nuisance_controls` includes a center and uncertainty ranges
-for nuisance controls such as barrier strength, broadening, temperature, angle,
-and `nk`.
+for nuisance controls such as barrier strength, broadening, temperature, and
+`nk`.
+
+Direction semantics are reported separately through `direction` and
+`direction_prior`. Inverse configs accept these direction-prior kinds:
+
+- `direction_resolved`
+- `direction_biased`
+- `mixed_or_unknown`
+
+When a config is `direction_resolved`, candidates must be restricted to the
+allowed supported named modes. Unsupported modes such as `c_axis` are rejected
+at config validation time.
 
 `objective` records the score used for ranking. The Task 6 smoke prototype uses
 `spectrum_rmse` against a target AR spectrum.

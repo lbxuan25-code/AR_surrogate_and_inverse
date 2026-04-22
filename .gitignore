@@ -24,6 +24,8 @@ outputs/datasets/*
 !outputs/datasets/task2_smoke_fit_layer/**
 !outputs/datasets/task3_orchestration_smoke/
 !outputs/datasets/task3_orchestration_smoke/**
+!outputs/datasets/task8_directional_smoke/
+!outputs/datasets/task8_directional_smoke/**
 
 outputs/runs/*
 !outputs/runs/.gitkeep
@@ -36,3 +38,4 @@ outputs/runs/*
 !outputs/runs/task5_surrogate_evaluation/**
 !outputs/runs/task6_smoke_inverse_run_metadata.json
 !outputs/runs/task7_experiment_fit_run_metadata.json
+!outputs/runs/task8_directional_dataset_run_metadata.json

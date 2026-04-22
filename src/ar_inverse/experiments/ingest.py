@@ -8,6 +8,8 @@ from typing import Any
 
 import numpy as np
 
+from ar_inverse.direction import normalize_direction_prior
+
 EXPERIMENT_SPECTRUM_SCHEMA_VERSION = "ar_inverse_experiment_spectrum_v1"
 
 REQUIRED_EXPERIMENT_KEYS: tuple[str, ...] = (
@@ -40,6 +42,8 @@ def validate_experiment_spectrum(payload: dict[str, Any]) -> None:
         raise ValueError("Experiment spectrum contains non-finite values.")
     if not isinstance(payload["metadata"], dict):
         raise ValueError("Experiment metadata must be a mapping.")
+    if "direction_prior" in payload["metadata"]:
+        normalize_direction_prior(payload["metadata"]["direction_prior"])
 
 
 def load_experiment_spectrum(path: Path | str) -> dict[str, Any]:

@@ -56,6 +56,7 @@ def test_build_experiment_fit_report_writes_separated_sections(tmp_path) -> None
     assert report["run_kind"] == "task7_experiment_fitting_report"
     assert "preprocessing" in report
     assert "transport_nuisance_controls" in report
+    assert "directional_priors_and_regimes" in report
     assert "order_parameter_feature_claims" in report
     assert "surrogate_uncertainty" in report
     assert "final_forward_recheck_results" in report
@@ -63,9 +64,11 @@ def test_build_experiment_fit_report_writes_separated_sections(tmp_path) -> None
         "the AR data are compatible with these feature families"
     )
     assert report["order_parameter_feature_claims"]["not_unique_microscopic_truth"] is True
+    assert report["directional_priors_and_regimes"]["experiment_direction_prior"]["kind"] == "direction_biased"
 
     for record in report["final_forward_recheck_results"]:
         assert missing_forward_metadata_keys(record["forward_recheck_metadata"]) == ()
+        assert record["direction"]["direction_regime"].startswith("inplane_100")
 
     _assert_no_unique_truth_claim(markdown_path.read_text(encoding="utf-8"))
 
@@ -86,6 +89,7 @@ def test_repository_task7_report_contract() -> None:
     assert run_metadata["claim_policy"] == "candidate_families_not_unique_microscopic_truth"
     assert report["final_forward_recheck_results"]
     assert report["transport_nuisance_controls"]["candidate_values"]
+    assert report["directional_priors_and_regimes"]["candidate_values"]
     assert report["order_parameter_feature_claims"]["candidate_values"]
     _assert_no_unique_truth_claim(json.dumps(report, sort_keys=True))
     _assert_no_unique_truth_claim(markdown_path.read_text(encoding="utf-8"))

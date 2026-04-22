@@ -9,7 +9,12 @@ from typing import Any
 import numpy as np
 
 from ar_inverse.metadata import assert_forward_metadata_complete
-from ar_inverse.surrogate.calibration import calibration_diagnostics, fallback_policy, transport_regime_label
+from ar_inverse.surrogate.calibration import (
+    calibration_diagnostics,
+    direction_regime_label,
+    fallback_policy,
+    transport_regime_label,
+)
 from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import RidgeLinearSpectrumSurrogate
 from ar_inverse.surrogate.train import load_dataset_arrays
@@ -46,12 +51,14 @@ def _row_error_record(
     split: str,
     prediction: np.ndarray,
     target: np.ndarray,
+    row: dict[str, Any],
     controls: dict[str, Any],
     thresholds: dict[str, float],
 ) -> dict[str, Any]:
     metrics = regression_metrics(prediction.reshape(1, -1), target.reshape(1, -1))
     transport_controls = dict(controls.get("transport_controls", {}))
     regime = transport_regime_label(transport_controls)
+    direction_regime = direction_regime_label(row)
     unsafe_reasons: list[str] = []
     if metrics["rmse"] > thresholds["rmse"]:
         unsafe_reasons.append(f"rmse>{thresholds['rmse']}")
@@ -61,6 +68,8 @@ def _row_error_record(
         "row_id": row_id,
         "split": split,
         "transport_regime": regime,
+        "direction_regime": direction_regime,
+        "direction": row.get("direction"),
         "transport_controls": transport_controls,
         "metrics": metrics,
         "safe_for_inverse_acceleration": not unsafe_reasons,
@@ -69,9 +78,17 @@ def _row_error_record(
 
 
 def _group_regime_records(row_records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return _group_records_by_key(row_records, "transport_regime")
+
+
+def _group_direction_records(row_records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return _group_records_by_key(row_records, "direction_regime")
+
+
+def _group_records_by_key(row_records: list[dict[str, Any]], key: str) -> dict[str, dict[str, Any]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
     for record in row_records:
-        grouped.setdefault(str(record["transport_regime"]), []).append(record)
+        grouped.setdefault(str(record[key]), []).append(record)
 
     report: dict[str, dict[str, Any]] = {}
     for regime, records in grouped.items():
@@ -133,6 +150,21 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
                 "",
             ]
         )
+    lines.extend(["## Direction Regimes", ""])
+    for regime, regime_report in report["direction_regime_report"].items():
+        lines.extend(
+            [
+                f"### {regime}",
+                "",
+                f"- Rows: `{regime_report['num_rows']}`",
+                f"- Mean RMSE: `{regime_report['mean_rmse']:.8g}`",
+                f"- Max RMSE: `{regime_report['max_rmse']:.8g}`",
+                f"- Max absolute error: `{regime_report['max_abs_error']:.8g}`",
+                f"- Safe for inverse acceleration: `{regime_report['safe_for_inverse_acceleration']}`",
+                f"- Unsafe rows: `{', '.join(regime_report['unsafe_row_ids']) or 'none'}`",
+                "",
+            ]
+        )
     lines.extend(
         [
             "## Fallback Policy",
@@ -180,14 +212,16 @@ def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFI
                 split=str(splits[index]),
                 prediction=predictions[index],
                 target=targets[index],
+                row=row,
                 controls=dict(row.get("controls", {})),
                 thresholds=thresholds,
             )
         )
 
     regime_report = _group_regime_records(row_records)
+    direction_regime_report = _group_direction_records(row_records)
     diagnostics = calibration_diagnostics(row_records, thresholds)
-    policy = fallback_policy(regime_report, thresholds)
+    policy = fallback_policy(regime_report, thresholds, direction_regime_report)
     forward_metadata_family = manifest["rows"][0]["forward_metadata"]
 
     report = {
@@ -207,6 +241,7 @@ def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFI
         },
         "row_errors": row_records,
         "transport_regime_report": regime_report,
+        "direction_regime_report": direction_regime_report,
         "calibration_diagnostics": diagnostics,
         "fallback_policy": policy,
         "forward_metadata_family": forward_metadata_family,
@@ -229,6 +264,7 @@ def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFI
         "checkpoint": str(config["checkpoint"]),
         "dataset_manifest": str(dataset["manifest_path"]),
         "unsafe_transport_regimes": policy["unsafe_transport_regimes"],
+        "unsafe_direction_regimes": policy["unsafe_direction_regimes"],
         "forward_metadata_family": forward_metadata_family,
     }
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")

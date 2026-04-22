@@ -6,6 +6,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from ar_inverse.direction import (
+    SUPPORTED_DIRECTION_MODES,
+    direction_block_from_forward_payload,
+    normalize_direction_prior,
+    validate_direction_config,
+)
 from ar_inverse.datasets.schema import file_sha256, forward_output_ref
 from ar_inverse.forward_dependency import import_forward_module
 from ar_inverse.inverse.candidates import (
@@ -32,6 +38,15 @@ def load_inverse_config(path: Path | str) -> dict[str, Any]:
         raise ValueError(f"Inverse config is missing required key(s): {', '.join(missing)}.")
     if not isinstance(config["candidate_specs"], list) or not config["candidate_specs"]:
         raise ValueError("Inverse config must contain a non-empty candidate_specs list.")
+    direction_prior = normalize_direction_prior(config.get("direction_prior"))
+    config["direction_prior"] = direction_prior
+    for spec in config["candidate_specs"]:
+        direction = spec.get("direction")
+        validate_direction_config(direction)
+        if direction_prior["kind"] == "direction_resolved":
+            mode = direction.get("direction_mode") if isinstance(direction, dict) else None
+            if mode not in direction_prior["allowed_direction_modes"]:
+                raise ValueError("Direction-resolved inverse candidates must use an allowed supported direction mode.")
     return config
 
 
@@ -57,11 +72,19 @@ def _request_from_spec(spec: dict[str, Any], target_payload: dict[str, Any]):
     forward = import_forward_module("forward")
     request_payload = target_payload["request"]
     bias_grid = dict(request_payload["bias_grid"])
+    transport_controls = dict(spec["transport_controls"])
+    direction = spec.get("direction")
+    if isinstance(direction, dict) and direction.get("direction_mode") in SUPPORTED_DIRECTION_MODES:
+        transport_controls.pop("interface_angle", None)
+        transport_controls.pop("direction_mode", None)
+        transport = forward.transport_with_direction_mode(str(direction["direction_mode"]), **transport_controls)
+    else:
+        transport = forward.TransportControls(**transport_controls)
     return forward.FitLayerSpectrumRequest(
         pairing_controls=dict(spec.get("pairing_controls", {})),
         pairing_control_mode="delta_from_baseline_meV",
         allow_weak_delta_zx_s=bool(spec.get("allow_weak_delta_zx_s", False)),
-        transport=forward.TransportControls(**dict(spec["transport_controls"])),
+        transport=transport,
         bias_grid=forward.BiasGrid(**bias_grid),
         request_label=str(spec["candidate_family_id"]),
     )
@@ -93,6 +116,7 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
     target_conductance = list(target_payload["conductance"])
     fallback_policy_report = _load_json(Path(config["fallback_policy_report"])) if config.get("fallback_policy_report") else {}
     fallback_policy = dict(fallback_policy_report.get("fallback_policy", {}))
+    direction_prior = normalize_direction_prior(config.get("direction_prior"))
     surrogate_usage = {
         "used": False,
         "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
@@ -110,6 +134,11 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
 
         pairing_controls = {str(key): float(value) for key, value in dict(spec.get("pairing_controls", {})).items()}
         transport_controls = dict(spec["transport_controls"])
+        direction = (
+            direction_block_from_forward_payload(payload, configured_direction=dict(spec["direction"]))
+            if isinstance(spec.get("direction"), dict)
+            else None
+        )
         pairing_half_width = spec.get("pairing_half_width", 0.05)
         transport_half_width = spec.get("transport_half_width", _transport_range_widths(transport_controls))
         forward_recheck = {
@@ -127,6 +156,8 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
             objective=objective,
             forward_recheck=forward_recheck,
             surrogate_usage=surrogate_usage,
+            direction=direction,
+            direction_prior=direction_prior,
         )
         candidates.append(candidate)
 
@@ -142,6 +173,7 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
             "row_id": target_row["row_id"],
             "forward_output_ref": target_row["forward_output_ref"],
             "forward_metadata": target_row["forward_metadata"],
+            "direction": target_row.get("direction"),
         },
         "search": {
             "candidate_count": len(config["candidate_specs"]),
@@ -149,6 +181,7 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
             "objective": "spectrum_rmse",
             "surrogate_usage": surrogate_usage,
             "fallback_policy": fallback_policy,
+            "direction_prior": direction_prior,
         },
         "candidate_families": candidate_families,
     }
@@ -170,6 +203,7 @@ def run_inverse_search_from_config(config_path: Path | str = DEFAULT_TASK6_CONFI
         "reported_candidate_count": len(candidate_families),
         "best_objective_score": candidate_families[0]["objective"]["score"],
         "forward_recheck_metadata": [candidate["forward_recheck"]["metadata"] for candidate in candidate_families],
+        "direction_prior": direction_prior,
     }
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report_path, markdown_path
@@ -192,6 +226,7 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
         f"- Objective: `{report['search']['objective']}`",
         f"- Surrogate used: `{report['search']['surrogate_usage']['used']}`",
         f"- Surrogate reason: {report['search']['surrogate_usage']['reason']}",
+        f"- Direction prior: `{report['search']['direction_prior']['kind']}`",
         "",
         "## Candidate Families",
         "",
@@ -204,6 +239,7 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
                 f"- Objective score: `{candidate['objective']['score']:.8g}`",
                 f"- Pairing controls: `{candidate['pairing_controls']['center']}`",
                 f"- Transport nuisance controls: `{candidate['transport_nuisance_controls']['center']}`",
+                f"- Direction regime: `{candidate.get('direction', {}).get('direction_regime', 'unspecified')}`",
                 f"- Forward recheck git commit: `{candidate['forward_recheck']['metadata']['git_commit']}`",
                 "",
             ]

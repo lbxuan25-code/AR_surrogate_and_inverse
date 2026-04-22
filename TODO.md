@@ -2,13 +2,90 @@
 
 ## Current Task
 
-No current task. All planned bootstrap tasks are complete.
+### Task 9 — Train The First Direction-Aware Surrogate
+
+Prerequisite: Task 8 complete.
+
+Goal: build the first surrogate whose declared support is the forward repository's
+supported named in-plane modes, first without diagnostic raw angles as primary data.
+
+#### Planned focus
+- Build a non-smoke dataset large enough to cover:
+  - pairing controls
+  - `barrier_z`
+  - `gamma`
+  - temperature
+  - `inplane_100`
+  - `inplane_110`
+  - narrow spread subset
+- Retrain the surrogate with the upgraded feature intake.
+- Compare direction-aware performance to the old angle-only baseline.
+- Produce a model card that explicitly states supported direction regimes and
+  fallback rules.
 
 ---
 
 ## Backlog
 
+### Task 10 — Experiment-Side Direction Normalization / Priors
+
+Prerequisite: Task 8 complete.
+
+Goal: connect experimental spectra to the new directional contract without falsely
+claiming unsupported directional resolution.
+
+#### Planned focus
+- Define experiment metadata fields for:
+  - nominal crystal orientation
+  - confidence in direction control
+  - whether mixed-or-unknown direction must be assumed
+- Add report language separating:
+  - direction prior supplied by experiment
+  - direction regime explored by inverse search
+  - final forward recheck regime
+- Keep wide or arbitrary direction mixture fitting out of the supported path until
+  a separate validated forward-side contract exists.
+
+### Task 11 — Revisit Generic Raw Angles As A Separate Regime
+
+Prerequisite: Task 9 complete.
+
+Goal: decide whether generic raw angles deserve:
+- a down-weighted extension set,
+- a separate surrogate,
+- or continued exclusion from production inverse workflows.
+
+This task must not silently promote diagnostic-only angle data into the primary
+truth-grade training pool.
+
+---
+
 ## Archive
+
+### Task 8 — Integrate Directional Feature Contract Into The Surrogate/Inverse Repository
+
+Completed 2026-04-22.
+
+#### Verification
+- `pytest` passed: 39 tests.
+- Direction contract helpers: `src/ar_inverse/direction.py`.
+- Direction-aware dataset config:
+  `configs/datasets/task8_directional_smoke_dataset.json`.
+- Direction-aware dataset manifest:
+  `outputs/datasets/task8_directional_smoke/dataset.json`.
+- Run metadata:
+  `outputs/runs/task8_directional_dataset_run_metadata.json`.
+- Dataset rows use `ar_inverse_dataset_row_v2` and include `direction` blocks
+  for `inplane_100_no_spread`, `inplane_110_no_spread`, and
+  `named_mode_narrow_spread`.
+- Surrogate feature extraction now separates named-mode identity, transport
+  controls, spread controls, and raw angle auxiliary metadata.
+- Evaluation report includes `direction_regime_report` and direction-aware
+  fallback fields.
+- Inverse and experiment configs accept direction priors and reject unsupported
+  direction requests such as `c_axis`.
+- README and docs describe supported named modes, unsupported `c_axis`,
+  diagnostic-only raw angles, and narrow-spread-only directional spread.
 
 ### Task 7 — Experiment-Fitting Report Workflow
 

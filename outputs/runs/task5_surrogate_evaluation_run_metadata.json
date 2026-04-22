@@ -1,7 +1,7 @@
 {
   "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
   "config": "configs/surrogate/task5_evaluate_linear_surrogate.json",
-  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "forward_metadata_family": {
     "allow_weak_delta_zx_s": false,
     "fit_layer_policy": {
@@ -21,12 +21,12 @@
         "delta_zx_s"
       ]
     },
-    "fit_layer_request_label": "task3_smoke_train_000",
+    "fit_layer_request_label": "task8_direction_train_inplane_100",
     "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
     "formal_baseline_role": "authoritative_formal_round2_baseline",
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
-    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
     "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",
@@ -99,6 +99,10 @@
   "markdown_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.md",
   "report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
   "run_kind": "task5_surrogate_evaluation_and_calibration",
+  "unsafe_direction_regimes": [
+    "inplane_110_no_spread",
+    "named_mode_narrow_spread"
+  ],
   "unsafe_transport_regimes": [
     "high_barrier|high_gamma|high_temp",
     "high_barrier|low_gamma|low_temp"

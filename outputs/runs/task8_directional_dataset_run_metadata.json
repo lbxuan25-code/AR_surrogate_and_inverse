@@ -1,7 +1,7 @@
 {
   "allow_diagnostic_raw_angles": false,
-  "dataset_id": "task3_orchestration_smoke_v1",
-  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "dataset_id": "task8_directional_smoke_v1",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "force": true,
   "forward_metadata_family": {
     "allow_weak_delta_zx_s": false,
@@ -22,7 +22,7 @@
         "delta_zx_s"
       ]
     },
-    "fit_layer_request_label": "task3_smoke_train_000",
+    "fit_layer_request_label": "task8_direction_train_inplane_100",
     "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
     "formal_baseline_role": "authoritative_formal_round2_baseline",
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
@@ -101,6 +101,6 @@
   "num_rows": 3,
   "reused_rows": 0,
   "run_kind": "task3_dataset_generation_orchestration",
-  "sampling_policy_id": "fit_layer_transport_smoke_v1",
-  "source_config": "configs/datasets/task3_smoke_dataset.json"
+  "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
+  "source_config": "configs/datasets/task8_directional_smoke_dataset.json"
 }

@@ -90,3 +90,36 @@ python scripts/datasets/build_dataset.py --config configs/datasets/task3_smoke_d
 Rerunning the command reuses completed rows whose referenced forward-output
 JSON files still match their recorded SHA-256 digests. Use `--force` to
 regenerate every row.
+
+## Direction-Aware Policy
+
+Task 8 adds `directional_fit_layer_transport_smoke_v1` for the forward
+direction contract. Sampling is split into three regimes:
+
+- Primary supported regime: `inplane_100` and `inplane_110`, no spread.
+- Secondary supported regime: `inplane_100` and `inplane_110` with narrow
+  named-mode-centered spread.
+- Diagnostic-only regime: generic raw angles, excluded unless a config
+  explicitly opts in with `allow_diagnostic_raw_angles`.
+
+Unsupported direction modes, including `c_axis`, are rejected during config
+validation. The primary training pool for the next surrogate stage must exclude
+generic raw angles by default.
+
+The Task 8 smoke config is:
+
+```text
+configs/datasets/task8_directional_smoke_dataset.json
+```
+
+It writes:
+
+```text
+outputs/datasets/task8_directional_smoke/dataset.json
+```
+
+The smoke rows exercise:
+
+- `inplane_100`, no spread;
+- `inplane_110`, no spread;
+- `inplane_110`, narrow spread with `half_width <= pi/32`.

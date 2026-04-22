@@ -6,10 +6,18 @@ import json
 from pathlib import Path
 from typing import Any
 
+from ar_inverse.direction import (
+    SUPPORTED_DIRECTION_MODES,
+    direction_block_from_forward_payload,
+    validate_direction_config,
+)
 from ar_inverse.datasets.sampling import (
+    DIRECTIONAL_SMOKE_SAMPLING_POLICY_ID,
     SMOKE_SAMPLING_POLICY_ID,
     SmokeSampleSpec,
+    deterministic_directional_smoke_samples,
     deterministic_smoke_samples,
+    directional_smoke_sampling_policy,
     smoke_sampling_policy,
 )
 from ar_inverse.datasets.schema import (
@@ -29,18 +37,55 @@ DEFAULT_TASK2_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task2_smoke_dataset_r
 DEFAULT_TASK3_SMOKE_CONFIG_PATH = Path("configs/datasets/task3_smoke_dataset.json")
 DEFAULT_TASK3_SMOKE_DATASET_DIR = Path("outputs/datasets/task3_orchestration_smoke")
 DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task3_dataset_generation_run_metadata.json")
+DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH = Path("configs/datasets/task8_directional_smoke_dataset.json")
+DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR = Path("outputs/datasets/task8_directional_smoke")
+DEFAULT_TASK8_DIRECTIONAL_RUN_METADATA_PATH = Path("outputs/runs/task8_directional_dataset_run_metadata.json")
 
 
 def _request_from_sample(sample: SmokeSampleSpec):
     forward = import_forward_module("forward")
+    transport = _transport_from_sample(forward, sample)
     return forward.FitLayerSpectrumRequest(
         pairing_controls=dict(sample.pairing_controls),
         pairing_control_mode="delta_from_baseline_meV",
         allow_weak_delta_zx_s=False,
-        transport=forward.TransportControls(**sample.transport_controls),
+        transport=transport,
         bias_grid=forward.BiasGrid(**sample.bias_grid),
         request_label=sample.row_id,
     )
+
+
+def _transport_from_sample(forward: Any, sample: SmokeSampleSpec):
+    direction = sample.direction
+    controls = dict(sample.transport_controls)
+    if not direction:
+        return forward.TransportControls(**controls)
+
+    mode = direction.get("direction_mode")
+    if mode in SUPPORTED_DIRECTION_MODES:
+        controls.pop("interface_angle", None)
+        controls.pop("direction_mode", None)
+        return forward.transport_with_direction_mode(str(mode), **controls)
+
+    if mode is None:
+        controls["interface_angle"] = float(direction["interface_angle"])
+        controls.pop("direction_mode", None)
+        return forward.TransportControls(**controls)
+
+    raise ValueError(f"Unsupported direction_mode {mode!r}.")
+
+
+def _generate_result_from_sample(forward: Any, sample: SmokeSampleSpec):
+    request = _request_from_sample(sample)
+    spread = (sample.direction or {}).get("directional_spread")
+    if spread:
+        directional_spread = forward.DirectionalSpread(
+            direction_mode=str(spread.get("direction_mode") or sample.direction["direction_mode"]),
+            half_width=float(spread["half_width"]),
+            num_samples=int(spread["num_samples"]),
+        )
+        return forward.generate_spread_spectrum_from_fit_layer(request, directional_spread)
+    return forward.generate_spectrum_from_fit_layer(request)
 
 
 def build_task2_smoke_dataset(
@@ -57,8 +102,7 @@ def build_task2_smoke_dataset(
 
     rows: list[dict[str, object]] = []
     for sample in deterministic_smoke_samples():
-        request = _request_from_sample(sample)
-        result = forward.generate_spectrum_from_fit_layer(request)
+        result = _generate_result_from_sample(forward, sample)
         payload = result.to_dict()
 
         spectrum_path = spectra_dir / f"{sample.row_id}.json"
@@ -107,6 +151,21 @@ def build_task2_smoke_dataset(
     return manifest_path, run_metadata_output_path
 
 
+def task8_directional_dataset_config() -> dict[str, Any]:
+    """Return the canonical Task 8 directional smoke dataset config."""
+
+    return {
+        "dataset_id": "task8_directional_smoke_v1",
+        "description": "Direction-aware smoke dataset covering supported named modes and narrow spread.",
+        "output_dir": DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR.as_posix(),
+        "run_metadata_path": DEFAULT_TASK8_DIRECTIONAL_RUN_METADATA_PATH.as_posix(),
+        "sampling_policy_id": DIRECTIONAL_SMOKE_SAMPLING_POLICY_ID,
+        "allow_diagnostic_raw_angles": False,
+        "sampling_policy": directional_smoke_sampling_policy(),
+        "samples": [sample.to_dict() for sample in deterministic_directional_smoke_samples()],
+    }
+
+
 def load_dataset_config(path: Path | str) -> dict[str, Any]:
     """Load a dataset generation config from JSON."""
 
@@ -124,18 +183,25 @@ def load_dataset_config(path: Path | str) -> dict[str, Any]:
     return config
 
 
-def sample_from_config(sample: dict[str, Any]) -> SmokeSampleSpec:
+def sample_from_config(
+    sample: dict[str, Any],
+    *,
+    allow_diagnostic_raw_angles: bool = False,
+) -> SmokeSampleSpec:
     """Convert a config sample mapping into the local sample spec."""
 
     required = ("row_id", "split", "pairing_controls", "transport_controls")
     missing = [key for key in required if key not in sample]
     if missing:
         raise ValueError(f"Dataset sample config is missing key(s): {', '.join(missing)}.")
+    direction = dict(sample["direction"]) if "direction" in sample and sample["direction"] is not None else None
+    validate_direction_config(direction, allow_diagnostic_raw_angles=allow_diagnostic_raw_angles)
     return SmokeSampleSpec(
         row_id=str(sample["row_id"]),
         split=str(sample["split"]),
         pairing_controls={str(key): float(value) for key, value in dict(sample["pairing_controls"]).items()},
         transport_controls=dict(sample["transport_controls"]),
+        direction=direction,
         bias_grid=dict(sample.get("bias_grid", {})) or {
             "bias_min_mev": -20.0,
             "bias_max_mev": 20.0,
@@ -217,7 +283,7 @@ def build_dataset_from_config(
     config_path: Path | str,
     *,
     output_dir: Path | str | None = None,
-    run_metadata_path: Path | str = DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH,
+    run_metadata_path: Path | str | None = None,
     force: bool = False,
 ) -> tuple[Path, Path]:
     """Generate a dataset from a config, resuming completed rows when possible."""
@@ -229,6 +295,7 @@ def build_dataset_from_config(
     description = str(config.get("description", "Forward-generated dataset."))
     sampling_policy_id = str(config["sampling_policy_id"])
     sampling_policy = dict(config.get("sampling_policy", {"sampling_policy_id": sampling_policy_id}))
+    allow_diagnostic_raw_angles = bool(config.get("allow_diagnostic_raw_angles", False))
     output_path = Path(output_dir or config.get("output_dir") or DEFAULT_TASK3_SMOKE_DATASET_DIR)
     spectra_dir = output_path / "forward_outputs"
     manifest_path = output_path / "dataset.json"
@@ -236,7 +303,10 @@ def build_dataset_from_config(
     output_path.mkdir(parents=True, exist_ok=True)
     spectra_dir.mkdir(parents=True, exist_ok=True)
 
-    samples = [sample_from_config(sample) for sample in config["samples"]]
+    samples = [
+        sample_from_config(sample, allow_diagnostic_raw_angles=allow_diagnostic_raw_angles)
+        for sample in config["samples"]
+    ]
     reusable_rows = {} if force else _load_reusable_rows(manifest_path, output_path)
 
     rows: list[dict[str, object]] = []
@@ -278,8 +348,7 @@ def build_dataset_from_config(
             )
             continue
 
-        request = _request_from_sample(sample)
-        result = forward.generate_spectrum_from_fit_layer(request)
+        result = _generate_result_from_sample(forward, sample)
         payload = result.to_dict()
         spectrum_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -290,9 +359,15 @@ def build_dataset_from_config(
             forward_request=payload["request"],
             forward_output_ref_payload=forward_output_ref(spectrum_path, base_dir=output_path),
             forward_metadata=payload["metadata"],
+            direction=(
+                direction_block_from_forward_payload(payload, configured_direction=sample.direction)
+                if sample.direction is not None
+                else None
+            ),
             controls={
                 "fit_layer_pairing_controls": dict(sample.pairing_controls),
                 "transport_controls": dict(sample.transport_controls),
+                "direction": dict(sample.direction) if sample.direction is not None else None,
                 "bias_grid": dict(sample.bias_grid),
             },
         )
@@ -320,7 +395,7 @@ def build_dataset_from_config(
     validate_resumable_manifest(manifest)
     validate_dataset_manifest(manifest)
 
-    run_metadata_output_path = Path(run_metadata_path)
+    run_metadata_output_path = Path(run_metadata_path or config.get("run_metadata_path") or DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH)
     run_metadata_output_path.parent.mkdir(parents=True, exist_ok=True)
     run_metadata = {
         "run_kind": "task3_dataset_generation_orchestration",
@@ -332,6 +407,7 @@ def build_dataset_from_config(
         "generated_rows": generated_count,
         "reused_rows": reused_count,
         "force": bool(force),
+        "allow_diagnostic_raw_angles": allow_diagnostic_raw_angles,
         "forward_metadata_family": rows[0]["forward_metadata"],
     }
     run_metadata_output_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")

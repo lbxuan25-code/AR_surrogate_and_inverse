@@ -6,9 +6,11 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
+from ar_inverse.direction import DIRECTION_SCHEMA_VERSION, direction_regime_from_block
 from ar_inverse.metadata import assert_forward_metadata_complete, missing_forward_metadata_keys
 
 DATASET_ROW_SCHEMA_VERSION = "ar_inverse_dataset_row_v1"
+DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION = "ar_inverse_dataset_row_v2"
 DATASET_MANIFEST_SCHEMA_VERSION = "ar_inverse_dataset_manifest_v1"
 RESUMABLE_MANIFEST_SCHEMA_VERSION = "ar_inverse_resumable_manifest_v1"
 
@@ -73,12 +75,15 @@ def make_dataset_row(
     forward_request: dict[str, object],
     forward_output_ref_payload: dict[str, str],
     forward_metadata: dict[str, object],
+    direction: dict[str, object] | None = None,
     controls: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Create and validate a canonical dataset row."""
 
     row: dict[str, object] = {
-        "dataset_row_schema_version": DATASET_ROW_SCHEMA_VERSION,
+        "dataset_row_schema_version": (
+            DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION if direction is not None else DATASET_ROW_SCHEMA_VERSION
+        ),
         "row_id": row_id,
         "sampling_policy_id": sampling_policy_id,
         "split": split,
@@ -86,6 +91,8 @@ def make_dataset_row(
         "forward_output_ref": forward_output_ref_payload,
         "forward_metadata": forward_metadata,
     }
+    if direction is not None:
+        row["direction"] = direction
     if controls is not None:
         row["controls"] = controls
     validate_dataset_row(row)
@@ -99,8 +106,15 @@ def validate_dataset_row(row: dict[str, Any]) -> None:
     if missing:
         raise ValueError(f"Dataset row is missing required key(s): {', '.join(missing)}.")
 
-    if row["dataset_row_schema_version"] != DATASET_ROW_SCHEMA_VERSION:
+    if row["dataset_row_schema_version"] not in (
+        DATASET_ROW_SCHEMA_VERSION,
+        DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION,
+    ):
         raise ValueError(f"Unsupported dataset row schema version: {row['dataset_row_schema_version']!r}.")
+    if row["dataset_row_schema_version"] == DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION:
+        if "direction" not in row:
+            raise ValueError("Direction-aware dataset row is missing required key: direction.")
+        validate_direction_block(row["direction"])
 
     if row["split"] not in SPLIT_LABELS:
         raise ValueError(f"Unsupported split label: {row['split']!r}. Expected one of {SPLIT_LABELS}.")
@@ -119,6 +133,32 @@ def validate_dataset_row(row: dict[str, Any]) -> None:
     if not isinstance(metadata, dict):
         raise ValueError("Dataset row forward_metadata must be a mapping.")
     assert_forward_metadata_complete(metadata)
+
+
+def validate_direction_block(direction: Any) -> None:
+    """Validate the local direction block copied into direction-aware rows."""
+
+    if not isinstance(direction, dict):
+        raise ValueError("Dataset row direction must be a mapping.")
+    required = (
+        "direction_schema_version",
+        "direction_mode",
+        "interface_angle",
+        "direction_support_tier",
+        "direction_regime",
+        "directional_spread",
+        "forward_direction_provenance",
+    )
+    missing = [key for key in required if key not in direction]
+    if missing:
+        raise ValueError(f"Dataset row direction is missing key(s): {', '.join(missing)}.")
+    if direction["direction_schema_version"] != DIRECTION_SCHEMA_VERSION:
+        raise ValueError("Unsupported direction schema version.")
+    expected_regime = direction_regime_from_block(direction)
+    if direction["direction_regime"] != expected_regime:
+        raise ValueError(
+            f"Dataset row direction_regime {direction['direction_regime']!r} does not match {expected_regime!r}."
+        )
 
 
 def validate_dataset_manifest(manifest: dict[str, Any]) -> None:

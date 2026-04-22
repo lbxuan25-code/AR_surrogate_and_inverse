@@ -134,6 +134,40 @@ or set `LNO327_FORWARD_SRC` / `LNO327_FORWARD_REPO`. See
 [docs/forward_dependency_setup.md](docs/forward_dependency_setup.md) for the
 full setup note.
 
+## Direction Contract
+
+This repository follows the external forward package's directional capability
+contract. Supported truth-grade named modes are `inplane_100` and
+`inplane_110`. `c_axis` is unsupported and is rejected as a training or inverse
+target.
+
+Generic raw `interface_angle` values are caution-only / diagnostic-only. They
+are not included in the primary training pool unless a dataset config
+explicitly opts in and keeps them separated. Directional spread is supported
+only as narrow named-mode-centered spread with `half_width <= pi/32`.
+
+See [docs/direction_contract.md](docs/direction_contract.md) for the local
+schema and reporting interpretation.
+
+## Task 8 Direction-Aware Smoke Dataset
+
+Generate the direction-aware smoke manifest with:
+
+```bash
+python scripts/datasets/build_dataset.py --config configs/datasets/task8_directional_smoke_dataset.json
+```
+
+This writes:
+
+- `outputs/datasets/task8_directional_smoke/dataset.json`
+- `outputs/runs/task8_directional_dataset_run_metadata.json`
+
+The smoke config exercises `inplane_100` without spread, `inplane_110` without
+spread, and one narrow-spread `inplane_110` case. Surrogate training and
+evaluation configs now ingest this manifest and use explicit direction
+features: named-mode identity, spread controls, and raw angle only as auxiliary
+metadata.
+
 ## Task 1 Smoke Path
 
 The current bootstrap smoke path:

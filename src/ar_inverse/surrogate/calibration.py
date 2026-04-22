@@ -6,6 +6,8 @@ from typing import Any
 
 import numpy as np
 
+from ar_inverse.direction import direction_regime_from_block
+
 
 def transport_regime_label(transport_controls: dict[str, Any]) -> str:
     """Return a coarse transport-regime label for error grouping."""
@@ -18,6 +20,13 @@ def transport_regime_label(transport_controls: dict[str, Any]) -> str:
     gamma_bin = "low_gamma" if gamma <= 1.0 else "high_gamma"
     temp_bin = "low_temp" if temperature <= 3.0 else "high_temp"
     return f"{barrier_bin}|{gamma_bin}|{temp_bin}"
+
+
+def direction_regime_label(row: dict[str, Any]) -> str:
+    """Return the direction-contract bucket for evaluation grouping."""
+
+    direction = row.get("direction")
+    return direction_regime_from_block(direction if isinstance(direction, dict) else None)
 
 
 def calibration_diagnostics(
@@ -47,6 +56,7 @@ def calibration_diagnostics(
 def fallback_policy(
     transport_regime_report: dict[str, dict[str, Any]],
     thresholds: dict[str, float],
+    direction_regime_report: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Build a direct-forward fallback policy from transport-regime errors."""
 
@@ -55,6 +65,13 @@ def fallback_policy(
     )
     safe_regimes = sorted(
         regime for regime, report in transport_regime_report.items() if report["safe_for_inverse_acceleration"]
+    )
+    direction_regime_report = direction_regime_report or {}
+    unsafe_direction_regimes = sorted(
+        regime for regime, report in direction_regime_report.items() if not report["safe_for_inverse_acceleration"]
+    )
+    safe_direction_regimes = sorted(
+        regime for regime, report in direction_regime_report.items() if report["safe_for_inverse_acceleration"]
     )
     if unsafe_regimes:
         summary = (
@@ -74,6 +91,8 @@ def fallback_policy(
         },
         "safe_transport_regimes": safe_regimes,
         "unsafe_transport_regimes": unsafe_regimes,
+        "safe_direction_regimes": safe_direction_regimes,
+        "unsafe_direction_regimes": unsafe_direction_regimes,
         "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
         "summary": summary,
     }

@@ -17,8 +17,6 @@ if local_src_text not in sys.path:
 
 from ar_inverse.datasets.build import (
     DEFAULT_TASK3_SMOKE_CONFIG_PATH,
-    DEFAULT_TASK3_SMOKE_DATASET_DIR,
-    DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH,
     build_dataset_from_config,
 )
 from ar_inverse.forward_dependency import ForwardDependencyError
@@ -35,14 +33,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=DEFAULT_TASK3_SMOKE_DATASET_DIR,
-        help="Directory for the dataset manifest and forward-output payloads.",
+        default=None,
+        help="Directory for the dataset manifest and forward-output payloads; defaults to the config output_dir.",
     )
     parser.add_argument(
         "--run-metadata",
         type=Path,
-        default=DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH,
-        help="Path for local run metadata.",
+        default=None,
+        help="Path for local run metadata; defaults to the generator's configured smoke path.",
     )
     parser.add_argument(
         "--force",
@@ -58,7 +56,7 @@ def main() -> None:
         manifest_path, run_metadata_path = build_dataset_from_config(
             args.config,
             output_dir=args.output_dir,
-            run_metadata_path=args.run_metadata,
+            **({"run_metadata_path": args.run_metadata} if args.run_metadata is not None else {}),
             force=args.force,
         )
     except ForwardDependencyError as exc:

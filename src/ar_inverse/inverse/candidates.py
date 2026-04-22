@@ -43,6 +43,8 @@ def make_candidate_family(
     objective: dict[str, float | str],
     forward_recheck: dict[str, Any],
     surrogate_usage: dict[str, Any],
+    direction: dict[str, Any] | None = None,
+    direction_prior: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Create and validate a candidate-family output."""
 
@@ -67,6 +69,10 @@ def make_candidate_family(
         "surrogate_usage": surrogate_usage,
         "forward_recheck": forward_recheck,
     }
+    if direction is not None:
+        family["direction"] = direction
+    if direction_prior is not None:
+        family["direction_prior"] = direction_prior
     validate_candidate_family(family)
     return family
 

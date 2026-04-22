@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from ar_inverse.surrogate.calibration import transport_regime_label
+from ar_inverse.surrogate.calibration import direction_regime_label, transport_regime_label
 from ar_inverse.surrogate.evaluate import DEFAULT_TASK5_CONFIG_PATH, evaluate_surrogate_from_config
 
 
@@ -32,6 +32,8 @@ def test_evaluate_surrogate_from_config_writes_unsafe_regime_report(tmp_path) ->
     assert report["evaluation_scope"]["num_held_out_rows"] == 2
     assert report["calibration_diagnostics"]["unsafe_fraction"] == 1.0
     assert report["fallback_policy"]["unsafe_transport_regimes"]
+    assert report["fallback_policy"]["unsafe_direction_regimes"]
+    assert set(report["direction_regime_report"]) == {"inplane_110_no_spread", "named_mode_narrow_spread"}
     assert "direct_forward_required" in report["fallback_policy"]["default_action"]
     assert all(not row["safe_for_inverse_acceleration"] for row in report["row_errors"])
 
@@ -51,8 +53,10 @@ def test_repository_task5_report_identifies_unsafe_inverse_regimes() -> None:
     unsafe_regimes = report["fallback_policy"]["unsafe_transport_regimes"]
     assert len(unsafe_regimes) >= 1
     assert unsafe_regimes == run_metadata["unsafe_transport_regimes"]
+    assert report["fallback_policy"]["unsafe_direction_regimes"] == run_metadata["unsafe_direction_regimes"]
     assert report["forward_metadata_family"]["forward_interface_version"]
     assert "unsafe transport regimes" in markdown_path.read_text(encoding="utf-8")
+    assert "Direction Regimes" in markdown_path.read_text(encoding="utf-8")
 
 
 def test_evaluate_surrogate_cli_writes_report(tmp_path) -> None:
@@ -83,4 +87,16 @@ def test_transport_regime_label_is_stable() -> None:
     assert (
         transport_regime_label({"barrier_z": 0.8, "gamma": 0.95, "temperature_kelvin": 2.5})
         == "high_barrier|low_gamma|low_temp"
+    )
+
+
+def test_direction_regime_label_is_stable() -> None:
+    assert direction_regime_label({"direction": {"direction_mode": "inplane_100", "directional_spread": None}}) == (
+        "inplane_100_no_spread"
+    )
+    assert (
+        direction_regime_label(
+            {"direction": {"direction_mode": "inplane_110", "directional_spread": {"half_width": 0.01}}}
+        )
+        == "named_mode_narrow_spread"
     )

@@ -22,6 +22,19 @@ a smoke-scale training check and not a calibrated inverse-search surrogate.
 - sampling policy id;
 - split counts;
 - forward-output references used for training and held-out evaluation.
+- direction-regime counts and supported direction modes.
+
+## Direction Support
+
+State whether the checkpoint supports:
+
+- `inplane_100`, no spread;
+- `inplane_110`, no spread;
+- narrow named-mode-centered spread;
+- diagnostic raw angles, if explicitly included.
+
+Also state that `c_axis` is unsupported and that raw angles are auxiliary
+metadata, not the sole direction feature.
 
 ## Forward Metadata Family
 

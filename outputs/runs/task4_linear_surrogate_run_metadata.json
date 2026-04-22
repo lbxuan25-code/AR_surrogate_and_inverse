@@ -1,8 +1,21 @@
 {
   "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
   "config": "configs/surrogate/task4_linear_surrogate.json",
-  "dataset_id": "task3_orchestration_smoke_v1",
-  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "dataset_id": "task8_directional_smoke_v1",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+  "direction_support": {
+    "diagnostic_raw_angle_rows": 0,
+    "direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "direction_regime_counts": {
+      "inplane_100_no_spread": 1,
+      "inplane_110_no_spread": 1,
+      "named_mode_narrow_spread": 1
+    },
+    "legacy_angle_only_rows": 0
+  },
   "forward_metadata_family": {
     "allow_weak_delta_zx_s": false,
     "fit_layer_policy": {
@@ -22,12 +35,12 @@
         "delta_zx_s"
       ]
     },
-    "fit_layer_request_label": "task3_smoke_train_000",
+    "fit_layer_request_label": "task8_direction_train_inplane_100",
     "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
     "formal_baseline_role": "authoritative_formal_round2_baseline",
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
-    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
     "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",

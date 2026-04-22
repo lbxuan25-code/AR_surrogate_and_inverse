@@ -10,6 +10,7 @@ they do not store or copy forward physics implementation details.
 ## Versions
 
 - Row schema: `ar_inverse_dataset_row_v1`
+- Direction-aware row schema: `ar_inverse_dataset_row_v2`
 - Manifest schema: `ar_inverse_dataset_manifest_v1`
 
 ## Dataset Row
@@ -29,6 +30,31 @@ Optional but recommended:
 
 - `controls`: local training-facing controls split into
   `fit_layer_pairing_controls`, `transport_controls`, and `bias_grid`.
+
+Direction-aware rows use `ar_inverse_dataset_row_v2` and must also include:
+
+- `direction`: a dedicated direction block copied from the forward request and
+  forward-emitted transport metadata.
+
+The direction block includes:
+
+- `direction_schema_version`: currently `ar_inverse_direction_v1`.
+- `direction_mode`: supported named mode when present.
+- `interface_angle`: forward-emitted angle, stored as auxiliary metadata.
+- `direction_support_tier`: forward-emitted support tier.
+- `direction_crystal_label`: forward-emitted crystal label when available.
+- `direction_dimensionality`: forward-emitted dimensionality when available.
+- `directional_spread`: spread metadata when a narrow named-mode spread request
+  was used; otherwise `null`.
+- `direction_regime`: local evaluation bucket such as
+  `inplane_100_no_spread`, `inplane_110_no_spread`, or
+  `named_mode_narrow_spread`.
+- `forward_direction_provenance`: request and transport-summary fields needed
+  to reproduce the direction semantics.
+
+Old `ar_inverse_dataset_row_v1` smoke manifests remain loadable when possible,
+but new generation configs must write `ar_inverse_dataset_row_v2` rows with a
+direction block.
 
 ## Forward Output Reference
 
@@ -59,6 +85,10 @@ The required keys are:
 
 Datasets whose rows carry different forward metadata versions must be treated
 as distinct dataset families.
+
+Direction-aware datasets whose rows carry different direction contracts,
+direction modes, or spread semantics must also be treated as distinct dataset
+families.
 
 ## Manifest
 

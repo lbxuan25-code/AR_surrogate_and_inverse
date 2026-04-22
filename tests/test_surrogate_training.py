@@ -36,7 +36,10 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
 
     metrics = _load_json(metrics_path)
     assert metrics["model_type"] == "ridge_linear_spectrum_surrogate"
-    assert metrics["dataset_id"] == "task3_orchestration_smoke_v1"
+    assert metrics["dataset_id"] == "task8_directional_smoke_v1"
+    assert metrics["direction_support"]["direction_regime_counts"]["named_mode_narrow_spread"] == 1
+    assert "direction_raw_interface_angle" in metrics["feature_spec"]["names"]
+    assert "interface_angle" not in metrics["feature_spec"]["names"]
     assert metrics["held_out_splits"] == ["validation", "test"]
     assert set(metrics["splits"]) == {"train", "validation", "test"}
     assert metrics["splits"]["validation"]["num_rows"] == 1
@@ -44,11 +47,12 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
 
     model_card = model_card_path.read_text(encoding="utf-8")
     assert "Forward Metadata Family" in model_card
-    assert "task3_orchestration_smoke_v1" in model_card
+    assert "task8_directional_smoke_v1" in model_card
+    assert "Direction Support" in model_card
 
 
 def test_saved_surrogate_checkpoint_predicts_full_spectrum() -> None:
-    dataset = load_dataset_arrays("outputs/datasets/task3_orchestration_smoke/dataset.json")
+    dataset = load_dataset_arrays("outputs/datasets/task8_directional_smoke/dataset.json")
     model = RidgeLinearSpectrumSurrogate.load(DEFAULT_TASK4_CHECKPOINT_DIR / "model.npz")
 
     prediction = model.predict(dataset["features"])
@@ -73,7 +77,8 @@ def test_repository_task4_artifacts_record_dataset_and_held_out_metrics() -> Non
     metrics = _load_json(metrics_path)
     run_metadata = _load_json(run_metadata_path)
 
-    assert metrics["dataset_manifest"] == "outputs/datasets/task3_orchestration_smoke/dataset.json"
+    assert metrics["dataset_manifest"] == "outputs/datasets/task8_directional_smoke/dataset.json"
+    assert metrics["direction_support"]["direction_modes"] == ["inplane_100", "inplane_110"]
     assert metrics["held_out_splits"] == ["validation", "test"]
     assert "validation" in metrics["splits"]
     assert "test" in metrics["splits"]

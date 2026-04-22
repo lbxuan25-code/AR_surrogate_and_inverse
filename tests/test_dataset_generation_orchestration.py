@@ -5,9 +5,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from ar_inverse.datasets.build import (
     DEFAULT_TASK3_SMOKE_CONFIG_PATH,
     DEFAULT_TASK3_SMOKE_DATASET_DIR,
+    DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH,
+    DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR,
     build_dataset_from_config,
 )
 from ar_inverse.datasets.schema import file_sha256, validate_dataset_manifest, validate_resumable_manifest
@@ -75,6 +79,52 @@ def test_repository_task3_smoke_dataset_has_complete_metadata_and_hashes() -> No
         payload = _load_json(output_path)
         assert payload["request"] == row["forward_request"]
         assert payload["metadata"] == row["forward_metadata"]
+
+
+def test_task8_directional_smoke_dataset_has_direction_blocks() -> None:
+    manifest_path = DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR / "dataset.json"
+    assert manifest_path.exists()
+
+    manifest = _load_json(manifest_path)
+    validate_resumable_manifest(manifest)
+    validate_dataset_manifest(manifest)
+
+    regimes = {row["direction"]["direction_regime"] for row in manifest["rows"]}
+    assert regimes == {
+        "inplane_100_no_spread",
+        "inplane_110_no_spread",
+        "named_mode_narrow_spread",
+    }
+    assert all(row["dataset_row_schema_version"] == "ar_inverse_dataset_row_v2" for row in manifest["rows"])
+    for row in manifest["rows"]:
+        assert row["direction"]["forward_direction_provenance"]["request_transport"]
+        if row["direction"]["direction_regime"] == "named_mode_narrow_spread":
+            assert row["direction"]["directional_spread"]["half_width"] > 0
+            assert row["direction"]["directional_spread"]["num_samples"] == 3
+
+
+def test_directional_dataset_config_rejects_unsupported_modes(tmp_path) -> None:
+    config = _load_json(DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH)
+    config["output_dir"] = str(tmp_path / "bad_dataset")
+    config["run_metadata_path"] = str(tmp_path / "bad_run_metadata.json")
+    config["samples"][0]["direction"] = {"direction_mode": "c_axis"}
+    config_path = tmp_path / "unsupported_direction.json"
+    config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Unsupported direction_mode"):
+        build_dataset_from_config(config_path, force=True)
+
+
+def test_directional_dataset_config_rejects_too_wide_spread(tmp_path) -> None:
+    config = _load_json(DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH)
+    config["output_dir"] = str(tmp_path / "bad_spread_dataset")
+    config["run_metadata_path"] = str(tmp_path / "bad_spread_run_metadata.json")
+    config["samples"][2]["direction"]["directional_spread"]["half_width"] = 0.2
+    config_path = tmp_path / "wide_spread.json"
+    config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="pi/32"):
+        build_dataset_from_config(config_path, force=True)
 
 
 def test_dataset_generation_cli_writes_manifest(tmp_path) -> None:

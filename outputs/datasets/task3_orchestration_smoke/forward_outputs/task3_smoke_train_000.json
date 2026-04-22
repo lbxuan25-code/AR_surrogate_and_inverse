@@ -152,7 +152,7 @@
     "formal_baseline_role": "authoritative_formal_round2_baseline",
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
-    "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
     "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",
@@ -273,6 +273,7 @@
     "schema_version": "ar_forward_input_v1",
     "transport": {
       "barrier_z": 0.5,
+      "direction_mode": null,
       "gamma": 1.0,
       "interface_angle": 0.0,
       "nk": 11,
@@ -284,6 +285,11 @@
   "transport_summary": {
     "approximation": "2D specular-reflection, band-projected, multichannel phase-sensitive BTK/generalized-KT style solver; still not a full exact coupled multiband interface-scattering theory.",
     "barrier_z": 0.5,
+    "direction_crystal_label": null,
+    "direction_dimensionality": "2D in-plane raw angle",
+    "direction_is_named_mode": false,
+    "direction_mode": null,
+    "direction_support_tier": "raw_2d_inplane_angle",
     "gamma": 1.0,
     "interface_angle": 0.0,
     "mean_mismatch_penalty": 1.0,

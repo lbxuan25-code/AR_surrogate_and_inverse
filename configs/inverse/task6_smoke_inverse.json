@@ -1,10 +1,18 @@
 {
-  "target_dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
-  "target_row_id": "task3_smoke_train_000",
+  "target_dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+  "target_row_id": "task8_direction_train_inplane_100",
   "fallback_policy_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
   "output_dir": "outputs/inverse/task6_smoke_inverse",
   "run_metadata_path": "outputs/runs/task6_smoke_inverse_run_metadata.json",
   "top_k": 2,
+  "direction_prior": {
+    "kind": "direction_biased",
+    "allowed_direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls."
+  },
   "candidate_specs": [
     {
       "candidate_family_id": "compatible_train_like_000",
@@ -13,18 +21,19 @@
         "delta_perp_x": -0.08
       },
       "transport_controls": {
-        "interface_angle": 0.0,
         "barrier_z": 0.5,
         "gamma": 1.0,
         "temperature_kelvin": 3.0,
         "nk": 11
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
       },
       "pairing_half_width": {
         "delta_zz_s": 0.04,
         "delta_perp_x": 0.04
       },
       "transport_half_width": {
-        "interface_angle": 0.02,
         "barrier_z": 0.03,
         "gamma": 0.05,
         "temperature_kelvin": 0.25,
@@ -38,18 +47,19 @@
         "delta_perp_x": -0.06
       },
       "transport_controls": {
-        "interface_angle": 0.02,
         "barrier_z": 0.55,
         "gamma": 1.0,
         "temperature_kelvin": 3.0,
         "nk": 11
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
       },
       "pairing_half_width": {
         "delta_zz_s": 0.05,
         "delta_perp_x": 0.05
       },
       "transport_half_width": {
-        "interface_angle": 0.03,
         "barrier_z": 0.05,
         "gamma": 0.05,
         "temperature_kelvin": 0.25,
@@ -63,18 +73,19 @@
         "delta_zx_d": 0.1
       },
       "transport_controls": {
-        "interface_angle": 0.12,
         "barrier_z": 0.65,
         "gamma": 1.1,
         "temperature_kelvin": 3.5,
         "nk": 11
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
       },
       "pairing_half_width": {
         "delta_xx_s": 0.05,
         "delta_zx_d": 0.05
       },
       "transport_half_width": {
-        "interface_angle": 0.03,
         "barrier_z": 0.05,
         "gamma": 0.05,
         "temperature_kelvin": 0.25,

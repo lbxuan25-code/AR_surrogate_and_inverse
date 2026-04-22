@@ -10,15 +10,24 @@ This is a smoke-scale model, not a calibrated inverse-search surrogate.
 - Type: ridge-linear spectrum surrogate
 - Ridge alpha: `1e-06`
 - Checkpoint: `outputs/checkpoints/task4_linear_surrogate/model.npz`
-- Feature order: `delta_zz_s, delta_xx_s, delta_zx_d, delta_perp_z, delta_perp_x, delta_zz_d, delta_xx_d, delta_zx_s, interface_angle, barrier_z, gamma, temperature_kelvin, nk`
+- Feature order: `delta_zz_s, delta_xx_s, delta_zx_d, delta_perp_z, delta_perp_x, delta_zz_d, delta_xx_d, delta_zx_s, direction_inplane_100, direction_inplane_110, direction_named_mode, direction_diagnostic_raw_angle, direction_has_spread, direction_spread_half_width, direction_spread_num_samples, direction_raw_interface_angle, barrier_z, gamma, temperature_kelvin, nk`
 
 ## Dataset
 
-- Dataset id: `task3_orchestration_smoke_v1`
-- Manifest: `outputs/datasets/task3_orchestration_smoke/dataset.json`
-- Sampling policy id: `fit_layer_transport_smoke_v1`
+- Dataset id: `task8_directional_smoke_v1`
+- Manifest: `outputs/datasets/task8_directional_smoke/dataset.json`
+- Sampling policy id: `directional_fit_layer_transport_smoke_v1`
 - Rows: `3`
 - Splits: `test, train, validation`
+- Direction regimes: `{'inplane_100_no_spread': 1, 'inplane_110_no_spread': 1, 'named_mode_narrow_spread': 1}`
+
+## Direction Support
+
+- Supported named modes: `inplane_100`, `inplane_110`.
+- `c_axis` is unsupported and is not a valid inverse target.
+- Generic raw angles are diagnostic-only and are not primary truth-grade training data.
+- Directional spread is represented only as narrow named-mode-centered spread.
+- Dataset direction support summary: `{'direction_regime_counts': {'inplane_100_no_spread': 1, 'inplane_110_no_spread': 1, 'named_mode_narrow_spread': 1}, 'direction_modes': ['inplane_100', 'inplane_110'], 'legacy_angle_only_rows': 0, 'diagnostic_raw_angle_rows': 0}`
 
 ## Forward Metadata Family
 
@@ -27,7 +36,7 @@ This is a smoke-scale model, not a calibrated inverse-search surrogate.
 - pairing_convention_id: `round2_physical_channels_task_h_fit_layer_v1`
 - formal_baseline_record: `outputs/source/round2_baseline_selection.json`
 - formal_baseline_selection_rule: `temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature`
-- git_commit: `4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3`
+- git_commit: `b85a5cb304acbfd5d51133251ef57293bd0abd2b`
 - git_dirty: `False`
 
 ## Metrics
@@ -42,16 +51,16 @@ This is a smoke-scale model, not a calibrated inverse-search surrogate.
 ### validation
 
 - Rows: `1`
-- MAE: `0.085753342`
-- RMSE: `0.098413207`
-- Max absolute error: `0.14850668`
+- MAE: `0.076728554`
+- RMSE: `0.094277379`
+- Max absolute error: `0.13597491`
 
 ### test
 
 - Rows: `1`
-- MAE: `0.16279561`
-- RMSE: `0.19309576`
-- Max absolute error: `0.30883826`
+- MAE: `0.16258977`
+- RMSE: `0.2001587`
+- Max absolute error: `0.29266713`
 
 ## Limitations
 

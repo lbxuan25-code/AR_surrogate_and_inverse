@@ -3,6 +3,15 @@
   "candidate_family_count": 2,
   "claim_policy": "candidate_families_not_unique_microscopic_truth",
   "config": "configs/experiments/task7_synthetic_experiment.json",
+  "direction_prior": {
+    "allowed_direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "description": "Synthetic smoke experiment is biased toward supported in-plane directions but is not treated as uniquely direction-resolved.",
+    "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+    "kind": "direction_biased"
+  },
   "experiment_id": "synthetic_task7_forward_perturbation_v1",
   "markdown_report": "outputs/experiments/task7_synthetic_fit/experiment_fit_report.md",
   "report": "outputs/experiments/task7_synthetic_fit/experiment_fit_report.json",

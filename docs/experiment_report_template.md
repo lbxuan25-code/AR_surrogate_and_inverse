@@ -1,8 +1,8 @@
 # Experiment Report Template
 
 Experiment-fitting reports must keep preprocessing, transport nuisance
-controls, feature-family compatibility, surrogate uncertainty, and final
-direct-forward checks separate.
+controls, directional priors, feature-family compatibility, surrogate
+uncertainty, and final direct-forward checks separate.
 
 Reports should say:
 
@@ -34,6 +34,13 @@ Reports must not claim a unique microscopic RMFT point.
 - uncertainty ranges;
 - statement that these are nuisance controls, not order-parameter feature
   claims.
+
+### Direction Priors And Regimes
+
+- experiment direction prior, using `direction_resolved`, `direction_biased`,
+  or `mixed_or_unknown`;
+- candidate direction regimes used for direct-forward rechecks;
+- explicit separation from pairing controls and transport nuisance controls.
 
 ### Candidate Feature Families
 

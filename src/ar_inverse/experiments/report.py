@@ -8,6 +8,7 @@ from typing import Any
 
 import numpy as np
 
+from ar_inverse.direction import normalize_direction_prior
 from ar_inverse.experiments.ingest import load_experiment_spectrum
 from ar_inverse.experiments.preprocessing import apply_preprocessing, default_preprocessing_config
 from ar_inverse.inverse.objectives import spectrum_objective
@@ -65,6 +66,8 @@ def _fit_candidate_records(
                 "experiment_fit_objective": metrics,
                 "pairing_controls": candidate["pairing_controls"],
                 "transport_nuisance_controls": candidate["transport_nuisance_controls"],
+                "direction": candidate.get("direction"),
+                "direction_prior": candidate.get("direction_prior"),
                 "uncertainty_ranges": candidate["uncertainty_ranges"],
                 "forward_recheck_metadata": candidate["forward_recheck"]["metadata"],
             }
@@ -80,6 +83,9 @@ def build_experiment_fit_report(config_path: Path | str = DEFAULT_TASK7_CONFIG_P
     config_file = Path(config_path)
     config = load_experiment_fit_config(config_file)
     experiment = load_experiment_spectrum(config["experiment_spectrum"])
+    direction_prior = normalize_direction_prior(
+        config.get("direction_prior") or experiment.get("metadata", {}).get("direction_prior")
+    )
     preprocessing_config = dict(config.get("preprocessing", default_preprocessing_config()))
     processed_experiment, preprocessing_metadata = apply_preprocessing(experiment, preprocessing_config)
 
@@ -98,6 +104,7 @@ def build_experiment_fit_report(config_path: Path | str = DEFAULT_TASK7_CONFIG_P
             "experiment_id": experiment["experiment_id"],
             "source": str(config["experiment_spectrum"]),
             "metadata": experiment["metadata"],
+            "direction_prior": direction_prior,
         },
         "preprocessing": preprocessing_metadata,
         "experimental_preprocessing": {
@@ -108,6 +115,17 @@ def build_experiment_fit_report(config_path: Path | str = DEFAULT_TASK7_CONFIG_P
             "description": "Transport controls are nuisance parameters and are reported separately from pairing controls.",
             "candidate_values": {
                 record["candidate_family_id"]: record["transport_nuisance_controls"] for record in candidate_records
+            },
+        },
+        "directional_priors_and_regimes": {
+            "description": "Direction priors and candidate direction regimes are reported separately from pairing controls and transport nuisance controls.",
+            "experiment_direction_prior": direction_prior,
+            "candidate_values": {
+                record["candidate_family_id"]: {
+                    "direction": record.get("direction"),
+                    "direction_prior": record.get("direction_prior"),
+                }
+                for record in candidate_records
             },
         },
         "order_parameter_feature_claims": {
@@ -143,6 +161,7 @@ def build_experiment_fit_report(config_path: Path | str = DEFAULT_TASK7_CONFIG_P
         "candidate_family_count": len(candidate_records),
         "best_candidate_family_id": candidate_records[0]["candidate_family_id"],
         "claim_policy": "candidate_families_not_unique_microscopic_truth",
+        "direction_prior": direction_prior,
     }
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return report_path, markdown_path
@@ -172,6 +191,12 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
             "",
             report["transport_nuisance_controls"]["description"],
             "",
+            "## Direction Priors And Regimes",
+            "",
+            report["directional_priors_and_regimes"]["description"],
+            "",
+            f"- Experiment direction prior: `{report['directional_priors_and_regimes']['experiment_direction_prior']['kind']}`",
+            "",
             "## Candidate Feature Families",
             "",
         ]
@@ -184,6 +209,7 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
                 f"- Fit score: `{record['experiment_fit_objective']['score']:.8g}`",
                 f"- Pairing controls: `{record['pairing_controls']['center']}`",
                 f"- Transport nuisance controls: `{record['transport_nuisance_controls']['center']}`",
+                f"- Direction regime: `{(record.get('direction') or {}).get('direction_regime', 'unspecified')}`",
                 f"- Forward metadata commit: `{record['forward_recheck_metadata']['git_commit']}`",
                 "",
             ]

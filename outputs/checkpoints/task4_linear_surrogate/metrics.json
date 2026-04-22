@@ -43,8 +43,21 @@
     20.0
   ],
   "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
-  "dataset_id": "task3_orchestration_smoke_v1",
-  "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+  "dataset_id": "task8_directional_smoke_v1",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+  "direction_support": {
+    "diagnostic_raw_angle_rows": 0,
+    "direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "direction_regime_counts": {
+      "inplane_100_no_spread": 1,
+      "inplane_110_no_spread": 1,
+      "named_mode_narrow_spread": 1
+    },
+    "legacy_angle_only_rows": 0
+  },
   "feature_spec": {
     "names": [
       "delta_zz_s",
@@ -55,7 +68,14 @@
       "delta_zz_d",
       "delta_xx_d",
       "delta_zx_s",
-      "interface_angle",
+      "direction_inplane_100",
+      "direction_inplane_110",
+      "direction_named_mode",
+      "direction_diagnostic_raw_angle",
+      "direction_has_spread",
+      "direction_spread_half_width",
+      "direction_spread_num_samples",
+      "direction_raw_interface_angle",
       "barrier_z",
       "gamma",
       "temperature_kelvin",
@@ -71,10 +91,10 @@
   "run_kind": "task4_linear_surrogate_training",
   "splits": {
     "test": {
-      "mae": 0.1627956119960935,
-      "max_abs_error": 0.3088382561603701,
+      "mae": 0.16258976994012278,
+      "max_abs_error": 0.29266713002648115,
       "num_rows": 1,
-      "rmse": 0.19309576093618588
+      "rmse": 0.20015870049896514
     },
     "train": {
       "mae": 0.0,
@@ -83,10 +103,10 @@
       "rmse": 0.0
     },
     "validation": {
-      "mae": 0.08575334231212861,
-      "max_abs_error": 0.14850668454370353,
+      "mae": 0.07672855408984616,
+      "max_abs_error": 0.13597491072078993,
       "num_rows": 1,
-      "rmse": 0.09841320710716331
+      "rmse": 0.09427737940162063
     }
   }
 }

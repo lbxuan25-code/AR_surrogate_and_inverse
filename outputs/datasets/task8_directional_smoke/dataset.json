@@ -1,29 +1,29 @@
 {
-  "dataset_id": "task3_orchestration_smoke_v1",
+  "dataset_id": "task8_directional_smoke_v1",
   "dataset_manifest_schema_version": "ar_inverse_dataset_manifest_v1",
-  "description": "Small resumable smoke dataset for Task 3 dataset generation orchestration.",
+  "description": "Direction-aware smoke dataset covering supported named modes and narrow spread.",
   "plan": [
     {
-      "forward_output_path": "forward_outputs/task3_smoke_train_000.json",
+      "forward_output_path": "forward_outputs/task8_direction_train_inplane_100.json",
       "reused_existing_output": false,
-      "row_id": "task3_smoke_train_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_train_inplane_100",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "train",
       "status": "completed"
     },
     {
-      "forward_output_path": "forward_outputs/task3_smoke_validation_000.json",
+      "forward_output_path": "forward_outputs/task8_direction_validation_inplane_110.json",
       "reused_existing_output": false,
-      "row_id": "task3_smoke_validation_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_validation_inplane_110",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "validation",
       "status": "completed"
     },
     {
-      "forward_output_path": "forward_outputs/task3_smoke_test_000.json",
+      "forward_output_path": "forward_outputs/task8_direction_test_inplane_110_spread.json",
       "reused_existing_output": false,
-      "row_id": "task3_smoke_test_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_test_inplane_110_spread",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "test",
       "status": "completed"
     }
@@ -37,7 +37,9 @@
           "bias_min_mev": -20.0,
           "num_bias": 41
         },
-        "direction": null,
+        "direction": {
+          "direction_mode": "inplane_100"
+        },
         "fit_layer_pairing_controls": {
           "delta_perp_x": -0.08,
           "delta_zz_s": 0.18
@@ -45,12 +47,37 @@
         "transport_controls": {
           "barrier_z": 0.5,
           "gamma": 1.0,
-          "interface_angle": 0.0,
           "nk": 11,
           "temperature_kelvin": 3.0
         }
       },
-      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v2",
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
       "forward_metadata": {
         "allow_weak_delta_zx_s": false,
         "fit_layer_policy": {
@@ -70,7 +97,7 @@
             "delta_zx_s"
           ]
         },
-        "fit_layer_request_label": "task3_smoke_train_000",
+        "fit_layer_request_label": "task8_direction_train_inplane_100",
         "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
         "formal_baseline_role": "authoritative_formal_round2_baseline",
         "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
@@ -146,9 +173,9 @@
         }
       },
       "forward_output_ref": {
-        "path": "forward_outputs/task3_smoke_train_000.json",
+        "path": "forward_outputs/task8_direction_train_inplane_100.json",
         "payload_kind": "forward_spectrum",
-        "sha256": "8923d99f2429fd9b1949cd7d16a5a28267286cfeb219f3f56e4f4e454f9941eb",
+        "sha256": "282a0b94450d22e695cae77256267eef5057a466c9ae3bdfaf215bc2d66c3c42",
         "storage": "local_json"
       },
       "forward_request": {
@@ -164,19 +191,19 @@
           "delta_zz_s": 0.18
         },
         "request_kind": "fit_layer",
-        "request_label": "task3_smoke_train_000",
+        "request_label": "task8_direction_train_inplane_100",
         "schema_version": "ar_forward_input_v1",
         "transport": {
           "barrier_z": 0.5,
-          "direction_mode": null,
+          "direction_mode": "inplane_100",
           "gamma": 1.0,
           "interface_angle": 0.0,
           "nk": 11,
           "temperature_kelvin": 3.0
         }
       },
-      "row_id": "task3_smoke_train_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_train_inplane_100",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "train"
     },
     {
@@ -186,7 +213,9 @@
           "bias_min_mev": -20.0,
           "num_bias": 41
         },
-        "direction": null,
+        "direction": {
+          "direction_mode": "inplane_110"
+        },
         "fit_layer_pairing_controls": {
           "delta_xx_s": -0.12,
           "delta_zx_d": 0.1
@@ -194,12 +223,37 @@
         "transport_controls": {
           "barrier_z": 0.65,
           "gamma": 1.1,
-          "interface_angle": 0.12,
           "nk": 11,
           "temperature_kelvin": 3.5
         }
       },
-      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v2",
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "inplane_110_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
       "forward_metadata": {
         "allow_weak_delta_zx_s": false,
         "fit_layer_policy": {
@@ -219,7 +273,7 @@
             "delta_zx_s"
           ]
         },
-        "fit_layer_request_label": "task3_smoke_validation_000",
+        "fit_layer_request_label": "task8_direction_validation_inplane_110",
         "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
         "formal_baseline_role": "authoritative_formal_round2_baseline",
         "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
@@ -295,9 +349,9 @@
         }
       },
       "forward_output_ref": {
-        "path": "forward_outputs/task3_smoke_validation_000.json",
+        "path": "forward_outputs/task8_direction_validation_inplane_110.json",
         "payload_kind": "forward_spectrum",
-        "sha256": "d35f1da3e5d8b8b38eec68df82faf8f3d9038125d86008bdcef6c2df2c7a6847",
+        "sha256": "2878fd3a1d70a293d7cde9c047953bb6c48fe537785aeed676894c22ad527861",
         "storage": "local_json"
       },
       "forward_request": {
@@ -313,19 +367,19 @@
           "delta_zx_d": 0.1
         },
         "request_kind": "fit_layer",
-        "request_label": "task3_smoke_validation_000",
+        "request_label": "task8_direction_validation_inplane_110",
         "schema_version": "ar_forward_input_v1",
         "transport": {
           "barrier_z": 0.65,
-          "direction_mode": null,
+          "direction_mode": "inplane_110",
           "gamma": 1.1,
-          "interface_angle": 0.12,
+          "interface_angle": 0.7853981633974483,
           "nk": 11,
           "temperature_kelvin": 3.5
         }
       },
-      "row_id": "task3_smoke_validation_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_validation_inplane_110",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "validation"
     },
     {
@@ -335,7 +389,14 @@
           "bias_min_mev": -20.0,
           "num_bias": 41
         },
-        "direction": null,
+        "direction": {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "num_samples": 3
+          }
+        },
         "fit_layer_pairing_controls": {
           "delta_perp_x": 0.04,
           "delta_perp_z": 0.08
@@ -343,14 +404,109 @@
         "transport_controls": {
           "barrier_z": 0.8,
           "gamma": 0.95,
-          "interface_angle": -0.08,
           "nk": 11,
           "temperature_kelvin": 2.5
         }
       },
-      "dataset_row_schema_version": "ar_inverse_dataset_row_v1",
+      "dataset_row_schema_version": "ar_inverse_dataset_row_v2",
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 3,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.7853981633974483,
+            "crystal_label": "110",
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 3,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.7853981633974483,
+              "crystal_label": "110",
+              "direction_mode": "inplane_110",
+              "half_width": 0.02454369260617026,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 3,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": 0.760854470791278,
+                "mean_mismatch_penalty": 0.8373864493579123,
+                "num_channels": 28,
+                "num_filtered_channels": 0,
+                "num_input_channels": 28,
+                "num_same_band_channels": 28,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.3333333333333333
+              },
+              {
+                "interface_angle": 0.7853981633974483,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 41,
+                "num_filtered_channels": 0,
+                "num_input_channels": 41,
+                "num_same_band_channels": 41,
+                "relative_angle": 0.0,
+                "weight": 0.3333333333333333
+              },
+              {
+                "interface_angle": 0.8099418560036186,
+                "mean_mismatch_penalty": 0.8372555584747762,
+                "num_channels": 28,
+                "num_filtered_channels": 0,
+                "num_input_channels": 28,
+                "num_same_band_channels": 28,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.3333333333333333
+              }
+            ],
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
       "forward_metadata": {
         "allow_weak_delta_zx_s": false,
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 3,
+          "support_tier": "A"
+        },
         "fit_layer_policy": {
           "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
           "free_channels": [
@@ -368,7 +524,7 @@
             "delta_zx_s"
           ]
         },
-        "fit_layer_request_label": "task3_smoke_test_000",
+        "fit_layer_request_label": "task8_direction_test_inplane_110_spread",
         "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
         "formal_baseline_role": "authoritative_formal_round2_baseline",
         "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
@@ -444,9 +600,9 @@
         }
       },
       "forward_output_ref": {
-        "path": "forward_outputs/task3_smoke_test_000.json",
+        "path": "forward_outputs/task8_direction_test_inplane_110_spread.json",
         "payload_kind": "forward_spectrum",
-        "sha256": "8b16abcc39511aa12ad743c2dc5d2f58a73141d7629ea08bad806504a5611878",
+        "sha256": "f4cc9bb261a56ed3852bdda4724225f7dad0e05649f66d1c351afefef48a6c63",
         "storage": "local_json"
       },
       "forward_request": {
@@ -456,38 +612,71 @@
           "bias_min_mev": -20.0,
           "num_bias": 41
         },
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 3,
+          "support_tier": "A"
+        },
         "pairing_control_mode": "delta_from_baseline_meV",
         "pairing_controls": {
           "delta_perp_x": 0.04,
           "delta_perp_z": 0.08
         },
         "request_kind": "fit_layer",
-        "request_label": "task3_smoke_test_000",
+        "request_label": "task8_direction_test_inplane_110_spread",
         "schema_version": "ar_forward_input_v1",
         "transport": {
           "barrier_z": 0.8,
-          "direction_mode": null,
+          "direction_mode": "inplane_110",
           "gamma": 0.95,
-          "interface_angle": -0.08,
+          "interface_angle": 0.7853981633974483,
           "nk": 11,
           "temperature_kelvin": 2.5
         }
       },
-      "row_id": "task3_smoke_test_000",
-      "sampling_policy_id": "fit_layer_transport_smoke_v1",
+      "row_id": "task8_direction_test_inplane_110_spread",
+      "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
       "split": "test"
     }
   ],
   "sampling_policy": {
-    "description": "Three fixed fit-layer samples for resumable orchestration validation.",
-    "policy_kind": "deterministic_smoke",
-    "sampling_policy_id": "fit_layer_transport_smoke_v1",
+    "description": "Three smoke samples covering supported named modes and narrow spread.",
+    "direction_regimes": {
+      "diagnostic_only_regime": {
+        "generic_raw_angles": "explicit opt-in only; excluded from primary training"
+      },
+      "primary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": null,
+        "generic_raw_angles": "excluded"
+      },
+      "secondary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": "narrow named-mode-centered, half_width <= pi/32"
+      },
+      "unsupported_regime": {
+        "c_axis": "rejected at config validation time"
+      }
+    },
+    "policy_kind": "directional_contract_smoke",
+    "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
     "splits": [
       "train",
       "validation",
       "test"
     ]
   },
-  "sampling_policy_id": "fit_layer_transport_smoke_v1",
-  "source_config": "configs/datasets/task3_smoke_dataset.json"
+  "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
+  "source_config": "configs/datasets/task8_directional_smoke_dataset.json"
 }

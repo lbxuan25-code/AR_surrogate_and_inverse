@@ -8,6 +8,7 @@ from typing import Any
 
 import numpy as np
 
+from ar_inverse.direction import SUPPORTED_DIRECTION_MODES, direction_regime_from_block
 from ar_inverse.datasets.schema import file_sha256, validate_dataset_manifest
 from ar_inverse.metadata import assert_forward_metadata_complete
 from ar_inverse.surrogate.metrics import regression_metrics
@@ -57,15 +58,51 @@ def _feature_from_row(row: dict[str, Any]) -> np.ndarray:
 
     pairing_controls = dict(controls.get("fit_layer_pairing_controls", {}))
     transport_controls = dict(controls.get("transport_controls", {}))
+    direction_features = _direction_feature_values(row, transport_controls)
     values: list[float] = []
     for name in DEFAULT_FEATURE_SPEC.names:
         if name in pairing_controls:
             values.append(float(pairing_controls[name]))
+        elif name in direction_features:
+            values.append(float(direction_features[name]))
         elif name in transport_controls:
             values.append(float(transport_controls[name]))
         else:
             values.append(0.0)
     return np.asarray(values, dtype=np.float64)
+
+
+def _direction_feature_values(row: dict[str, Any], transport_controls: dict[str, Any]) -> dict[str, float]:
+    direction = row.get("direction")
+    if isinstance(direction, dict):
+        spread = direction.get("directional_spread")
+        spread_payload = spread if isinstance(spread, dict) else {}
+        mode = direction.get("direction_mode")
+        interface_angle = direction.get("interface_angle")
+        regime = direction_regime_from_block(direction)
+        return {
+            "direction_inplane_100": 1.0 if mode == "inplane_100" else 0.0,
+            "direction_inplane_110": 1.0 if mode == "inplane_110" else 0.0,
+            "direction_named_mode": 1.0 if mode in SUPPORTED_DIRECTION_MODES else 0.0,
+            "direction_diagnostic_raw_angle": 1.0 if regime == "diagnostic_raw_angle" else 0.0,
+            "direction_has_spread": 1.0 if spread_payload else 0.0,
+            "direction_spread_half_width": float(spread_payload.get("half_width", 0.0)),
+            "direction_spread_num_samples": float(spread_payload.get("num_samples", 0.0)),
+            "direction_raw_interface_angle": 0.0 if interface_angle is None else float(interface_angle),
+        }
+
+    # Legacy angle-only rows remain loadable but are explicitly diagnostic.
+    interface_angle = transport_controls.get("interface_angle", 0.0)
+    return {
+        "direction_inplane_100": 0.0,
+        "direction_inplane_110": 0.0,
+        "direction_named_mode": 0.0,
+        "direction_diagnostic_raw_angle": 1.0,
+        "direction_has_spread": 0.0,
+        "direction_spread_half_width": 0.0,
+        "direction_spread_num_samples": 0.0,
+        "direction_raw_interface_angle": float(interface_angle),
+    }
 
 
 def load_dataset_arrays(manifest_path: Path | str) -> dict[str, Any]:
@@ -140,6 +177,7 @@ def _write_model_card(
     manifest = dataset["manifest"]
     first_row = manifest["rows"][0]
     forward_metadata = first_row["forward_metadata"]
+    direction_support = _direction_support_summary(manifest["rows"])
     lines = [
         "# Task 4 Linear Surrogate Baseline",
         "",
@@ -162,6 +200,15 @@ def _write_model_card(
         f"- Sampling policy id: `{manifest['sampling_policy_id']}`",
         f"- Rows: `{len(manifest['rows'])}`",
         f"- Splits: `{', '.join(sorted({str(row['split']) for row in manifest['rows']}))}`",
+        f"- Direction regimes: `{direction_support['direction_regime_counts']}`",
+        "",
+        "## Direction Support",
+        "",
+        "- Supported named modes: `inplane_100`, `inplane_110`.",
+        "- `c_axis` is unsupported and is not a valid inverse target.",
+        "- Generic raw angles are diagnostic-only and are not primary truth-grade training data.",
+        "- Directional spread is represented only as narrow named-mode-centered spread.",
+        f"- Dataset direction support summary: `{direction_support}`",
         "",
         "## Forward Metadata Family",
         "",
@@ -239,6 +286,7 @@ def train_surrogate_from_config(
         "dataset_id": dataset["manifest"]["dataset_id"],
         "feature_spec": DEFAULT_FEATURE_SPEC.to_dict(),
         "bias_mev": dataset["bias_mev"],
+        "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
         "splits": _split_metrics(model, features, targets, splits),
         "held_out_splits": ["validation", "test"],
         "checkpoint": checkpoint_path.as_posix(),
@@ -263,7 +311,25 @@ def train_surrogate_from_config(
         "dataset_manifest": str(dataset["manifest_path"]),
         "dataset_id": dataset["manifest"]["dataset_id"],
         "forward_metadata_family": dataset["manifest"]["rows"][0]["forward_metadata"],
+        "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
         "held_out_splits": ["validation", "test"],
     }
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return checkpoint_path, metrics_path, model_card_path
+
+
+def _direction_support_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    counts: dict[str, int] = {}
+    modes: set[str] = set()
+    for row in rows:
+        direction = row.get("direction")
+        regime = direction_regime_from_block(direction if isinstance(direction, dict) else None)
+        counts[regime] = counts.get(regime, 0) + 1
+        if isinstance(direction, dict) and direction.get("direction_mode") is not None:
+            modes.add(str(direction["direction_mode"]))
+    return {
+        "direction_regime_counts": counts,
+        "direction_modes": sorted(modes),
+        "legacy_angle_only_rows": counts.get("legacy_or_unknown_direction", 0),
+        "diagnostic_raw_angle_rows": counts.get("diagnostic_raw_angle", 0),
+    }

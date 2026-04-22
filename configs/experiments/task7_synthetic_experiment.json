@@ -4,6 +4,14 @@
   "surrogate_evaluation_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
   "output_dir": "outputs/experiments/task7_synthetic_fit",
   "run_metadata_path": "outputs/runs/task7_experiment_fit_run_metadata.json",
+  "direction_prior": {
+    "kind": "direction_biased",
+    "allowed_direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "description": "Synthetic smoke experiment is biased toward supported in-plane directions but is not treated as uniquely direction-resolved."
+  },
   "preprocessing": {
     "preprocessing_schema_version": "ar_inverse_experiment_preprocessing_v1",
     "operations": [

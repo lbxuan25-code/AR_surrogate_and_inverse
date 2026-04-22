@@ -1,6 +1,15 @@
 {
   "best_objective_score": 0.0,
   "config": "configs/inverse/task6_smoke_inverse.json",
+  "direction_prior": {
+    "allowed_direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+    "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+    "kind": "direction_biased"
+  },
   "forward_recheck_metadata": [
     {
       "allow_weak_delta_zx_s": false,
@@ -26,7 +35,7 @@
       "formal_baseline_role": "authoritative_formal_round2_baseline",
       "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
       "forward_interface_version": "ar_forward_v1",
-      "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+      "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
       "git_dirty": false,
       "normal_state_family": "base",
       "normal_state_policy": "repository_fixed_base_normal_state",
@@ -120,7 +129,7 @@
       "formal_baseline_role": "authoritative_formal_round2_baseline",
       "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
       "forward_interface_version": "ar_forward_v1",
-      "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+      "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
       "git_dirty": false,
       "normal_state_family": "base",
       "normal_state_policy": "repository_fixed_base_normal_state",
@@ -195,5 +204,5 @@
   "report": "outputs/inverse/task6_smoke_inverse/inverse_report.json",
   "reported_candidate_count": 2,
   "run_kind": "task6_inverse_search_prototype",
-  "target_row_id": "task3_smoke_train_000"
+  "target_row_id": "task8_direction_train_inplane_100"
 }

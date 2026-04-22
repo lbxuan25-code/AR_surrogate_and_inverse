@@ -1,5 +1,102 @@
 {
+  "directional_priors_and_regimes": {
+    "candidate_values": {
+      "compatible_train_like_000": {
+        "direction": {
+          "direction_crystal_label": "100",
+          "direction_dimensionality": "2D in-plane",
+          "direction_is_named_mode": true,
+          "direction_mode": "inplane_100",
+          "direction_regime": "inplane_100_no_spread",
+          "direction_schema_version": "ar_inverse_direction_v1",
+          "direction_support_tier": "A",
+          "directional_spread": null,
+          "forward_direction_provenance": {
+            "metadata_directional_spread": null,
+            "request_transport": {
+              "direction_mode": "inplane_100",
+              "interface_angle": 0.0
+            },
+            "transport_summary": {
+              "direction_crystal_label": "100",
+              "direction_dimensionality": "2D in-plane",
+              "direction_is_named_mode": true,
+              "direction_mode": "inplane_100",
+              "direction_support_tier": "A",
+              "interface_angle": 0.0
+            }
+          },
+          "interface_angle": 0.0
+        },
+        "direction_prior": {
+          "allowed_direction_modes": [
+            "inplane_100",
+            "inplane_110"
+          ],
+          "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+          "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+          "kind": "direction_biased"
+        }
+      },
+      "nearby_barrier_shift_001": {
+        "direction": {
+          "direction_crystal_label": "100",
+          "direction_dimensionality": "2D in-plane",
+          "direction_is_named_mode": true,
+          "direction_mode": "inplane_100",
+          "direction_regime": "inplane_100_no_spread",
+          "direction_schema_version": "ar_inverse_direction_v1",
+          "direction_support_tier": "A",
+          "directional_spread": null,
+          "forward_direction_provenance": {
+            "metadata_directional_spread": null,
+            "request_transport": {
+              "direction_mode": "inplane_100",
+              "interface_angle": 0.0
+            },
+            "transport_summary": {
+              "direction_crystal_label": "100",
+              "direction_dimensionality": "2D in-plane",
+              "direction_is_named_mode": true,
+              "direction_mode": "inplane_100",
+              "direction_support_tier": "A",
+              "interface_angle": 0.0
+            }
+          },
+          "interface_angle": 0.0
+        },
+        "direction_prior": {
+          "allowed_direction_modes": [
+            "inplane_100",
+            "inplane_110"
+          ],
+          "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+          "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+          "kind": "direction_biased"
+        }
+      }
+    },
+    "description": "Direction priors and candidate direction regimes are reported separately from pairing controls and transport nuisance controls.",
+    "experiment_direction_prior": {
+      "allowed_direction_modes": [
+        "inplane_100",
+        "inplane_110"
+      ],
+      "description": "Synthetic smoke experiment is biased toward supported in-plane directions but is not treated as uniquely direction-resolved.",
+      "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+      "kind": "direction_biased"
+    }
+  },
   "experiment": {
+    "direction_prior": {
+      "allowed_direction_modes": [
+        "inplane_100",
+        "inplane_110"
+      ],
+      "description": "Synthetic smoke experiment is biased toward supported in-plane directions but is not treated as uniquely direction-resolved.",
+      "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+      "kind": "direction_biased"
+    },
     "experiment_id": "synthetic_task7_forward_perturbation_v1",
     "metadata": {
       "perturbation": "deterministic 0.005*sin(index/5.0) conductance offset",
@@ -59,6 +156,41 @@
     {
       "candidate_family_id": "compatible_train_like_000",
       "compatibility_statement": "the AR data are compatible with these feature families",
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_prior": {
+        "allowed_direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+        "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+        "kind": "direction_biased"
+      },
       "experiment_fit_objective": {
         "mae": 0.003198337588444006,
         "max_abs_error": 0.004997868015207629,
@@ -89,7 +221,7 @@
         "formal_baseline_role": "authoritative_formal_round2_baseline",
         "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
         "forward_interface_version": "ar_forward_v1",
-        "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+        "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
         "git_dirty": false,
         "normal_state_family": "base",
         "normal_state_policy": "repository_fixed_base_normal_state",
@@ -180,7 +312,6 @@
         "center": {
           "barrier_z": 0.5,
           "gamma": 1.0,
-          "interface_angle": 0.0,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -192,10 +323,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.02,
-            "min": -0.02
           },
           "nk": {
             "max": 11.0,
@@ -227,10 +354,6 @@
             "max": 1.05,
             "min": 0.95
           },
-          "interface_angle": {
-            "max": 0.02,
-            "min": -0.02
-          },
           "nk": {
             "max": 11.0,
             "min": 11.0
@@ -245,10 +368,45 @@
     {
       "candidate_family_id": "nearby_barrier_shift_001",
       "compatibility_statement": "the AR data are compatible with these feature families",
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_prior": {
+        "allowed_direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+        "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+        "kind": "direction_biased"
+      },
       "experiment_fit_objective": {
-        "mae": 0.031966156451629105,
-        "max_abs_error": 0.05460108943089381,
-        "score": 0.03638425163256217,
+        "mae": 0.0299811135613727,
+        "max_abs_error": 0.05117822922191151,
+        "score": 0.03588734498902199,
         "score_kind": "spectrum_rmse"
       },
       "forward_recheck_metadata": {
@@ -275,7 +433,7 @@
         "formal_baseline_role": "authoritative_formal_round2_baseline",
         "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
         "forward_interface_version": "ar_forward_v1",
-        "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+        "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
         "git_dirty": false,
         "normal_state_family": "base",
         "normal_state_policy": "repository_fixed_base_normal_state",
@@ -366,7 +524,6 @@
         "center": {
           "barrier_z": 0.55,
           "gamma": 1.0,
-          "interface_angle": 0.02,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -378,10 +535,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.05,
-            "min": -0.009999999999999998
           },
           "nk": {
             "max": 11.0,
@@ -412,10 +565,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.05,
-            "min": -0.009999999999999998
           },
           "nk": {
             "max": 11.0,
@@ -491,7 +640,6 @@
         "center": {
           "barrier_z": 0.5,
           "gamma": 1.0,
-          "interface_angle": 0.0,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -503,10 +651,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.02,
-            "min": -0.02
           },
           "nk": {
             "max": 11.0,
@@ -522,7 +666,6 @@
         "center": {
           "barrier_z": 0.55,
           "gamma": 1.0,
-          "interface_angle": 0.02,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -534,10 +677,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.05,
-            "min": -0.009999999999999998
           },
           "nk": {
             "max": 11.0,

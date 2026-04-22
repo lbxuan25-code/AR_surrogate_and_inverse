@@ -3,6 +3,41 @@
     {
       "candidate_family_id": "compatible_train_like_000",
       "candidate_family_schema_version": "ar_inverse_candidate_family_v1",
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_prior": {
+        "allowed_direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+        "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+        "kind": "direction_biased"
+      },
       "forward_recheck": {
         "metadata": {
           "allow_weak_delta_zx_s": false,
@@ -28,7 +63,7 @@
           "formal_baseline_role": "authoritative_formal_round2_baseline",
           "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
           "forward_interface_version": "ar_forward_v1",
-          "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+          "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
           "git_dirty": false,
           "normal_state_family": "base",
           "normal_state_policy": "repository_fixed_base_normal_state",
@@ -107,7 +142,7 @@
         "output_ref": {
           "path": "forward_rechecks/compatible_train_like_000.json",
           "payload_kind": "forward_spectrum",
-          "sha256": "2fbdbc80808b682b41e3e08edb3fc14bf7ea26219d7bd3b86af3ad44841fcf26",
+          "sha256": "c3c8e980dfca3306e95940cc4a1ccd159bf1d1189bb393c1bb710fa77889399c",
           "storage": "local_json"
         },
         "request": {
@@ -127,6 +162,7 @@
           "schema_version": "ar_forward_input_v1",
           "transport": {
             "barrier_z": 0.5,
+            "direction_mode": "inplane_100",
             "gamma": 1.0,
             "interface_angle": 0.0,
             "nk": 11,
@@ -167,7 +203,6 @@
         "center": {
           "barrier_z": 0.5,
           "gamma": 1.0,
-          "interface_angle": 0.0,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -179,10 +214,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.02,
-            "min": -0.02
           },
           "nk": {
             "max": 11.0,
@@ -214,10 +245,6 @@
             "max": 1.05,
             "min": 0.95
           },
-          "interface_angle": {
-            "max": 0.02,
-            "min": -0.02
-          },
           "nk": {
             "max": 11.0,
             "min": 11.0
@@ -232,6 +259,41 @@
     {
       "candidate_family_id": "nearby_barrier_shift_001",
       "candidate_family_schema_version": "ar_inverse_candidate_family_v1",
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_prior": {
+        "allowed_direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+        "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+        "kind": "direction_biased"
+      },
       "forward_recheck": {
         "metadata": {
           "allow_weak_delta_zx_s": false,
@@ -257,7 +319,7 @@
           "formal_baseline_role": "authoritative_formal_round2_baseline",
           "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
           "forward_interface_version": "ar_forward_v1",
-          "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+          "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
           "git_dirty": false,
           "normal_state_family": "base",
           "normal_state_policy": "repository_fixed_base_normal_state",
@@ -328,15 +390,15 @@
           }
         },
         "objective": {
-          "mae": 0.03356808304131581,
-          "max_abs_error": 0.05788004894536547,
-          "score": 0.0383773943279586,
+          "mae": 0.029697790496319338,
+          "max_abs_error": 0.05225638651978615,
+          "score": 0.03655420944127449,
           "score_kind": "spectrum_rmse"
         },
         "output_ref": {
           "path": "forward_rechecks/nearby_barrier_shift_001.json",
           "payload_kind": "forward_spectrum",
-          "sha256": "d199b73083b6c4d3cd3763bf3448335d61bbe5666d66159eb9de5071ee6362aa",
+          "sha256": "fdc5430298b9b875755d71614c9ae273199597417c0bd698e5c238c350de6e7e",
           "storage": "local_json"
         },
         "request": {
@@ -356,8 +418,9 @@
           "schema_version": "ar_forward_input_v1",
           "transport": {
             "barrier_z": 0.55,
+            "direction_mode": "inplane_100",
             "gamma": 1.0,
-            "interface_angle": 0.02,
+            "interface_angle": 0.0,
             "nk": 11,
             "temperature_kelvin": 3.0
           }
@@ -365,9 +428,9 @@
       },
       "interpretation": "the AR data are compatible with these feature families",
       "objective": {
-        "mae": 0.03356808304131581,
-        "max_abs_error": 0.05788004894536547,
-        "score": 0.0383773943279586,
+        "mae": 0.029697790496319338,
+        "max_abs_error": 0.05225638651978615,
+        "score": 0.03655420944127449,
         "score_kind": "spectrum_rmse"
       },
       "pairing_controls": {
@@ -396,7 +459,6 @@
         "center": {
           "barrier_z": 0.55,
           "gamma": 1.0,
-          "interface_angle": 0.02,
           "nk": 11,
           "temperature_kelvin": 3.0
         },
@@ -408,10 +470,6 @@
           "gamma": {
             "max": 1.05,
             "min": 0.95
-          },
-          "interface_angle": {
-            "max": 0.05,
-            "min": -0.009999999999999998
           },
           "nk": {
             "max": 11.0,
@@ -443,10 +501,6 @@
             "max": 1.05,
             "min": 0.95
           },
-          "interface_angle": {
-            "max": 0.05,
-            "min": -0.009999999999999998
-          },
           "nk": {
             "max": 11.0,
             "min": 11.0
@@ -464,15 +518,29 @@
   "run_kind": "task6_inverse_search_prototype",
   "search": {
     "candidate_count": 3,
+    "direction_prior": {
+      "allowed_direction_modes": [
+        "inplane_100",
+        "inplane_110"
+      ],
+      "description": "Smoke inverse search allows supported named in-plane modes and keeps direction separate from transport nuisance controls.",
+      "direction_prior_schema_version": "ar_inverse_direction_prior_v1",
+      "kind": "direction_biased"
+    },
     "fallback_policy": {
       "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
       "policy_id": "task5_direct_forward_fallback_v1",
+      "safe_direction_regimes": [],
       "safe_error_thresholds": {
         "max_abs_error": 0.1,
         "rmse": 0.05
       },
       "safe_transport_regimes": [],
       "summary": "Surrogate acceleration is disabled for unsafe transport regimes. Inverse workflows must use direct external forward calls there.",
+      "unsafe_direction_regimes": [
+        "inplane_110_no_spread",
+        "named_mode_narrow_spread"
+      ],
       "unsafe_transport_regimes": [
         "high_barrier|high_gamma|high_temp",
         "high_barrier|low_gamma|low_temp"
@@ -487,7 +555,33 @@
     }
   },
   "target": {
-    "dataset_manifest": "outputs/datasets/task3_orchestration_smoke/dataset.json",
+    "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+    "direction": {
+      "direction_crystal_label": "100",
+      "direction_dimensionality": "2D in-plane",
+      "direction_is_named_mode": true,
+      "direction_mode": "inplane_100",
+      "direction_regime": "inplane_100_no_spread",
+      "direction_schema_version": "ar_inverse_direction_v1",
+      "direction_support_tier": "A",
+      "directional_spread": null,
+      "forward_direction_provenance": {
+        "metadata_directional_spread": null,
+        "request_transport": {
+          "direction_mode": "inplane_100",
+          "interface_angle": 0.0
+        },
+        "transport_summary": {
+          "direction_crystal_label": "100",
+          "direction_dimensionality": "2D in-plane",
+          "direction_is_named_mode": true,
+          "direction_mode": "inplane_100",
+          "direction_support_tier": "A",
+          "interface_angle": 0.0
+        }
+      },
+      "interface_angle": 0.0
+    },
     "forward_metadata": {
       "allow_weak_delta_zx_s": false,
       "fit_layer_policy": {
@@ -507,12 +601,12 @@
           "delta_zx_s"
         ]
       },
-      "fit_layer_request_label": "task3_smoke_train_000",
+      "fit_layer_request_label": "task8_direction_train_inplane_100",
       "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
       "formal_baseline_role": "authoritative_formal_round2_baseline",
       "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
       "forward_interface_version": "ar_forward_v1",
-      "git_commit": "4e4c935d1f123c03ee2250f8624d5df3c2c7ebe3",
+      "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
       "git_dirty": false,
       "normal_state_family": "base",
       "normal_state_policy": "repository_fixed_base_normal_state",
@@ -583,11 +677,11 @@
       }
     },
     "forward_output_ref": {
-      "path": "forward_outputs/task3_smoke_train_000.json",
+      "path": "forward_outputs/task8_direction_train_inplane_100.json",
       "payload_kind": "forward_spectrum",
-      "sha256": "d91bb584c870227612ce7c43ff72b70229e4753996828a9d6fe74ce31573de35",
+      "sha256": "282a0b94450d22e695cae77256267eef5057a466c9ae3bdfaf215bc2d66c3c42",
       "storage": "local_json"
     },
-    "row_id": "task3_smoke_train_000"
+    "row_id": "task8_direction_train_inplane_100"
   }
 }
