@@ -111,7 +111,7 @@
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
     "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
-    "git_dirty": true,
+    "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",
     "output_schema_version": "ar_forward_output_v1",

@@ -2,7 +2,7 @@
   "allow_diagnostic_raw_angles": false,
   "dataset_id": "task10_directional_pilot_v1",
   "dataset_manifest": "outputs/datasets/task10_directional_pilot/dataset.json",
-  "force": false,
+  "force": true,
   "forward_metadata_family": {
     "allow_weak_delta_zx_s": false,
     "fit_layer_policy": {
@@ -28,7 +28,7 @@
     "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
     "forward_interface_version": "ar_forward_v1",
     "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
-    "git_dirty": true,
+    "git_dirty": false,
     "normal_state_family": "base",
     "normal_state_policy": "repository_fixed_base_normal_state",
     "output_schema_version": "ar_forward_output_v1",
@@ -97,9 +97,9 @@
       }
     }
   },
-  "generated_rows": 0,
+  "generated_rows": 12,
   "num_rows": 12,
-  "reused_rows": 12,
+  "reused_rows": 0,
   "run_kind": "task10_directional_dataset_generation",
   "sampling_policy_id": "task10_directional_pilot_v1",
   "source_config": "configs/datasets/task10_directional_pilot_dataset.json"

@@ -37,7 +37,7 @@ This is the Task 10 pilot artifact prepared for server execution review, not the
 - formal_baseline_record: `outputs/source/round2_baseline_selection.json`
 - formal_baseline_selection_rule: `temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature`
 - git_commit: `b85a5cb304acbfd5d51133251ef57293bd0abd2b`
-- git_dirty: `True`
+- git_dirty: `False`
 
 ## Metrics
 
