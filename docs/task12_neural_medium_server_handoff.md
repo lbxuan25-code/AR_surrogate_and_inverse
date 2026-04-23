@@ -1,5 +1,12 @@
 # Task 12 Neural Medium-Scale Server Handoff
 
+Task 12B completed on 2026-04-23 and this note is now retained as the archival
+server runbook for that accepted medium-scale neural validation run. The
+current `TODO.md` task moved on to Task 13A after local review confirmed the
+returned artifacts preserved the frozen forward-family and direction contracts
+and showed a meaningful held-out improvement over the committed ridge
+comparator.
+
 Task 12A prepares the first neural surrogate stack only. Task 12B is the
 actual medium-scale server validation run. Do not launch the medium-scale
 dataset generation, neural training, or neural evaluation in the local Codex

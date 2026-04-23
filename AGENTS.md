@@ -18,13 +18,17 @@ Current stage note:
 - Task 9 completed the canonical direction-aware smoke loop.
 - Task 10A/10B completed the pilot preparation and pilot server validation.
 - Task 11A/11B completed the compact production-contract validation run.
+- Task 12B completed: the first medium-scale neural surrogate validation run
+  returned compact artifacts, preserved the frozen forward-family and direction
+  contracts, and passed local review.
 - Task 12A completed: the first neural surrogate stack, medium-scale canonical
   configs, handoff note, and lightweight wiring tests are now in the
   repository.
-- The current `TODO.md` task is Task 12B: run the first medium-scale neural
-  surrogate validation job on the server and return compact artifacts.
-- Large-scale heavy surrogate campaigns belong to later tasks only after Task
-  12B review is accepted.
+- The current `TODO.md` task is Task 13A: prepare the first large-scale
+  surrogate dataset, training, and evaluation contract for the later heavy
+  neural campaign.
+- Large-scale heavy surrogate campaigns belong to Task 13B and later only after
+  the Task 13A contract review is accepted.
 
 ## Source Of Truth
 

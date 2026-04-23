@@ -9,8 +9,11 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 12B, run the first medium-scale neural surrogate
-  validation job on the server and return compact artifacts for local review.
+- Current TODO task: Task 13A, prepare the first large-scale surrogate dataset,
+  training, and evaluation contract for the first heavy neural campaign.
+- Task 12B is complete: the first medium-scale neural server validation run
+  returned compact review artifacts, preserved the frozen forward and direction
+  contracts, and passed local review.
 - Task 12A is complete: the first neural surrogate stack, dual-path ridge and
   neural checkpoint wiring, canonical medium-scale dataset config, neural
   training/evaluation configs, and Task 12 handoff note are prepared.
@@ -299,8 +302,8 @@ narrow spread only, and the frozen clean forward metadata family.
 
 Task 12A prepared the first neural surrogate stack and the canonical
 medium-scale validation contract without launching the medium-scale run
-locally. Task 12B is the server-run and returned-artifact review phase. Use
-these committed configs:
+locally. Task 12B completed the server run and returned-artifact review phase
+under this same contract. The canonical configs remain:
 
 - `configs/datasets/task12_directional_medium_dataset.json`
 - `configs/surrogate/task12_directional_neural_medium.json`
@@ -316,6 +319,14 @@ feed-forward checkpoint path with explicit optimizer, epoch, batch-size, seed,
 and device metadata. The medium-scale dataset contract targets `352` rows and
 still excludes `c_axis`, diagnostic raw-angle primary rows, arbitrary wide
 spread, and experiment-side direction mixtures.
+
+Task 12B returned compact review artifacts under this contract and passed local
+review. The returned neural evaluation reported held-out mean RMSE
+`0.0024540644`, max RMSE `0.0075590854`, mean max absolute error
+`0.0056677393`, and unsafe fraction `0.0`, while preserving only
+`inplane_100`, `inplane_110`, and narrow named-mode-centered spread under the
+frozen clean forward metadata family. The handoff note remains the archival
+runbook for that completed server task.
 
 ## Task 1 Smoke Path
 

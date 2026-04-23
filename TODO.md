@@ -2,64 +2,6 @@
 
 ## Current Task
 
-### Task 12B — Run the first medium-scale neural surrogate validation job
-
-#### Goal
-Run the first medium-scale server-side neural surrogate validation job using the
-Task 12A configs, then return compact artifacts to GitHub for local review.
-
-This is the first task that should be treated as the beginning of formal neural
-surrogate training, but it is still a validation-scale job rather than the
-final large-scale production campaign.
-
-#### Intended scale
-Target a medium-scale dataset budget large enough to test neural capacity
-meaningfully, for example:
-- roughly 300 to 600 total rows
-- train / validation / test split with explicit regime coverage
-- preserved coverage across:
-  - `inplane_100_no_spread`
-  - `inplane_110_no_spread`
-  - `named_mode_narrow_spread`
-
-Do not widen the direction domain during this task.
-
-#### Returned artifacts required for Task 12B review
-At minimum:
-- dataset run metadata
-- training metrics
-- model card
-- training run metadata
-- evaluation report
-- evaluation markdown
-- evaluation run metadata
-- Task 12 server run note
-- compact dataset family metadata, or the full manifest if still reviewable
-
-Heavy outputs such as:
-- full forward-output directories
-- large neural checkpoints
-- copied raw spectra collections
-
-should stay on the server unless a later task explicitly requests a compact
-canonical sample.
-
-#### Acceptance checklist for Task 12B
-- [ ] medium-scale generation used the Task 12 canonical config
-- [ ] returned artifacts preserve the frozen forward metadata family
-- [ ] returned artifacts preserve the validated direction contract only
-- [ ] neural training completed and produced checkpoints/metrics
-- [ ] evaluation report exists
-- [ ] neural validation is meaningfully stronger than the ridge baseline on at
-      least one held-out metric or regime
-- [ ] local review confirms no schema / naming / contract mismatch
-- [ ] only after this review may Task 13A move into Current Task
-
-#### Promotion rule
-Only after Task 12B is complete and reviewed may Task 13A move into Current Task.
-
----
-
 ### Task 13A — Prepare the large-scale surrogate dataset contract
 
 #### Goal
@@ -138,6 +80,55 @@ Do not commit heavyweight outputs unless explicitly promoted.
 ---
 
 ## Archive
+
+### Task 12B — Run the first medium-scale neural surrogate validation job
+
+Completed 2026-04-23.
+
+#### Verification
+- Returned medium-scale dataset run metadata:
+  `outputs/runs/task12_directional_medium_dataset_run_metadata.json`.
+- Returned medium-scale manifest:
+  `outputs/datasets/task12_directional_medium_neural/dataset.json`.
+- Returned neural training metrics:
+  `outputs/checkpoints/task12_directional_neural_medium/metrics.json`.
+- Returned neural model card:
+  `outputs/checkpoints/task12_directional_neural_medium/model_card.md`.
+- Returned neural training run metadata:
+  `outputs/runs/task12_directional_neural_medium_run_metadata.json`.
+- Returned neural evaluation report:
+  `outputs/runs/task12_directional_neural_evaluation_medium/evaluation_report.json`.
+- Returned neural evaluation markdown:
+  `outputs/runs/task12_directional_neural_evaluation_medium/evaluation_report.md`.
+- Returned neural evaluation run metadata:
+  `outputs/runs/task12_directional_neural_evaluation_medium_run_metadata.json`.
+- Returned Task 12 server run note:
+  `outputs/runs/task12_neural_medium_server_run_note.md`.
+- Local review confirmed the canonical Task 12 config produced `352` rows with
+  preserved truth-grade direction coverage:
+  `88` `inplane_100_no_spread`,
+  `88` `inplane_110_no_spread`,
+  `176` `named_mode_narrow_spread`.
+- Local review confirmed one frozen clean forward metadata family across the
+  returned artifacts with
+  `forward_interface_version: ar_forward_v1`,
+  `output_schema_version: ar_forward_output_v1`,
+  `pairing_convention_id: round2_physical_channels_task_h_fit_layer_v1`,
+  `git_commit: b85a5cb304acbfd5d51133251ef57293bd0abd2b`,
+  and `git_dirty: false`.
+- Local review confirmed the returned Task 12 dataset and reports preserve the
+  validated direction contract only: supported named modes
+  `inplane_100` / `inplane_110`, narrow named-mode-centered spread only, no
+  `c_axis`, and no diagnostic raw-angle primary rows.
+- Local review compared the returned Task 12 neural evaluation against the
+  committed ridge comparator under the same frozen forward-family and direction
+  contract and found meaningful held-out improvement, including:
+  mean RMSE `0.0024540644` vs ridge `0.0646178135`,
+  max absolute error `0.0145308234` vs ridge `0.2772479170`,
+  and unsafe fraction `0.0` vs ridge `0.625`.
+- Local review confirmed all three held-out direction regimes in Task 12 were
+  marked safe for inverse acceleration under the configured thresholds, whereas
+  the committed ridge comparator marked all held-out direction regimes unsafe.
 
 ### Task 12A — Prepare the neural surrogate training stack
 
