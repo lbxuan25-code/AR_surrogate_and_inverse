@@ -1,0 +1,38 @@
+{
+  "config_role": "current_directional_evaluation_production_entry",
+  "execution_mode": "server_only_production_contract",
+  "checkpoint": "outputs/checkpoints/task11_directional_surrogate_production/model.npz",
+  "dataset_manifest": "outputs/datasets/task11_directional_production/dataset.json",
+  "report_dir": "outputs/runs/task11_directional_evaluation_production",
+  "run_metadata_path": "outputs/runs/task11_directional_evaluation_production_run_metadata.json",
+  "run_kind": "task11_directional_evaluation_production",
+  "report_title": "Task 11 Directional Surrogate Production Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.05,
+    "max_abs_error": 0.1
+  },
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this production contract"
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  }
+}

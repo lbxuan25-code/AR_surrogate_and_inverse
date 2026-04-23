@@ -1,0 +1,39 @@
+{
+  "config_role": "current_directional_surrogate_production_entry",
+  "execution_mode": "server_only_production_contract",
+  "dataset_manifest": "outputs/datasets/task11_directional_production/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task11_directional_surrogate_production",
+  "run_metadata_path": "outputs/runs/task11_directional_surrogate_production_run_metadata.json",
+  "run_kind": "task11_directional_surrogate_production_training",
+  "model_card_title": "Task 11 Directional Surrogate Production Checkpoint",
+  "model_card_purpose_lines": [
+    "Production-contract direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
+    "This is the Task 11 production contract artifact prepared for server execution, not the Task 10 pilot checkpoint and not yet a returned production run result."
+  ],
+  "model_card_limitations_lines": [
+    "This checkpoint config targets the Task 11 production dataset contract and should only be generated on the server.",
+    "It is limited to supported named in-plane modes and narrow named-mode-centered spread under the frozen forward metadata family documented in the Task 11 contract.",
+    "Returned production artifacts must be reviewed locally before Task 11 can be accepted."
+  ],
+  "ridge_alpha": 1.0e-6,
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this production contract"
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  }
+}

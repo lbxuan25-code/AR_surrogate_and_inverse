@@ -9,8 +9,11 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 11A, prepare the production server contract without
-  launching the production run yet.
+- Current TODO task: Task 11B, run the first production server job and return
+  compact review artifacts for local validation.
+- Task 11A is complete: the canonical production dataset config, training
+  config, evaluation config, frozen forward-family contract, and production
+  server handoff note are prepared for manual server execution.
 - Task 10B is complete: the prepared small non-smoke pilot was run on the
   server, compact review artifacts were returned to GitHub, and local review
   accepted the result.
@@ -31,6 +34,11 @@ It does not copy or reimplement forward physics code.
   `configs/surrogate/task10_directional_surrogate_pilot.json`,
   `configs/surrogate/task10_directional_evaluation_pilot.json`, and
   `docs/task10_pilot_server_runbook.md`.
+- The canonical production contract entry points are:
+  `configs/datasets/task11_directional_production_dataset.json`,
+  `configs/surrogate/task11_directional_surrogate_production.json`,
+  `configs/surrogate/task11_directional_evaluation_production.json`, and
+  `docs/task11_production_server_handoff.md`.
 - Historical `task3`, `task4`, and `task5` paths are legacy / archived
   baseline names. They remain loadable for compatibility but are not the current
   canonical stage names.
@@ -249,6 +257,27 @@ named-mode-centered spread. It excludes `c_axis`, generic raw-angle primary
 data, and experiment-side direction mixtures. Dataset generation, training, and
 evaluation for this pilot are server-only Task 10B steps; only compact review
 artifacts should return to GitHub.
+
+## Task 11 Production Server Handoff
+
+Task 11A prepared the canonical first production contract without launching the
+production run locally. Task 11B is the server-run and returned-artifact review
+phase. Use these committed configs:
+
+- `configs/datasets/task11_directional_production_dataset.json`
+- `configs/surrogate/task11_directional_surrogate_production.json`
+- `configs/surrogate/task11_directional_evaluation_production.json`
+
+The production server handoff note is:
+
+- `docs/task11_production_server_handoff.md`
+
+The production contract remains limited to `inplane_100`, `inplane_110`, and
+narrow named-mode-centered spread. It explicitly excludes `c_axis`, diagnostic
+raw angles, arbitrary or wide mixtures, and experiment-side direction mixtures
+in the surrogate truth dataset. It also freezes the forward metadata family
+validated in Task 10B; any later server run must return compact artifacts that
+identify that same family for local review.
 
 ## Task 1 Smoke Path
 

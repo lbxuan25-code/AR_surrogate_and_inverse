@@ -1,0 +1,617 @@
+{
+  "config_role": "current_directional_contract_production_entry",
+  "execution_mode": "server_only_production_contract",
+  "dataset_id": "task11_directional_production_v1",
+  "description": "Canonical first production direction-aware dataset contract. Limited to supported named in-plane modes and narrow named-mode-centered spread under a frozen forward metadata family.",
+  "output_dir": "outputs/datasets/task11_directional_production",
+  "run_metadata_path": "outputs/runs/task11_directional_dataset_run_metadata.json",
+  "run_kind": "task11_directional_dataset_generation",
+  "sampling_policy_id": "task11_directional_production_v1",
+  "allow_diagnostic_raw_angles": false,
+  "validated_reference_artifact": "outputs/runs/task10_directional_dataset_run_metadata.json",
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only, half_width <= pi/32",
+    "diagnostic_raw_angles": "excluded unless a later task explicitly promotes them",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  },
+  "sampling_policy": {
+    "sampling_policy_id": "task11_directional_production_v1",
+    "policy_kind": "directional_contract_production",
+    "description": "First production contract with supported named in-plane modes and narrow named-mode-centered spread only.",
+    "direction_regimes": {
+      "primary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": null,
+        "generic_raw_angles": "excluded"
+      },
+      "secondary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": "narrow named-mode-centered, half_width <= pi/32"
+      },
+      "diagnostic_only_regime": {
+        "generic_raw_angles": "excluded from this production contract"
+      },
+      "unsupported_regime": {
+        "c_axis": "rejected at config validation time"
+      }
+    },
+    "fit_layer_pairing_controls": {
+      "mode": "delta_from_baseline_meV",
+      "channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "weak_delta_zx_s": "closed"
+    },
+    "transport_controls": {
+      "barrier_z": "structured production sweep",
+      "gamma": "structured production sweep",
+      "temperature_kelvin": "structured production sweep",
+      "nk": "fixed production odd grid"
+    },
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ]
+  },
+  "samples": [
+    {
+      "row_id": "task11_prod_train_inplane_100_core_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.24,
+        "delta_perp_x": -0.1
+      },
+      "transport_controls": {
+        "barrier_z": 0.3,
+        "gamma": 0.8,
+        "temperature_kelvin": 1.8,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_core_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.15,
+        "delta_zx_d": 0.12
+      },
+      "transport_controls": {
+        "barrier_z": 0.45,
+        "gamma": 0.95,
+        "temperature_kelvin": 2.6,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_100_core_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_z": 0.1,
+        "delta_zz_s": 0.14
+      },
+      "transport_controls": {
+        "barrier_z": 0.6,
+        "gamma": 1.1,
+        "temperature_kelvin": 3.4,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_core_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_x": 0.07,
+        "delta_xx_s": -0.06
+      },
+      "transport_controls": {
+        "barrier_z": 0.78,
+        "gamma": 0.85,
+        "temperature_kelvin": 4.1,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_100_spread_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.18,
+        "delta_zx_d": 0.09
+      },
+      "transport_controls": {
+        "barrier_z": 0.38,
+        "gamma": 1.05,
+        "temperature_kelvin": 2.2,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.02454369260617026,
+          "num_samples": 7
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_spread_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.1,
+        "delta_perp_z": 0.08
+      },
+      "transport_controls": {
+        "barrier_z": 0.52,
+        "gamma": 0.9,
+        "temperature_kelvin": 3.0,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.032724923474893676,
+          "num_samples": 7
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_100_core_c",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.11,
+        "delta_perp_z": 0.06
+      },
+      "transport_controls": {
+        "barrier_z": 0.22,
+        "gamma": 1.2,
+        "temperature_kelvin": 1.4,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_core_c",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_x": 0.05,
+        "delta_zx_d": 0.07
+      },
+      "transport_controls": {
+        "barrier_z": 0.68,
+        "gamma": 1.0,
+        "temperature_kelvin": 4.6,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_100_spread_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.04,
+        "delta_zz_s": 0.2
+      },
+      "transport_controls": {
+        "barrier_z": 0.88,
+        "gamma": 1.15,
+        "temperature_kelvin": 3.8,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.04908738521234052,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_spread_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_z": 0.09,
+        "delta_zx_d": 0.05
+      },
+      "transport_controls": {
+        "barrier_z": 1.02,
+        "gamma": 0.78,
+        "temperature_kelvin": 5.2,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_100_core_d",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_x": -0.03,
+        "delta_zz_s": 0.17
+      },
+      "transport_controls": {
+        "barrier_z": 0.5,
+        "gamma": 1.28,
+        "temperature_kelvin": 2.9,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_train_inplane_110_core_d",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.12,
+        "delta_perp_x": 0.08
+      },
+      "transport_controls": {
+        "barrier_z": 0.92,
+        "gamma": 1.08,
+        "temperature_kelvin": 5.8,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_validation_inplane_100_core",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_xx_s": -0.09,
+        "delta_zz_s": 0.15
+      },
+      "transport_controls": {
+        "barrier_z": 0.58,
+        "gamma": 0.92,
+        "temperature_kelvin": 3.1,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_validation_inplane_110_core",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_perp_z": 0.1,
+        "delta_zx_d": 0.08
+      },
+      "transport_controls": {
+        "barrier_z": 0.72,
+        "gamma": 1.18,
+        "temperature_kelvin": 3.6,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_validation_inplane_100_spread",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_perp_x": -0.02,
+        "delta_zz_s": 0.19
+      },
+      "transport_controls": {
+        "barrier_z": 0.82,
+        "gamma": 1.02,
+        "temperature_kelvin": 4.4,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.032724923474893676,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_validation_inplane_110_spread",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_xx_s": -0.11,
+        "delta_perp_z": 0.07
+      },
+      "transport_controls": {
+        "barrier_z": 0.96,
+        "gamma": 0.88,
+        "temperature_kelvin": 5.0,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.04908738521234052,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_test_inplane_100_core",
+      "split": "test",
+      "pairing_controls": {
+        "delta_zz_s": 0.21,
+        "delta_zx_d": 0.06
+      },
+      "transport_controls": {
+        "barrier_z": 0.4,
+        "gamma": 0.74,
+        "temperature_kelvin": 6.1,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_test_inplane_110_core",
+      "split": "test",
+      "pairing_controls": {
+        "delta_xx_s": -0.13,
+        "delta_perp_x": 0.04
+      },
+      "transport_controls": {
+        "barrier_z": 0.62,
+        "gamma": 1.22,
+        "temperature_kelvin": 6.4,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_test_inplane_100_spread",
+      "split": "test",
+      "pairing_controls": {
+        "delta_perp_z": 0.12,
+        "delta_zz_s": 0.16
+      },
+      "transport_controls": {
+        "barrier_z": 0.9,
+        "gamma": 1.12,
+        "temperature_kelvin": 4.9,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.02454369260617026,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_id": "task11_prod_test_inplane_110_spread",
+      "split": "test",
+      "pairing_controls": {
+        "delta_xx_s": -0.08,
+        "delta_perp_z": 0.11
+      },
+      "transport_controls": {
+        "barrier_z": 1.08,
+        "gamma": 0.82,
+        "temperature_kelvin": 5.6,
+        "nk": 31
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.032724923474893676,
+          "num_samples": 9
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    }
+  ]
+}

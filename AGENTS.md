@@ -19,8 +19,11 @@ Current stage note:
   runbook, and lightweight validation are now in the repository.
 - Task 10B completed: the server-run pilot artifacts were returned, reviewed
   locally, and accepted.
-- The current `TODO.md` task is Task 11A: prepare the production server
-  contract without launching the production run.
+- Task 11A completed: the canonical production dataset/training/evaluation
+  configs, frozen forward-family contract, handoff note, and lightweight
+  validation are now in the repository.
+- The current `TODO.md` task is Task 11B: run the first production server job
+  and return compact review artifacts for local validation.
 - Heavy execution remains deferred to explicit server-run tasks reviewed only
   after compact artifacts are returned to GitHub.
 

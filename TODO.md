@@ -2,52 +2,6 @@
 
 ## Current Task
 
-### Task 11A — Prepare the production server contract
-
-#### Goal
-Prepare one production dataset contract and one production training contract for
-server-scale generation, without launching the server-scale run yet.
-
-#### Scope
-Do:
-- define one canonical production dataset config;
-- define one canonical production training config;
-- define one canonical production evaluation config;
-- freeze the forward metadata family and direction contract version;
-- write a production server handoff checklist.
-
-Do not:
-- start server-scale generation;
-- start production training;
-- widen the direction domain;
-- add experiment-side multi-direction mixtures to the surrogate truth dataset.
-
-#### Production truth-grade domain
-The production surrogate truth domain must remain limited to:
-- `inplane_100`
-- `inplane_110`
-- narrow spread around supported named modes
-
-The production domain must explicitly exclude:
-- `c_axis`
-- arbitrary or wide multi-direction mixtures
-- diagnostic raw in-plane angles unless a later task promotes them
-
-#### Acceptance checklist
-- [ ] one canonical production dataset config exists
-- [ ] one canonical production training config exists
-- [ ] one canonical production evaluation config exists
-- [ ] included and excluded direction regimes are written explicitly
-- [ ] the fixed forward metadata family is documented
-- [ ] a server handoff checklist exists
-
-#### Promotion rule
-Only after Task 11A is complete may Task 11B move into Current Task.
-
----
-
-## Backlog
-
 ### Task 11B — Run the first production server job and return compact review artifacts
 
 #### Goal
@@ -76,6 +30,31 @@ Do not commit heavyweight production outputs unless explicitly requested.
 ---
 
 ## Archive
+
+### Task 11A — Prepare the production server contract
+
+Completed 2026-04-23.
+
+#### Verification
+- Canonical production dataset config:
+  `configs/datasets/task11_directional_production_dataset.json`.
+- Canonical production training config:
+  `configs/surrogate/task11_directional_surrogate_production.json`.
+- Canonical production evaluation config:
+  `configs/surrogate/task11_directional_evaluation_production.json`.
+- Production server handoff note:
+  `docs/task11_production_server_handoff.md`.
+- Lightweight validation test:
+  `tests/test_task11_production_contract.py`.
+- Local `pytest` passed:
+  `tests/test_task11_production_contract.py`,
+  `tests/test_task10_pilot_handoff.py`,
+  `tests/test_surrogate_training.py`.
+- The frozen production contract keeps only `inplane_100`, `inplane_110`, and
+  narrow named-mode-centered spread, excludes `c_axis` and diagnostic raw
+  angles, and freezes the clean forward metadata family accepted in Task 10B.
+- Task 11A intentionally did not run server-scale dataset generation,
+  production training, or production evaluation locally.
 
 ### Task 10B — Run the pilot on the server and validate the returned artifacts
 
