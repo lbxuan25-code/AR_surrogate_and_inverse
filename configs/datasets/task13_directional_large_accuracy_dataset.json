@@ -1,0 +1,399 @@
+{
+  "config_role": "current_directional_large_accuracy_dataset_entry",
+  "execution_mode": "server_only_large_accuracy_contract",
+  "dataset_id": "task13_directional_large_accuracy_v1",
+  "description": "Canonical Task 13 large-scale accuracy-driven dataset contract. Freezes a 4096-row truth-grade domain with explicit direction and transport regime quotas for the first heavy high-accuracy campaign.",
+  "output_dir": "outputs/datasets/task13_directional_large_accuracy",
+  "run_metadata_path": "outputs/runs/task13_directional_large_accuracy_dataset_run_metadata.json",
+  "run_kind": "task13_directional_large_accuracy_dataset_generation",
+  "sampling_policy_id": "task13_directional_large_accuracy_v1",
+  "allow_diagnostic_raw_angles": false,
+  "validated_reference_artifact": "outputs/runs/task12_directional_medium_dataset_run_metadata.json",
+  "expected_num_rows": 4096,
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only, half_width <= pi/32",
+    "diagnostic_raw_angles": "excluded unless a later task explicitly promotes them",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  },
+  "sampling_policy": {
+    "sampling_policy_id": "task13_directional_large_accuracy_v1",
+    "policy_kind": "directional_contract_large_accuracy_heavy_run",
+    "description": "Large-scale structured dataset contract for the first high-accuracy heavy neural campaign. Keeps only the validated named-mode direction contract and freezes explicit transport quotas.",
+    "direction_regimes": {
+      "primary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": null,
+        "generic_raw_angles": "excluded"
+      },
+      "secondary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": "narrow named-mode-centered, half_width <= pi/32"
+      },
+      "diagnostic_only_regime": {
+        "generic_raw_angles": "excluded from this Task 13 contract"
+      },
+      "unsupported_regime": {
+        "c_axis": "rejected at config validation time"
+      }
+    },
+    "fit_layer_pairing_controls": {
+      "mode": "delta_from_baseline_meV",
+      "channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "weak_delta_zx_s": "closed"
+    },
+    "transport_controls": {
+      "barrier_z": "explicit low/high quota sweep",
+      "gamma": "explicit low/high quota sweep",
+      "temperature_kelvin": "explicit low/high quota sweep",
+      "nk": "fixed large-scale odd grid"
+    },
+    "split_targets": {
+      "train": 3072,
+      "validation": 512,
+      "test": 512
+    },
+    "regime_targets": {
+      "inplane_100_no_spread": 1024,
+      "inplane_110_no_spread": 1024,
+      "named_mode_narrow_spread": 2048
+    },
+    "transport_regime_targets": {
+      "low_barrier|low_gamma|low_temp": 512,
+      "low_barrier|high_gamma|low_temp": 512,
+      "high_barrier|low_gamma|low_temp": 512,
+      "high_barrier|high_gamma|low_temp": 512,
+      "low_barrier|low_gamma|high_temp": 512,
+      "low_barrier|high_gamma|high_temp": 512,
+      "high_barrier|low_gamma|high_temp": 512,
+      "high_barrier|high_gamma|high_temp": 512
+    },
+    "split_transport_regime_targets": {
+      "train": {
+        "low_barrier|low_gamma|low_temp": 384,
+        "low_barrier|high_gamma|low_temp": 384,
+        "high_barrier|low_gamma|low_temp": 384,
+        "high_barrier|high_gamma|low_temp": 384,
+        "low_barrier|low_gamma|high_temp": 384,
+        "low_barrier|high_gamma|high_temp": 384,
+        "high_barrier|low_gamma|high_temp": 384,
+        "high_barrier|high_gamma|high_temp": 384
+      },
+      "validation": {
+        "low_barrier|low_gamma|low_temp": 64,
+        "low_barrier|high_gamma|low_temp": 64,
+        "high_barrier|low_gamma|low_temp": 64,
+        "high_barrier|high_gamma|low_temp": 64,
+        "low_barrier|low_gamma|high_temp": 64,
+        "low_barrier|high_gamma|high_temp": 64,
+        "high_barrier|low_gamma|high_temp": 64,
+        "high_barrier|high_gamma|high_temp": 64
+      },
+      "test": {
+        "low_barrier|low_gamma|low_temp": 64,
+        "low_barrier|high_gamma|low_temp": 64,
+        "high_barrier|low_gamma|low_temp": 64,
+        "high_barrier|high_gamma|low_temp": 64,
+        "low_barrier|low_gamma|high_temp": 64,
+        "low_barrier|high_gamma|high_temp": 64,
+        "high_barrier|low_gamma|high_temp": 64,
+        "high_barrier|high_gamma|high_temp": 64
+      }
+    },
+    "fixed_bias_grid": {
+      "bias_min_mev": -20.0,
+      "bias_max_mev": 20.0,
+      "num_bias": 121
+    },
+    "fixed_nk": 41,
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ]
+  },
+  "sample_grids": [
+    {
+      "row_prefix": "task13_train",
+      "split": "train",
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.12, "delta_perp_x": -0.08},
+        {"delta_zz_s": 0.18, "delta_zx_d": 0.06},
+        {"delta_zz_s": 0.24, "delta_perp_z": 0.09},
+        {"delta_zz_s": 0.30, "delta_xx_s": -0.04},
+        {"delta_xx_s": -0.14, "delta_perp_x": 0.05},
+        {"delta_xx_s": -0.18, "delta_zx_d": 0.10},
+        {"delta_xx_s": -0.08, "delta_perp_z": 0.11},
+        {"delta_xx_s": -0.03, "delta_zz_s": 0.16},
+        {"delta_zx_d": 0.05, "delta_perp_z": 0.08},
+        {"delta_zx_d": 0.09, "delta_perp_x": -0.06},
+        {"delta_zx_d": 0.12, "delta_zz_s": 0.20},
+        {"delta_zx_d": 0.15, "delta_xx_s": -0.05},
+        {"delta_perp_z": 0.04, "delta_perp_x": 0.06},
+        {"delta_perp_z": 0.08, "delta_zz_s": 0.22},
+        {"delta_perp_z": 0.12, "delta_xx_s": -0.07},
+        {"delta_perp_z": -0.05, "delta_zx_d": 0.11},
+        {"delta_perp_x": -0.10, "delta_zz_s": 0.10},
+        {"delta_perp_x": -0.04, "delta_xx_s": -0.09},
+        {"delta_perp_x": 0.08, "delta_zx_d": 0.07},
+        {"delta_perp_x": 0.12, "delta_perp_z": -0.03},
+        {"delta_zz_s": 0.26, "delta_perp_x": 0.09},
+        {"delta_xx_s": -0.11, "delta_perp_z": -0.04},
+        {"delta_zx_d": 0.13, "delta_perp_z": 0.05},
+        {"delta_zz_s": 0.14, "delta_xx_s": -0.12}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.24, "gamma": 0.74, "temperature_kelvin": 1.5, "nk": 41},
+        {"barrier_z": 0.32, "gamma": 0.82, "temperature_kelvin": 1.9, "nk": 41},
+        {"barrier_z": 0.44, "gamma": 0.92, "temperature_kelvin": 2.4, "nk": 41},
+        {"barrier_z": 0.56, "gamma": 0.99, "temperature_kelvin": 2.9, "nk": 41},
+        {"barrier_z": 0.22, "gamma": 1.04, "temperature_kelvin": 1.6, "nk": 41},
+        {"barrier_z": 0.34, "gamma": 1.10, "temperature_kelvin": 2.1, "nk": 41},
+        {"barrier_z": 0.46, "gamma": 1.18, "temperature_kelvin": 2.5, "nk": 41},
+        {"barrier_z": 0.58, "gamma": 1.28, "temperature_kelvin": 2.9, "nk": 41},
+        {"barrier_z": 0.62, "gamma": 0.72, "temperature_kelvin": 1.6, "nk": 41},
+        {"barrier_z": 0.70, "gamma": 0.84, "temperature_kelvin": 2.0, "nk": 41},
+        {"barrier_z": 0.82, "gamma": 0.94, "temperature_kelvin": 2.5, "nk": 41},
+        {"barrier_z": 0.94, "gamma": 0.98, "temperature_kelvin": 2.9, "nk": 41},
+        {"barrier_z": 0.64, "gamma": 1.04, "temperature_kelvin": 1.5, "nk": 41},
+        {"barrier_z": 0.74, "gamma": 1.12, "temperature_kelvin": 2.0, "nk": 41},
+        {"barrier_z": 0.86, "gamma": 1.20, "temperature_kelvin": 2.6, "nk": 41},
+        {"barrier_z": 0.96, "gamma": 1.30, "temperature_kelvin": 2.9, "nk": 41},
+        {"barrier_z": 0.26, "gamma": 0.76, "temperature_kelvin": 3.2, "nk": 41},
+        {"barrier_z": 0.38, "gamma": 0.86, "temperature_kelvin": 3.8, "nk": 41},
+        {"barrier_z": 0.48, "gamma": 0.94, "temperature_kelvin": 4.5, "nk": 41},
+        {"barrier_z": 0.58, "gamma": 0.99, "temperature_kelvin": 5.4, "nk": 41},
+        {"barrier_z": 0.24, "gamma": 1.06, "temperature_kelvin": 3.1, "nk": 41},
+        {"barrier_z": 0.36, "gamma": 1.14, "temperature_kelvin": 3.9, "nk": 41},
+        {"barrier_z": 0.50, "gamma": 1.22, "temperature_kelvin": 4.6, "nk": 41},
+        {"barrier_z": 0.58, "gamma": 1.30, "temperature_kelvin": 5.5, "nk": 41},
+        {"barrier_z": 0.62, "gamma": 0.74, "temperature_kelvin": 3.3, "nk": 41},
+        {"barrier_z": 0.74, "gamma": 0.86, "temperature_kelvin": 4.0, "nk": 41},
+        {"barrier_z": 0.84, "gamma": 0.96, "temperature_kelvin": 4.8, "nk": 41},
+        {"barrier_z": 0.96, "gamma": 0.99, "temperature_kelvin": 5.6, "nk": 41},
+        {"barrier_z": 0.64, "gamma": 1.04, "temperature_kelvin": 3.2, "nk": 41},
+        {"barrier_z": 0.76, "gamma": 1.14, "temperature_kelvin": 4.0, "nk": 41},
+        {"barrier_z": 0.86, "gamma": 1.22, "temperature_kelvin": 4.9, "nk": 41},
+        {"barrier_z": 0.98, "gamma": 1.32, "temperature_kelvin": 5.7, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_prefix": "task13_validation",
+      "split": "validation",
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.15, "delta_perp_x": -0.05},
+        {"delta_zz_s": 0.23, "delta_zx_d": 0.08},
+        {"delta_xx_s": -0.12, "delta_perp_z": 0.07},
+        {"delta_xx_s": -0.06, "delta_zz_s": 0.19},
+        {"delta_zx_d": 0.07, "delta_perp_z": 0.06},
+        {"delta_perp_z": 0.10, "delta_xx_s": -0.04},
+        {"delta_perp_x": 0.09, "delta_zx_d": 0.05},
+        {"delta_zz_s": 0.28, "delta_perp_z": -0.02}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.26, "gamma": 0.78, "temperature_kelvin": 1.7, "nk": 41},
+        {"barrier_z": 0.52, "gamma": 0.97, "temperature_kelvin": 2.8, "nk": 41},
+        {"barrier_z": 0.28, "gamma": 1.06, "temperature_kelvin": 1.9, "nk": 41},
+        {"barrier_z": 0.54, "gamma": 1.24, "temperature_kelvin": 2.8, "nk": 41},
+        {"barrier_z": 0.64, "gamma": 0.76, "temperature_kelvin": 1.8, "nk": 41},
+        {"barrier_z": 0.90, "gamma": 0.97, "temperature_kelvin": 2.8, "nk": 41},
+        {"barrier_z": 0.68, "gamma": 1.08, "temperature_kelvin": 1.9, "nk": 41},
+        {"barrier_z": 0.92, "gamma": 1.26, "temperature_kelvin": 2.8, "nk": 41},
+        {"barrier_z": 0.30, "gamma": 0.80, "temperature_kelvin": 3.4, "nk": 41},
+        {"barrier_z": 0.54, "gamma": 0.97, "temperature_kelvin": 5.1, "nk": 41},
+        {"barrier_z": 0.28, "gamma": 1.10, "temperature_kelvin": 3.5, "nk": 41},
+        {"barrier_z": 0.56, "gamma": 1.26, "temperature_kelvin": 5.0, "nk": 41},
+        {"barrier_z": 0.66, "gamma": 0.78, "temperature_kelvin": 3.6, "nk": 41},
+        {"barrier_z": 0.92, "gamma": 0.98, "temperature_kelvin": 5.2, "nk": 41},
+        {"barrier_z": 0.68, "gamma": 1.08, "temperature_kelvin": 3.5, "nk": 41},
+        {"barrier_z": 0.94, "gamma": 1.28, "temperature_kelvin": 5.3, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    },
+    {
+      "row_prefix": "task13_test",
+      "split": "test",
+      "pairing_controls_options": [
+        {"delta_zx_d": 0.06, "delta_perp_x": -0.07},
+        {"delta_zz_s": 0.20, "delta_perp_z": 0.05},
+        {"delta_xx_s": -0.10, "delta_perp_x": 0.08},
+        {"delta_zz_s": 0.27, "delta_zx_d": 0.04},
+        {"delta_perp_z": 0.11, "delta_zz_s": 0.17},
+        {"delta_perp_x": -0.02, "delta_xx_s": -0.13},
+        {"delta_zx_d": 0.14, "delta_perp_z": 0.03},
+        {"delta_zz_s": 0.13, "delta_xx_s": -0.10}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.30, "gamma": 0.80, "temperature_kelvin": 1.8, "nk": 41},
+        {"barrier_z": 0.50, "gamma": 0.95, "temperature_kelvin": 2.7, "nk": 41},
+        {"barrier_z": 0.30, "gamma": 1.08, "temperature_kelvin": 1.8, "nk": 41},
+        {"barrier_z": 0.56, "gamma": 1.22, "temperature_kelvin": 2.7, "nk": 41},
+        {"barrier_z": 0.66, "gamma": 0.78, "temperature_kelvin": 1.7, "nk": 41},
+        {"barrier_z": 0.88, "gamma": 0.96, "temperature_kelvin": 2.6, "nk": 41},
+        {"barrier_z": 0.70, "gamma": 1.10, "temperature_kelvin": 1.8, "nk": 41},
+        {"barrier_z": 0.90, "gamma": 1.24, "temperature_kelvin": 2.7, "nk": 41},
+        {"barrier_z": 0.32, "gamma": 0.82, "temperature_kelvin": 3.5, "nk": 41},
+        {"barrier_z": 0.52, "gamma": 0.96, "temperature_kelvin": 5.0, "nk": 41},
+        {"barrier_z": 0.30, "gamma": 1.12, "temperature_kelvin": 3.4, "nk": 41},
+        {"barrier_z": 0.54, "gamma": 1.24, "temperature_kelvin": 5.1, "nk": 41},
+        {"barrier_z": 0.68, "gamma": 0.80, "temperature_kelvin": 3.5, "nk": 41},
+        {"barrier_z": 0.90, "gamma": 0.97, "temperature_kelvin": 5.1, "nk": 41},
+        {"barrier_z": 0.70, "gamma": 1.10, "temperature_kelvin": 3.6, "nk": 41},
+        {"barrier_z": 0.92, "gamma": 1.26, "temperature_kelvin": 5.2, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 121
+      }
+    }
+  ]
+}

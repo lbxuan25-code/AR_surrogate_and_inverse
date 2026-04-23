@@ -9,8 +9,11 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 13A, prepare the first large-scale surrogate dataset,
-  training, and evaluation contract for the first heavy neural campaign.
+- Current TODO task: Task 13B, launch the first high-accuracy heavy surrogate
+  campaign on the server using the frozen Task 13 contract.
+- Task 13A is complete: the canonical large-scale dataset, training, and
+  evaluation contracts are prepared; the residual high-accuracy path, composite
+  loss, and ensemble-capable evaluation wiring are now in the repository.
 - Task 12B is complete: the first medium-scale neural server validation run
   returned compact review artifacts, preserved the frozen forward and direction
   contracts, and passed local review.
@@ -53,6 +56,11 @@ It does not copy or reimplement forward physics code.
   `configs/surrogate/task12_directional_neural_medium.json`,
   `configs/surrogate/task12_directional_neural_evaluation_medium.json`, and
   `docs/task12_neural_medium_server_handoff.md`.
+- The canonical Task 13 high-accuracy large-scale entry points are:
+  `configs/datasets/task13_directional_large_accuracy_dataset.json`,
+  `configs/surrogate/task13_directional_high_accuracy_large.json`,
+  `configs/surrogate/task13_directional_high_accuracy_evaluation_large.json`,
+  and `docs/task13_high_accuracy_large_server_handoff.md`.
 - Historical `task3`, `task4`, and `task5` paths are legacy / archived
   baseline names. They remain loadable for compatibility but are not the current
   canonical stage names.

@@ -1,0 +1,48 @@
+{
+  "config_role": "current_directional_high_accuracy_large_evaluation_entry",
+  "execution_mode": "server_only_large_accuracy_contract",
+  "checkpoint": "outputs/checkpoints/task13_directional_high_accuracy_large/ensemble_manifest.json",
+  "dataset_manifest": "outputs/datasets/task13_directional_large_accuracy/dataset.json",
+  "report_dir": "outputs/runs/task13_directional_high_accuracy_evaluation_large",
+  "run_metadata_path": "outputs/runs/task13_directional_high_accuracy_evaluation_large_run_metadata.json",
+  "run_kind": "task13_directional_high_accuracy_large_evaluation",
+  "report_title": "Task 13 Directional High-Accuracy Large-Scale Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.03,
+    "max_abs_error": 0.075
+  },
+  "ensemble_disagreement_thresholds": {
+    "mean_std": 0.0,
+    "max_std": 0.0
+  },
+  "device": "auto",
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this Task 13 contract"
+  },
+  "uncertainty_contract": {
+    "ensemble_enabled": true,
+    "disagreement_summary": "per_spectrum_mean_std_and_max_std",
+    "threshold_status": "pending_held_out_calibration_before_task13b_launch"
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "config_role": "current_directional_high_accuracy_large_training_entry",
+  "execution_mode": "server_only_large_accuracy_contract",
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "dataset_manifest": "outputs/datasets/task13_directional_large_accuracy/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task13_directional_high_accuracy_large",
+  "run_metadata_path": "outputs/runs/task13_directional_high_accuracy_large_run_metadata.json",
+  "run_kind": "task13_directional_high_accuracy_large_training",
+  "model_card_title": "Task 13 Directional High-Accuracy Large-Scale Checkpoint",
+  "model_card_purpose_lines": [
+    "Large-scale direction-aware high-accuracy residual surrogate mapping fit-layer, direction, and transport controls to full AR conductance spectra.",
+    "This Task 13 contract upgrades the neural stack beyond the Task 12 plain-MLP comparator while preserving the same feature and output spectrum meanings."
+  ],
+  "model_card_limitations_lines": [
+    "This Task 13 high-accuracy checkpoint must be generated on the server from the frozen Task 13 large-scale dataset contract.",
+    "It remains limited to supported named in-plane modes and narrow named-mode-centered spread only under the frozen forward metadata family.",
+    "Final disagreement-trigger fallback thresholds remain pending held-out calibration before the formal Task 13B launch note is accepted."
+  ],
+  "residual_hidden_width": 384,
+  "residual_num_blocks": 5,
+  "normalization": "layernorm",
+  "activation": "gelu",
+  "optimizer": "adamw",
+  "learning_rate": 0.0004,
+  "weight_decay": 0.00005,
+  "batch_size": 48,
+  "max_epochs": 450,
+  "early_stopping_patience": 40,
+  "random_seed": 1103,
+  "device": "auto",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "loss": {
+    "kind": "weighted_mse_plus_first_difference",
+    "reconstruction_weight": 1.0,
+    "shape_weight": 0.15,
+    "bias_weighting": {
+      "kind": "center_window",
+      "central_weight": 2.5,
+      "outer_weight": 1.0,
+      "central_bias_half_width_mev": 4.0
+    }
+  },
+  "ensemble": {
+    "enabled": true,
+    "seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "aggregation": "mean",
+    "disagreement_summary": "per_spectrum_mean_std_and_max_std"
+  },
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this Task 13 contract"
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  }
+}

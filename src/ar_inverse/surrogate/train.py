@@ -15,6 +15,7 @@ from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import (
     DEFAULT_FEATURE_SPEC,
     NEURAL_MLP_MODEL_TYPE,
+    NEURAL_RESIDUAL_MLP_MODEL_TYPE,
     RIDGE_MODEL_TYPE,
     NeuralMLPSpectrumSurrogate,
     RidgeLinearSpectrumSurrogate,
@@ -183,6 +184,36 @@ def _split_metrics(
     return metrics
 
 
+def _split_metrics_from_predictions(
+    predictions: np.ndarray,
+    targets: np.ndarray,
+    splits: np.ndarray,
+) -> dict[str, dict[str, float | int]]:
+    metrics: dict[str, dict[str, float | int]] = {}
+    for split in ("train", "validation", "test"):
+        mask = splits == split
+        if not bool(np.any(mask)):
+            continue
+        split_metrics = regression_metrics(predictions[mask], targets[mask])
+        split_metrics["num_rows"] = int(np.sum(mask))
+        metrics[split] = split_metrics
+    return metrics
+
+
+def _ensemble_seeds_from_config(config: dict[str, Any]) -> list[int]:
+    ensemble = config.get("ensemble")
+    if not isinstance(ensemble, dict) or not bool(ensemble.get("enabled", False)):
+        return [int(config.get("random_seed", 0))]
+
+    seeds = ensemble.get("seeds")
+    if not isinstance(seeds, list) or len(seeds) < 2:
+        raise ValueError("ensemble.seeds must be a list with at least two entries when ensemble is enabled.")
+    normalized = [int(seed) for seed in seeds]
+    if len(set(normalized)) != len(normalized):
+        raise ValueError("ensemble.seeds must be unique.")
+    return normalized
+
+
 def _write_model_card(
     path: Path,
     *,
@@ -295,13 +326,27 @@ def _model_card_model_lines(config: dict[str, Any], metrics: dict[str, Any], che
         return lines
 
     training = dict(metrics.get("training", {}))
+    if model_type == NEURAL_MLP_MODEL_TYPE:
+        lines.extend(
+            [
+                f"- Hidden layer widths: `{training.get('hidden_layer_widths', [])}`",
+                f"- Depth: `{training.get('depth', 0)}`",
+            ]
+        )
+    elif model_type == NEURAL_RESIDUAL_MLP_MODEL_TYPE:
+        lines.extend(
+            [
+                f"- Residual hidden width: `{training.get('residual_hidden_width', training.get('hidden_width', 0))}`",
+                f"- Residual blocks: `{training.get('residual_num_blocks', training.get('num_blocks', 0))}`",
+                f"- Normalization: `{training.get('normalization', config.get('normalization', 'none'))}`",
+            ]
+        )
     lines.extend(
         [
-            f"- Hidden layer widths: `{training.get('hidden_layer_widths', [])}`",
-            f"- Depth: `{training.get('depth', 0)}`",
             f"- Activation: `{training.get('activation', config.get('activation', 'relu'))}`",
             f"- Optimizer: `{training.get('optimizer', config.get('optimizer', 'adam'))}`",
             f"- Learning rate: `{training.get('learning_rate', config.get('learning_rate', 1.0e-3))}`",
+            f"- Weight decay: `{training.get('weight_decay', config.get('weight_decay', 0.0))}`",
             f"- Batch size: `{training.get('batch_size', config.get('batch_size', 32))}`",
             f"- Epoch limit: `{training.get('epoch_limit', config.get('max_epochs', 100))}`",
             f"- Best epoch: `{training.get('best_epoch', training.get('epochs_completed', 0))}`",
@@ -311,6 +356,26 @@ def _model_card_model_lines(config: dict[str, Any], metrics: dict[str, Any], che
             f"- Resolved device: `{training.get('resolved_device', 'cpu')}`",
         ]
     )
+    loss_contract = dict(training.get("loss_contract", {}))
+    if loss_contract:
+        lines.extend(
+            [
+                f"- Loss kind: `{loss_contract.get('kind', 'plain_mse')}`",
+                f"- Reconstruction weight: `{loss_contract.get('reconstruction_weight', 1.0)}`",
+                f"- Shape weight: `{loss_contract.get('shape_weight', 0.0)}`",
+                f"- Bias weighting: `{loss_contract.get('bias_weighting', {})}`",
+            ]
+        )
+    ensemble = dict(metrics.get("ensemble", {}))
+    if ensemble:
+        lines.extend(
+            [
+                f"- Ensemble enabled: `{ensemble.get('enabled', False)}`",
+                f"- Ensemble seeds: `{ensemble.get('seeds', [])}`",
+                f"- Ensemble aggregation: `{ensemble.get('aggregation', 'mean')}`",
+                f"- Ensemble disagreement summary: `{ensemble.get('disagreement_summary', 'per_point_std')}`",
+            ]
+        )
     return lines
 
 
@@ -333,8 +398,11 @@ def train_surrogate_from_config(
     held_out_splits = list(config.get("held_out_splits", ["validation", "test"]))
     model_type = normalize_model_type(config.get("model_type"))
     prediction_device: str | None = None
+    ensemble_seeds = _ensemble_seeds_from_config(config)
 
     if model_type == RIDGE_MODEL_TYPE:
+        if len(ensemble_seeds) != 1:
+            raise ValueError("Ridge surrogate training does not support ensemble.seeds.")
         ridge_alpha = float(config.get("ridge_alpha", 1.0e-6))
         model = RidgeLinearSpectrumSurrogate.fit(
             features[train_mask],
@@ -344,34 +412,107 @@ def train_surrogate_from_config(
         training_summary = {
             "ridge_alpha": ridge_alpha,
         }
+        split_metrics = _split_metrics(model, features, targets, splits, device=prediction_device)
     else:
         validation_mask = splits == "validation"
         validation_features = features[validation_mask] if bool(np.any(validation_mask)) else None
         validation_targets = targets[validation_mask] if bool(np.any(validation_mask)) else None
-        model, training_summary = NeuralMLPSpectrumSurrogate.fit(
-            features[train_mask],
-            targets[train_mask],
-            validation_features=validation_features,
-            validation_targets=validation_targets,
-            hidden_layer_widths=_hidden_layer_widths_from_config(config),
-            activation_name=str(config.get("activation", "relu")),
-            optimizer_name=str(config.get("optimizer", "adam")),
-            learning_rate=float(config.get("learning_rate", 1.0e-3)),
-            batch_size=int(config.get("batch_size", 32)),
-            max_epochs=int(config.get("max_epochs", 100)),
-            early_stopping_patience=int(config.get("early_stopping_patience", 10)),
-            random_seed=int(config.get("random_seed", 0)),
-            device=str(config.get("device", "auto")),
-        )
+        shared_fit_kwargs = {
+            "validation_features": validation_features,
+            "validation_targets": validation_targets,
+            "model_type": model_type,
+            "hidden_layer_widths": _hidden_layer_widths_from_config(config),
+            "residual_hidden_width": int(config.get("residual_hidden_width", config.get("hidden_width", 256))),
+            "residual_num_blocks": int(config.get("residual_num_blocks", config.get("depth", 4))),
+            "activation_name": str(config.get("activation", "relu")),
+            "normalization_name": str(config.get("normalization", "none")),
+            "optimizer_name": str(config.get("optimizer", "adam")),
+            "learning_rate": float(config.get("learning_rate", 1.0e-3)),
+            "weight_decay": float(config.get("weight_decay", 0.0)),
+            "batch_size": int(config.get("batch_size", 32)),
+            "max_epochs": int(config.get("max_epochs", 100)),
+            "early_stopping_patience": int(config.get("early_stopping_patience", 10)),
+            "device": str(config.get("device", "auto")),
+            "loss_config": dict(config.get("loss", {})) if config.get("loss") is not None else None,
+            "bias_mev": list(dataset["bias_mev"]),
+        }
         prediction_device = "cpu"
+        ensemble_config = dict(config.get("ensemble", {}))
+        if len(ensemble_seeds) == 1:
+            model, training_summary = NeuralMLPSpectrumSurrogate.fit(
+                features[train_mask],
+                targets[train_mask],
+                random_seed=int(ensemble_seeds[0]),
+                **shared_fit_kwargs,
+            )
+            split_metrics = _split_metrics(model, features, targets, splits, device=prediction_device)
+        else:
+            member_dir = Path(config["checkpoint_dir"]) / "members"
+            member_dir.mkdir(parents=True, exist_ok=True)
+            member_models: list[NeuralMLPSpectrumSurrogate] = []
+            member_records: list[dict[str, Any]] = []
+            member_predictions: list[np.ndarray] = []
+            member_checkpoints: list[str] = []
+            for seed in ensemble_seeds:
+                member_model, member_training_summary = NeuralMLPSpectrumSurrogate.fit(
+                    features[train_mask],
+                    targets[train_mask],
+                    random_seed=int(seed),
+                    **shared_fit_kwargs,
+                )
+                member_checkpoint_path = member_dir / f"model_seed_{seed}.pt"
+                member_model.save(member_checkpoint_path)
+                member_models.append(member_model)
+                member_checkpoints.append(member_checkpoint_path.as_posix())
+                member_prediction = member_model.predict(features, device=prediction_device)
+                member_predictions.append(member_prediction)
+                member_records.append(
+                    {
+                        "seed": int(seed),
+                        "checkpoint": member_checkpoint_path.as_posix(),
+                        "splits": _split_metrics_from_predictions(member_prediction, targets, splits),
+                        "training": member_training_summary,
+                    }
+                )
+
+            ensemble_prediction = np.mean(np.stack(member_predictions, axis=0), axis=0)
+            split_metrics = _split_metrics_from_predictions(ensemble_prediction, targets, splits)
+            checkpoint_path = Path(config["checkpoint_dir"]) / "ensemble_manifest.json"
+            checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+            ensemble_manifest = {
+                "ensemble_schema_version": "ar_inverse_surrogate_ensemble_v1",
+                "model_type": model_type,
+                "dataset_manifest": str(dataset["manifest_path"]),
+                "dataset_id": dataset["manifest"]["dataset_id"],
+                "aggregation": str(ensemble_config.get("aggregation", "mean")),
+                "disagreement_summary": str(ensemble_config.get("disagreement_summary", "per_point_std")),
+                "seeds": list(int(seed) for seed in ensemble_seeds),
+                "member_checkpoints": member_checkpoints,
+                "loss_contract": member_records[0]["training"]["loss_contract"],
+            }
+            checkpoint_path.write_text(json.dumps(ensemble_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            model = member_models[0]
+            training_summary = dict(member_records[0]["training"])
+            training_summary.update(
+                {
+                    "ensemble_enabled": True,
+                    "ensemble_member_count": len(ensemble_seeds),
+                    "ensemble_seeds": list(int(seed) for seed in ensemble_seeds),
+                    "ensemble_aggregation": str(ensemble_config.get("aggregation", "mean")),
+                    "ensemble_disagreement_summary": str(
+                        ensemble_config.get("disagreement_summary", "per_point_std")
+                    ),
+                }
+            )
 
     checkpoint_dir = Path(config["checkpoint_dir"])
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    checkpoint_path = checkpoint_dir / checkpoint_filename_for_model_type(model_type)
+    checkpoint_path = locals().get("checkpoint_path", checkpoint_dir / checkpoint_filename_for_model_type(model_type))
     metrics_path = checkpoint_dir / "metrics.json"
     model_card_path = checkpoint_dir / "model_card.md"
 
-    model.save(checkpoint_path)
+    if model_type == RIDGE_MODEL_TYPE or len(ensemble_seeds) == 1:
+        model.save(checkpoint_path)
     run_kind = str(config.get("run_kind", "task9_directional_surrogate_smoke_training"))
     metrics = {
         "run_kind": run_kind,
@@ -381,7 +522,7 @@ def train_surrogate_from_config(
         "feature_spec": DEFAULT_FEATURE_SPEC.to_dict(),
         "bias_mev": dataset["bias_mev"],
         "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
-        "splits": _split_metrics(model, features, targets, splits, device=prediction_device),
+        "splits": split_metrics,
         "held_out_splits": held_out_splits,
         "checkpoint": checkpoint_path.as_posix(),
     }
@@ -389,6 +530,17 @@ def train_surrogate_from_config(
         metrics["ridge_alpha"] = float(training_summary["ridge_alpha"])
     else:
         metrics["training"] = training_summary
+        if len(ensemble_seeds) > 1:
+            ensemble = dict(config.get("ensemble", {}))
+            metrics["ensemble"] = {
+                "enabled": True,
+                "member_count": len(ensemble_seeds),
+                "seeds": list(int(seed) for seed in ensemble_seeds),
+                "aggregation": str(ensemble.get("aggregation", "mean")),
+                "disagreement_summary": str(ensemble.get("disagreement_summary", "per_point_std")),
+                "member_checkpoints": member_checkpoints,
+            }
+            metrics["members"] = member_records
     metrics_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     _write_model_card(
         model_card_path,
@@ -428,11 +580,29 @@ def train_surrogate_from_config(
                 "random_seed": training_summary["random_seed"],
                 "requested_device": training_summary["requested_device"],
                 "resolved_device": training_summary["resolved_device"],
-                "hidden_layer_widths": training_summary["hidden_layer_widths"],
                 "depth": training_summary["depth"],
                 "activation": training_summary["activation"],
+                "weight_decay": training_summary["weight_decay"],
+                "loss_contract": training_summary["loss_contract"],
             }
         )
+        if "hidden_layer_widths" in training_summary:
+            run_metadata["hidden_layer_widths"] = training_summary["hidden_layer_widths"]
+        if "residual_hidden_width" in training_summary:
+            run_metadata["residual_hidden_width"] = training_summary["residual_hidden_width"]
+            run_metadata["residual_num_blocks"] = training_summary["residual_num_blocks"]
+            run_metadata["normalization"] = training_summary["normalization"]
+        if len(ensemble_seeds) > 1:
+            ensemble = dict(config.get("ensemble", {}))
+            run_metadata["ensemble"] = {
+                "enabled": True,
+                "member_count": len(ensemble_seeds),
+                "seeds": list(int(seed) for seed in ensemble_seeds),
+                "aggregation": str(ensemble.get("aggregation", "mean")),
+                "disagreement_summary": str(ensemble.get("disagreement_summary", "per_point_std")),
+                "member_checkpoints": member_checkpoints,
+                "checkpoint_manifest": checkpoint_path.as_posix(),
+            }
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return checkpoint_path, metrics_path, model_card_path
 
