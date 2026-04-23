@@ -37,6 +37,9 @@ Run from the repository root on the server after:
 
 - the external forward repository is installed and importable as `forward`, or
   `LNO327_FORWARD_SRC` / `LNO327_FORWARD_REPO` points to it;
+- the external forward repository working tree is clean enough that the emitted
+  metadata should report `git_dirty: false`; check `git -C /path/to/forward-repo status --short`
+  before the pilot run;
 - this repository is on the exact Git commit that contains the Task 10A configs
   and this runbook;
 - the Python environment can run the existing CLI entry points.

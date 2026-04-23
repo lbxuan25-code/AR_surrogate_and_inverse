@@ -6,6 +6,15 @@
   "run_metadata_path": "outputs/runs/task10_directional_surrogate_pilot_run_metadata.json",
   "run_kind": "task10_directional_surrogate_pilot_training",
   "model_card_title": "Task 10 Directional Surrogate Pilot Checkpoint",
+  "model_card_purpose_lines": [
+    "Small non-smoke direction-aware pilot checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
+    "This is the Task 10 pilot artifact prepared for server execution review, not the Task 9 smoke-loop artifact and not a server-scale production run."
+  ],
+  "model_card_limitations_lines": [
+    "This checkpoint is trained on the Task 10 directional pilot dataset and remains a compact pilot artifact.",
+    "It verifies direction-aware feature intake, checkpointing, metrics, and returned-artifact review under the split local-edit and server-run workflow.",
+    "Production-scale dataset generation and training belong to later tasks."
+  ],
   "ridge_alpha": 1.0e-6,
   "direction_contract": {
     "primary_supported_modes": [

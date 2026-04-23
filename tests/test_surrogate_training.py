@@ -24,6 +24,14 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
     config = _load_json(DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH)
     config["checkpoint_dir"] = str(tmp_path / "checkpoint")
     config["run_metadata_path"] = str(tmp_path / "run_metadata.json")
+    config["model_card_purpose_lines"] = [
+        "Custom purpose line one.",
+        "Custom purpose line two.",
+    ]
+    config["model_card_limitations_lines"] = [
+        "Custom limitation line one.",
+        "Custom limitation line two.",
+    ]
     config_path = tmp_path / "task4_config.json"
     config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -51,6 +59,9 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
     assert "Task 9 Directional Surrogate Smoke Checkpoint" in model_card
     assert "task8_directional_smoke_v1" in model_card
     assert "Direction Support" in model_card
+    assert "Custom purpose line one." in model_card
+    assert "Custom limitation line two." in model_card
+    assert "This checkpoint is trained on the tiny Task 8 directional smoke dataset" not in model_card
 
 
 def test_saved_surrogate_checkpoint_predicts_full_spectrum() -> None:

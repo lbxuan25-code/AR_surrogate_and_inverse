@@ -186,13 +186,27 @@ def _write_model_card(
     forward_metadata = first_row["forward_metadata"]
     direction_support = _direction_support_summary(manifest["rows"])
     title = str(config.get("model_card_title", "Task 9 Directional Surrogate Smoke Checkpoint"))
+    purpose_lines = _model_card_lines(
+        config.get("model_card_purpose_lines"),
+        default_lines=(
+            "Smoke-scale direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
+            "This is the Task 9 smoke-loop artifact, not the Task 10 non-smoke pilot or a server-scale training run.",
+        ),
+    )
+    limitation_lines = _model_card_lines(
+        config.get("model_card_limitations_lines"),
+        default_lines=(
+            "This checkpoint is trained on the tiny Task 8 directional smoke dataset and is intended only",
+            "to verify direction-aware feature intake, checkpointing, metrics, and dataset metadata plumbing.",
+            "The non-smoke pilot and server-scale training expansions belong to later tasks.",
+        ),
+    )
     lines = [
         f"# {title}",
         "",
         "## Purpose",
         "",
-        "Smoke-scale direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
-        "This is the Task 9 smoke-loop artifact, not the Task 10 non-smoke pilot or a server-scale training run.",
+        *purpose_lines,
         "",
         "## Model",
         "",
@@ -247,13 +261,19 @@ def _write_model_card(
         [
             "## Limitations",
             "",
-            "This checkpoint is trained on the tiny Task 8 directional smoke dataset and is intended only",
-            "to verify direction-aware feature intake, checkpointing, metrics, and dataset metadata plumbing.",
-            "The non-smoke pilot and server-scale training expansions belong to later tasks.",
+            *limitation_lines,
             "",
         ]
     )
     path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def _model_card_lines(lines: Any, *, default_lines: tuple[str, ...]) -> list[str]:
+    if lines is None:
+        return list(default_lines)
+    if not isinstance(lines, list) or not lines or not all(isinstance(line, str) and line for line in lines):
+        raise ValueError("Model card line overrides must be a non-empty list of strings.")
+    return list(lines)
 
 
 def train_surrogate_from_config(

@@ -5,5 +5,14 @@
   "run_metadata_path": "outputs/runs/task9_directional_surrogate_smoke_run_metadata.json",
   "run_kind": "task9_directional_surrogate_smoke_training",
   "model_card_title": "Task 9 Directional Surrogate Smoke Checkpoint",
+  "model_card_purpose_lines": [
+    "Smoke-scale direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
+    "This is the Task 9 smoke-loop artifact, not the Task 10 non-smoke pilot or a server-scale training run."
+  ],
+  "model_card_limitations_lines": [
+    "This checkpoint is trained on the tiny Task 8 directional smoke dataset and is intended only",
+    "to verify direction-aware feature intake, checkpointing, metrics, and dataset metadata plumbing.",
+    "The non-smoke pilot and server-scale training expansions belong to later tasks."
+  ],
   "ridge_alpha": 1.0e-6
 }
