@@ -2,80 +2,248 @@
 
 ## Current Task
 
-### Task 13A — Prepare the large-scale surrogate dataset contract
+### Task 13A — Freeze the high-accuracy large-scale surrogate contract and upgrade the training stack
 
 #### Goal
-Freeze the first large-scale dataset and training contract for heavy server use,
-using the validated neural stack and the still-frozen direction contract.
+Prepare a high-accuracy large-scale surrogate contract that does more than scale
+up row count. This task must also freeze the model/loss/calibration stack that
+will be used for the first truly accuracy-driven heavy run.
+
+The objective is not merely “larger training,” but:
+- better held-out spectral accuracy,
+- better regime robustness,
+- explicit uncertainty-aware fallback behavior,
+- and a training stack suitable for later inverse acceleration.
+
+#### Why this task now replaces the older generic 13A
+Task 12B proved that the first neural MLP beats the ridge baseline under the
+frozen forward-family and direction contract. However, the current neural stack
+is still only a first-generation model:
+- plain feed-forward MLP,
+- plain pointwise MSE training,
+- no explicit uncertainty estimation,
+- no residual/depth-stabilization path,
+- no explicit low-bias / shape-aware loss weighting.
+
+Before the first heavy campaign, these accuracy-critical choices must be frozen.
 
 #### Scope
 Do:
-- define the first large-scale dataset config;
-- define the first large-scale neural training config;
-- define the first large-scale evaluation config;
-- freeze the sampling budget and regime quotas;
-- write a large-scale server handoff note.
+- define one canonical large-scale dataset config for an accuracy-driven heavy run;
+- define one canonical high-accuracy neural training config;
+- define one canonical large-scale evaluation config;
+- upgrade the neural surrogate stack from “plain MLP + plain MSE” to a more
+  stable and accuracy-oriented contract;
+- freeze the uncertainty/calibration contract for later inverse use;
+- write one large-scale server handoff note with exact commands and artifact rules;
+- add lightweight tests validating the new large-scale config and new model/loss wiring.
 
 Do not:
 - start the large-scale run yet;
-- widen the direction domain;
-- add `c_axis` or diagnostic raw-angle primary rows.
+- widen the truth-grade direction domain;
+- add `c_axis` or diagnostic raw-angle primary rows;
+- silently replace the frozen forward metadata family;
+- silently remove the Task 12 plain-MLP comparator path.
 
-#### Suggested scale planning targets
-The contract should be written so the later heavy run can target something like:
-- 2,000 to 5,000 total rows
-- explicit quotas across supported direction regimes
-- explicit quotas across transport regimes
-- fixed bias-grid and `nk` policy
-- restart-safe run metadata and artifact return rules
+#### Frozen truth-domain restrictions
+The large-scale contract must remain limited to:
+- `inplane_100`, no spread
+- `inplane_110`, no spread
+- narrow named-mode-centered spread only
+
+The contract must continue to exclude:
+- `c_axis`
+- diagnostic raw-angle primary rows
+- arbitrary wide spread
+- experiment-side direction mixtures in the surrogate truth dataset
+
+#### Large-scale dataset contract
+The canonical heavy dataset config must target a genuinely large run, for example:
+- total rows: `4096`
+- train / validation / test: `3072 / 512 / 512`
+- explicit quotas across:
+  - `inplane_100_no_spread`
+  - `inplane_110_no_spread`
+  - `named_mode_narrow_spread`
+- explicit quotas across transport regimes:
+  - low/high barrier
+  - low/high gamma
+  - low/high temperature
+- fixed `nk` and fixed bias-grid policy
+- no silent sampling drift across splits
+
+The config must include explicit regime-count targets and a machine-checkable
+`expected_num_rows`.
+
+#### High-accuracy model-stack contract
+The heavy run must freeze a stronger neural contract than Task 12B.
+
+Required upgrades:
+- keep the existing plain neural MLP path as a comparator;
+- add one canonical high-accuracy surrogate path using:
+  - residual MLP blocks or another equally simple depth-stabilized feed-forward design,
+  - normalization support (`LayerNorm` or equivalent),
+  - configurable width/depth,
+  - checkpoint/readback support fully compatible with evaluation/report code.
+
+Do not introduce architectures that change the meaning of the current feature
+contract or output spectrum contract.
+
+#### High-accuracy loss contract
+The canonical high-accuracy training config must not use plain pointwise MSE alone.
+
+It must freeze a composite loss with at least:
+- weighted spectrum reconstruction loss,
+- stronger weight near low-bias / central-bias regions,
+- one shape-aware term such as first-difference or local-slope consistency,
+- explicit coefficients recorded in config and run metadata.
+
+The loss contract must be documented in the model card and run metadata.
+
+#### Uncertainty and fallback contract
+The heavy run must freeze one uncertainty-aware policy for later inverse use.
+
+Preferred contract:
+- ensemble of `3` independently seeded high-accuracy models,
+- ensemble-mean prediction for reporting,
+- ensemble disagreement summary recorded in evaluation artifacts.
+
+At minimum, Task 13A must define:
+- the ensemble seed set,
+- how ensemble disagreement is summarized,
+- which disagreement thresholds trigger direct-forward fallback,
+- how this joins the existing regime-level fallback policy.
+
+#### Required repository outputs from Task 13A
+- canonical large-scale dataset config
+- canonical high-accuracy neural training config
+- canonical large-scale evaluation config
+- updated surrogate model code for the frozen high-accuracy path
+- updated loss implementation and config wiring
+- updated uncertainty / ensemble evaluation wiring
+- large-scale server handoff note
+- lightweight validation tests
+- updated `TODO.md` and `AGENTS.md`
 
 #### Acceptance checklist
 - [ ] one canonical large-scale dataset config exists
-- [ ] one canonical large-scale neural training config exists
+- [ ] one canonical high-accuracy neural training config exists
 - [ ] one canonical large-scale evaluation config exists
-- [ ] regime quotas are explicit
-- [ ] transport sampling policy is explicit
+- [ ] explicit row quotas exist for all supported direction regimes
+- [ ] explicit transport-regime quotas exist
 - [ ] the frozen forward metadata family remains explicit
+- [ ] the high-accuracy model path is implemented and checkpoint-compatible
+- [ ] the composite weighted loss is implemented and documented
+- [ ] the uncertainty / ensemble contract is explicit
 - [ ] a large-scale server handoff note exists
+- [ ] lightweight validation tests pass
+- [ ] no heavy local outputs were fabricated
 
 #### Promotion rule
 Only after Task 13A is complete may Task 13B move into Current Task.
 
 ---
 
-### Task 13B — Launch the first heavy large-scale surrogate campaign
+### Task 13B — Launch the first high-accuracy heavy surrogate campaign
 
 #### Goal
-Run the first truly heavy server-side surrogate campaign:
-- large-scale forward dataset generation
-- large-scale neural surrogate training
-- large-scale evaluation
-- compact returned artifacts for local acceptance
+Run the first truly heavy, accuracy-driven server-side surrogate campaign using
+the frozen large-scale contract from Task 13A.
 
-This is the first task that should be treated as the full heavy surrogate
-training campaign.
+This task is not only a heavy run. It is the first run that must be judged by:
+- large-scale held-out accuracy,
+- regime robustness,
+- uncertainty-aware reliability,
+- and suitability for later inverse acceleration.
 
-#### Returned artifacts required for Task 13B review
-At minimum:
+#### Server-side execution scope
+The server run must include:
+- large-scale forward dataset generation,
+- training of the frozen high-accuracy neural path,
+- training of the frozen ensemble members when the ensemble contract is enabled,
+- large-scale evaluation on validation/test splits,
+- uncertainty-aware reporting,
+- compact returned artifacts for local acceptance.
+
+#### Intended heavy scale
+The run must follow the canonical Task 13A contract exactly, including:
+- total rows around `4096`
+- explicit regime quotas
+- fixed bias grid
+- fixed `nk`
+- frozen forward metadata family
+- unchanged truth-grade direction contract
+
+Do not widen the direction domain during this task.
+
+#### Required returned artifacts for review
+At minimum, commit back:
 - large-scale dataset run metadata
-- large-scale training metrics
-- large-scale model card
-- large-scale evaluation report
-- large-scale evaluation markdown
-- large-scale training/evaluation run metadata
+- compact dataset family metadata or the full manifest if still reviewable
+- high-accuracy training metrics
+- high-accuracy model card
+- high-accuracy training run metadata
+- evaluation report
+- evaluation markdown
+- evaluation run metadata
+- ensemble summary report if ensemble is enabled
 - server run note
-- compact dataset family metadata proving the frozen direction and forward
-  contracts used by the heavy run
 
-Do not commit heavyweight outputs unless explicitly promoted.
+Heavy artifacts that should remain on the server unless explicitly promoted:
+- large forward-output directories
+- full raw spectra collections
+- individual heavy checkpoints
+- copied intermediate training artifacts
 
-#### Acceptance checklist
-- [ ] heavy run used the frozen large-scale contract
-- [ ] large-scale neural training completed successfully
-- [ ] returned metrics/evaluation reports exist
-- [ ] local review confirms forward-family and direction-contract stability
-- [ ] surrogate now defines clearly documented safe and unsafe regimes for later
-      inverse acceleration work
+#### Mandatory comparison policy
+Task 13B review must compare:
+- the committed ridge baseline,
+- the committed Task 12B plain neural baseline,
+- and the new Task 13 heavy model / ensemble result.
+
+The large-scale campaign is not accepted merely because it trains successfully.
+It must show that the heavy model is at least as reliable as Task 12B and is
+better justified for production inverse acceleration.
+
+#### Accuracy acceptance targets
+Task 13B should be accepted only if all of the following hold:
+
+Global held-out requirements:
+- [ ] evaluation report exists
+- [ ] mean held-out RMSE remains within the configured production-safe range
+- [ ] mean held-out max absolute error remains within the configured production-safe range
+- [ ] held-out unsafe fraction is no worse than Task 12B and remains near zero
+
+Direction-regime requirements:
+- [ ] `inplane_100_no_spread` remains safe for inverse acceleration
+- [ ] `inplane_110_no_spread` remains safe for inverse acceleration
+- [ ] `named_mode_narrow_spread` remains safe for inverse acceleration
+
+Robustness requirements:
+- [ ] no supported held-out direction regime collapses relative to Task 12B
+- [ ] no major transport regime becomes newly unsafe without being explicitly documented
+- [ ] evaluation includes per-regime metrics and worst-case rows
+
+Uncertainty requirements:
+- [ ] ensemble disagreement or equivalent uncertainty summary exists
+- [ ] disagreement-triggered fallback policy is explicit
+- [ ] high-disagreement or unsafe regions are documented as direct-forward-required
+
+Contract requirements:
+- [ ] heavy run used the frozen large-scale dataset config
+- [ ] heavy run used the frozen forward metadata family
+- [ ] heavy run preserved the validated direction contract only
+- [ ] local review confirms no schema / naming / contract mismatch
+
+#### Failure rule
+If the heavy run achieves lower average error but introduces unstable or unsafe
+regimes not justified by the uncertainty contract, Task 13B is not accepted.
+
+#### Success rule
+Task 13B is complete only after local review concludes that the returned heavy
+artifacts define a clearly documented, uncertainty-aware, high-accuracy
+surrogate family suitable for later inverse acceleration under the frozen
+direction contract.
 
 ---
 
