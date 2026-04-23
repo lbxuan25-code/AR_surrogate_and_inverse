@@ -631,7 +631,7 @@
   "report_schema_version": "ar_inverse_experiment_fit_report_v1",
   "run_kind": "task7_experiment_fitting_report",
   "surrogate_uncertainty": {
-    "source": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
+    "source": "outputs/runs/task9_directional_evaluation_smoke/evaluation_report.json",
     "usage": "No surrogate-only claim is made; candidate scores use direct-forward recheck payloads."
   },
   "transport_nuisance_controls": {

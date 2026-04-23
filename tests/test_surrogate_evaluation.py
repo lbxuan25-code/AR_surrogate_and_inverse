@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from ar_inverse.surrogate.calibration import direction_regime_label, transport_regime_label
-from ar_inverse.surrogate.evaluate import DEFAULT_TASK5_CONFIG_PATH, evaluate_surrogate_from_config
+from ar_inverse.surrogate.evaluate import DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH, evaluate_surrogate_from_config
 
 
 def _load_json(path: Path) -> dict[str, object]:
@@ -14,7 +14,7 @@ def _load_json(path: Path) -> dict[str, object]:
 
 
 def test_evaluate_surrogate_from_config_writes_unsafe_regime_report(tmp_path) -> None:
-    config = _load_json(DEFAULT_TASK5_CONFIG_PATH)
+    config = _load_json(DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH)
     config["report_dir"] = str(tmp_path / "evaluation")
     config["run_metadata_path"] = str(tmp_path / "run_metadata.json")
     config_path = tmp_path / "task5_config.json"
@@ -27,7 +27,7 @@ def test_evaluate_surrogate_from_config_writes_unsafe_regime_report(tmp_path) ->
     assert Path(config["run_metadata_path"]).exists()
 
     report = _load_json(report_path)
-    assert report["run_kind"] == "task5_surrogate_evaluation_and_calibration"
+    assert report["run_kind"] == "task9_directional_evaluation_smoke"
     assert report["evaluation_scope"]["held_out_splits"] == ["validation", "test"]
     assert report["evaluation_scope"]["num_held_out_rows"] == 2
     assert report["calibration_diagnostics"]["unsafe_fraction"] == 1.0
@@ -38,10 +38,10 @@ def test_evaluate_surrogate_from_config_writes_unsafe_regime_report(tmp_path) ->
     assert all(not row["safe_for_inverse_acceleration"] for row in report["row_errors"])
 
 
-def test_repository_task5_report_identifies_unsafe_inverse_regimes() -> None:
-    report_path = Path("outputs/runs/task5_surrogate_evaluation/evaluation_report.json")
-    markdown_path = Path("outputs/runs/task5_surrogate_evaluation/evaluation_report.md")
-    run_metadata_path = Path("outputs/runs/task5_surrogate_evaluation_run_metadata.json")
+def test_repository_task9_directional_evaluation_report_identifies_unsafe_inverse_regimes() -> None:
+    report_path = Path("outputs/runs/task9_directional_evaluation_smoke/evaluation_report.json")
+    markdown_path = Path("outputs/runs/task9_directional_evaluation_smoke/evaluation_report.md")
+    run_metadata_path = Path("outputs/runs/task9_directional_evaluation_smoke_run_metadata.json")
 
     assert report_path.exists()
     assert markdown_path.exists()
@@ -50,17 +50,20 @@ def test_repository_task5_report_identifies_unsafe_inverse_regimes() -> None:
     report = _load_json(report_path)
     run_metadata = _load_json(run_metadata_path)
 
+    assert report["run_kind"] == "task9_directional_evaluation_smoke"
+    assert run_metadata["run_kind"] == "task9_directional_evaluation_smoke"
     unsafe_regimes = report["fallback_policy"]["unsafe_transport_regimes"]
     assert len(unsafe_regimes) >= 1
     assert unsafe_regimes == run_metadata["unsafe_transport_regimes"]
     assert report["fallback_policy"]["unsafe_direction_regimes"] == run_metadata["unsafe_direction_regimes"]
     assert report["forward_metadata_family"]["forward_interface_version"]
     assert "unsafe transport regimes" in markdown_path.read_text(encoding="utf-8")
+    assert "Task 9 Directional Surrogate Smoke Evaluation" in markdown_path.read_text(encoding="utf-8")
     assert "Direction Regimes" in markdown_path.read_text(encoding="utf-8")
 
 
 def test_evaluate_surrogate_cli_writes_report(tmp_path) -> None:
-    config = _load_json(DEFAULT_TASK5_CONFIG_PATH)
+    config = _load_json(DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH)
     config["report_dir"] = str(tmp_path / "cli_evaluation")
     config["run_metadata_path"] = str(tmp_path / "cli_run_metadata.json")
     config_path = tmp_path / "task5_cli_config.json"

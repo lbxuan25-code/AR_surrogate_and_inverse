@@ -66,9 +66,9 @@ Run metadata is written to:
 outputs/runs/task2_smoke_dataset_run_metadata.json
 ```
 
-## Task 3 Orchestration Smoke Config
+## Legacy Task 3 Orchestration Smoke Config
 
-The Task 3 generator uses an explicit JSON config at:
+The archived Task 3 generator uses an explicit legacy JSON config at:
 
 ```text
 configs/datasets/task3_smoke_dataset.json
@@ -89,7 +89,8 @@ python scripts/datasets/build_dataset.py --config configs/datasets/task3_smoke_d
 
 Rerunning the command reuses completed rows whose referenced forward-output
 JSON files still match their recorded SHA-256 digests. Use `--force` to
-regenerate every row.
+regenerate every row. This path is retained as a legacy baseline; the current
+directional contract entry is the Task 8 config below.
 
 ## Direction-Aware Policy
 

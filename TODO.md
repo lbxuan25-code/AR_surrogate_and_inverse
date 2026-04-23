@@ -23,6 +23,16 @@ supported named in-plane modes, first without diagnostic raw angles as primary d
 - Produce a model card that explicitly states supported direction regimes and
   fallback rules.
 
+#### Naming note
+- Naming cleanup completed 2026-04-23 without starting the formal non-smoke
+  Task 9 training expansion.
+- Current smoke-scale canonical entries:
+  - dataset: `configs/datasets/task8_directional_smoke_dataset.json`
+  - training: `configs/surrogate/task9_directional_surrogate_smoke.json`
+  - evaluation: `configs/surrogate/task9_directional_evaluation_smoke.json`
+- Historical `task3`, `task4`, and `task5` configs and outputs are retained as
+  legacy / archived baseline names, not current canonical entry points.
+
 ---
 
 ## Backlog

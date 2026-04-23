@@ -163,10 +163,10 @@
     }
   },
   "model": {
-    "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
+    "checkpoint": "outputs/checkpoints/task9_directional_surrogate_smoke/model.npz",
     "model_type": "ridge_linear_spectrum_surrogate"
   },
-  "report_title": "Legacy Task 5 Surrogate Evaluation And Calibration",
+  "report_title": "Task 9 Directional Surrogate Smoke Evaluation",
   "row_errors": [
     {
       "direction": {
@@ -325,7 +325,7 @@
       ]
     }
   ],
-  "run_kind": "legacy_task5_surrogate_evaluation_and_calibration",
+  "run_kind": "task9_directional_evaluation_smoke",
   "transport_regime_report": {
     "high_barrier|high_gamma|high_temp": {
       "max_abs_error": 0.13597491072078993,

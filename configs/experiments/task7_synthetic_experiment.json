@@ -1,7 +1,7 @@
 {
   "experiment_spectrum": "outputs/experiments/task7_synthetic_fit/synthetic_experiment_spectrum.json",
   "inverse_report": "outputs/inverse/task6_smoke_inverse/inverse_report.json",
-  "surrogate_evaluation_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
+  "surrogate_evaluation_report": "outputs/runs/task9_directional_evaluation_smoke/evaluation_report.json",
   "output_dir": "outputs/experiments/task7_synthetic_fit",
   "run_metadata_path": "outputs/runs/task7_experiment_fit_run_metadata.json",
   "direction_prior": {

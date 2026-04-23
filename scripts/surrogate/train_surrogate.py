@@ -1,4 +1,4 @@
-"""Train the first surrogate baseline."""
+"""Train a direction-aware surrogate smoke checkpoint."""
 
 from __future__ import annotations
 
@@ -12,15 +12,15 @@ local_src_text = str(LOCAL_SRC)
 if local_src_text not in sys.path:
     sys.path.insert(0, local_src_text)
 
-from ar_inverse.surrogate.train import DEFAULT_TASK4_CONFIG_PATH, train_surrogate_from_config
+from ar_inverse.surrogate.train import DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH, train_surrogate_from_config
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Train the Task 4 surrogate baseline.")
+    parser = argparse.ArgumentParser(description="Train the Task 9 directional surrogate smoke checkpoint.")
     parser.add_argument(
         "--config",
         type=Path,
-        default=DEFAULT_TASK4_CONFIG_PATH,
+        default=DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
         help="JSON surrogate training config.",
     )
     return parser.parse_args()

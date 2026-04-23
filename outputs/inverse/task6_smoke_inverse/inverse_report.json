@@ -195,7 +195,7 @@
         }
       },
       "surrogate_usage": {
-        "fallback_policy_id": "task5_direct_forward_fallback_v1",
+        "fallback_policy_id": "task9_directional_direct_forward_fallback_v1",
         "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
         "used": false
       },
@@ -451,7 +451,7 @@
         }
       },
       "surrogate_usage": {
-        "fallback_policy_id": "task5_direct_forward_fallback_v1",
+        "fallback_policy_id": "task9_directional_direct_forward_fallback_v1",
         "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
         "used": false
       },
@@ -529,7 +529,7 @@
     },
     "fallback_policy": {
       "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
-      "policy_id": "task5_direct_forward_fallback_v1",
+      "policy_id": "task9_directional_direct_forward_fallback_v1",
       "safe_direction_regimes": [],
       "safe_error_thresholds": {
         "max_abs_error": 0.1,
@@ -549,7 +549,7 @@
     "objective": "spectrum_rmse",
     "reported_candidate_count": 2,
     "surrogate_usage": {
-      "fallback_policy_id": "task5_direct_forward_fallback_v1",
+      "fallback_policy_id": "task9_directional_direct_forward_fallback_v1",
       "reason": "Task 5 fallback policy requires direct forward for unsafe or unseen regimes.",
       "used": false
     }

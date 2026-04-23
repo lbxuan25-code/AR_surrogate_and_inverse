@@ -66,6 +66,7 @@ outputs/inverse/task6_smoke_inverse/inverse_report.json
 ```
 
 It includes the target row, search policy, surrogate/fallback decision, and the
-reported candidate families. Because Task 5 marks the current surrogate unsafe
-for inverse acceleration, the smoke inverse search uses direct external-forward
-rechecks for final scoring.
+reported candidate families. The current direction-aware smoke evaluation
+report can mark direction or transport regimes unsafe for inverse acceleration,
+so the smoke inverse search uses direct external-forward rechecks for final
+scoring.

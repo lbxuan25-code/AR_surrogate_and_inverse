@@ -1,8 +1,14 @@
 {
+  "config_role": "legacy_task5_evaluation_alias",
+  "lifecycle_status": "legacy_superseded",
+  "superseded_by": "configs/surrogate/task9_directional_evaluation_smoke.json",
+  "note": "Historical Task 5 filename retained for compatibility; use the task9 directional evaluation smoke config as the current entry point.",
   "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
   "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "report_dir": "outputs/runs/task5_surrogate_evaluation",
   "run_metadata_path": "outputs/runs/task5_surrogate_evaluation_run_metadata.json",
+  "run_kind": "legacy_task5_surrogate_evaluation_and_calibration",
+  "report_title": "Legacy Task 5 Surrogate Evaluation And Calibration",
   "held_out_splits": [
     "validation",
     "test"

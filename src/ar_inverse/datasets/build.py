@@ -397,8 +397,14 @@ def build_dataset_from_config(
 
     run_metadata_output_path = Path(run_metadata_path or config.get("run_metadata_path") or DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH)
     run_metadata_output_path.parent.mkdir(parents=True, exist_ok=True)
+    default_run_kind = (
+        "task8_directional_dataset_generation"
+        if any(sample.direction for sample in samples)
+        else "legacy_task3_dataset_generation_orchestration"
+    )
+    run_kind = str(config.get("run_kind", default_run_kind))
     run_metadata = {
-        "run_kind": "task3_dataset_generation_orchestration",
+        "run_kind": run_kind,
         "dataset_manifest": manifest_path.as_posix(),
         "dataset_id": dataset_id,
         "source_config": config_file.as_posix(),

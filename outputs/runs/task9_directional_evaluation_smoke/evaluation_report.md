@@ -1,8 +1,8 @@
-# Legacy Task 5 Surrogate Evaluation And Calibration
+# Task 9 Directional Surrogate Smoke Evaluation
 
 ## Summary
 
-- Model: `outputs/checkpoints/task4_linear_surrogate/model.npz`
+- Model: `outputs/checkpoints/task9_directional_surrogate_smoke/model.npz`
 - Dataset: `outputs/datasets/task8_directional_smoke/dataset.json`
 - Held-out splits: `validation, test`
 - Safe RMSE threshold: `0.05`

@@ -103,7 +103,8 @@ The dataset manifest is a compact JSON object:
 
 ## Resumable Manifest
 
-Task 3 adds resumable orchestration fields:
+The legacy Task 3 orchestration and the current Task 8 directional smoke
+generator both use resumable orchestration fields:
 
 - `resumable_manifest_schema_version`: currently
   `ar_inverse_resumable_manifest_v1`.
@@ -125,4 +126,4 @@ its referenced forward-output file exists and its SHA-256 digest still matches
 the row's `forward_output_ref`.
 
 Retries, scheduling, parallel workers, and large-scale policy expansion remain
-outside this Task 3 smoke orchestration.
+outside these smoke orchestration paths.

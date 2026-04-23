@@ -98,7 +98,7 @@
   },
   "markdown_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.md",
   "report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
-  "run_kind": "task5_surrogate_evaluation_and_calibration",
+  "run_kind": "legacy_task5_surrogate_evaluation_and_calibration",
   "unsafe_direction_regimes": [
     "inplane_110_no_spread",
     "named_mode_narrow_spread"

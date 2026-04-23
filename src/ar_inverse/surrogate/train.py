@@ -1,4 +1,4 @@
-"""Training pipeline for the first surrogate baseline."""
+"""Training pipeline for direction-aware surrogate smoke checkpoints."""
 
 from __future__ import annotations
 
@@ -14,9 +14,16 @@ from ar_inverse.metadata import assert_forward_metadata_complete
 from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import DEFAULT_FEATURE_SPEC, RidgeLinearSpectrumSurrogate
 
-DEFAULT_TASK4_CONFIG_PATH = Path("configs/surrogate/task4_linear_surrogate.json")
-DEFAULT_TASK4_CHECKPOINT_DIR = Path("outputs/checkpoints/task4_linear_surrogate")
-DEFAULT_TASK4_RUN_METADATA_PATH = Path("outputs/runs/task4_linear_surrogate_run_metadata.json")
+DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH = Path("configs/surrogate/task9_directional_surrogate_smoke.json")
+DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR = Path("outputs/checkpoints/task9_directional_surrogate_smoke")
+DEFAULT_DIRECTIONAL_SURROGATE_RUN_METADATA_PATH = Path(
+    "outputs/runs/task9_directional_surrogate_smoke_run_metadata.json"
+)
+
+# Deprecated compatibility aliases for historical Task 4 callers.
+DEFAULT_TASK4_CONFIG_PATH = DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH
+DEFAULT_TASK4_CHECKPOINT_DIR = DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR
+DEFAULT_TASK4_RUN_METADATA_PATH = DEFAULT_DIRECTIONAL_SURROGATE_RUN_METADATA_PATH
 
 
 def load_training_config(path: Path | str) -> dict[str, Any]:
@@ -178,13 +185,14 @@ def _write_model_card(
     first_row = manifest["rows"][0]
     forward_metadata = first_row["forward_metadata"]
     direction_support = _direction_support_summary(manifest["rows"])
+    title = str(config.get("model_card_title", "Task 9 Directional Surrogate Smoke Checkpoint"))
     lines = [
-        "# Task 4 Linear Surrogate Baseline",
+        f"# {title}",
         "",
         "## Purpose",
         "",
-        "First lightweight baseline mapping fit-layer and transport controls to AR conductance spectra.",
-        "This is a smoke-scale model, not a calibrated inverse-search surrogate.",
+        "Smoke-scale direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.",
+        "This is a naming-clean smoke artifact and not the formal large Task 9 surrogate training run.",
         "",
         "## Model",
         "",
@@ -239,9 +247,9 @@ def _write_model_card(
         [
             "## Limitations",
             "",
-            "This baseline is trained on the tiny Task 3 smoke dataset and is intended only",
-            "to verify training, checkpointing, metrics, and dataset metadata plumbing.",
-            "Calibration and unsafe-regime analysis belong to Task 5.",
+            "This checkpoint is trained on the tiny Task 8 directional smoke dataset and is intended only",
+            "to verify direction-aware feature intake, checkpointing, metrics, and dataset metadata plumbing.",
+            "The formal non-smoke Task 9 training expansion has not been run by this artifact.",
             "",
         ]
     )
@@ -249,9 +257,9 @@ def _write_model_card(
 
 
 def train_surrogate_from_config(
-    config_path: Path | str = DEFAULT_TASK4_CONFIG_PATH,
+    config_path: Path | str = DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
 ) -> tuple[Path, Path, Path]:
-    """Train the Task 4 baseline and write checkpoint, metrics, and model card."""
+    """Train a direction-aware smoke checkpoint and write metrics/model card."""
 
     config_file = Path(config_path)
     config = load_training_config(config_file)
@@ -278,8 +286,9 @@ def train_surrogate_from_config(
     model_card_path = checkpoint_dir / "model_card.md"
 
     model.save(checkpoint_path)
+    run_kind = str(config.get("run_kind", "task9_directional_surrogate_smoke_training"))
     metrics = {
-        "run_kind": "task4_linear_surrogate_training",
+        "run_kind": run_kind,
         "model_type": "ridge_linear_spectrum_surrogate",
         "ridge_alpha": ridge_alpha,
         "dataset_manifest": str(dataset["manifest_path"]),
@@ -300,10 +309,10 @@ def train_surrogate_from_config(
         checkpoint_path=checkpoint_path,
     )
 
-    run_metadata_path = Path(config.get("run_metadata_path", DEFAULT_TASK4_RUN_METADATA_PATH))
+    run_metadata_path = Path(config.get("run_metadata_path", DEFAULT_DIRECTIONAL_SURROGATE_RUN_METADATA_PATH))
     run_metadata_path.parent.mkdir(parents=True, exist_ok=True)
     run_metadata = {
-        "run_kind": "task4_linear_surrogate_training",
+        "run_kind": run_kind,
         "config": config_file.as_posix(),
         "checkpoint": checkpoint_path.as_posix(),
         "metrics": metrics_path.as_posix(),

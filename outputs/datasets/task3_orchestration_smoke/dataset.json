@@ -1,7 +1,7 @@
 {
   "dataset_id": "task3_orchestration_smoke_v1",
   "dataset_manifest_schema_version": "ar_inverse_dataset_manifest_v1",
-  "description": "Small resumable smoke dataset for Task 3 dataset generation orchestration.",
+  "description": "Legacy small resumable smoke dataset for archived Task 3 dataset generation orchestration.",
   "plan": [
     {
       "forward_output_path": "forward_outputs/task3_smoke_train_000.json",

@@ -1,7 +1,7 @@
 {
   "target_dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "target_row_id": "task8_direction_train_inplane_100",
-  "fallback_policy_report": "outputs/runs/task5_surrogate_evaluation/evaluation_report.json",
+  "fallback_policy_report": "outputs/runs/task9_directional_evaluation_smoke/evaluation_report.json",
   "output_dir": "outputs/inverse/task6_smoke_inverse",
   "run_metadata_path": "outputs/runs/task6_smoke_inverse_run_metadata.json",
   "top_k": 2,

@@ -116,5 +116,5 @@
   ],
   "metrics": "outputs/checkpoints/task4_linear_surrogate/metrics.json",
   "model_card": "outputs/checkpoints/task4_linear_surrogate/model_card.md",
-  "run_kind": "task4_linear_surrogate_training"
+  "run_kind": "legacy_task4_linear_surrogate_training"
 }

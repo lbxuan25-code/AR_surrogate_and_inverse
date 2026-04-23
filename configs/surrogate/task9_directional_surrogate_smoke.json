@@ -1,0 +1,9 @@
+{
+  "config_role": "current_directional_surrogate_smoke_entry",
+  "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task9_directional_surrogate_smoke",
+  "run_metadata_path": "outputs/runs/task9_directional_surrogate_smoke_run_metadata.json",
+  "run_kind": "task9_directional_surrogate_smoke_training",
+  "model_card_title": "Task 9 Directional Surrogate Smoke Checkpoint",
+  "ridge_alpha": 1.0e-6
+}

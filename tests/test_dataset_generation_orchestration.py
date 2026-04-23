@@ -43,6 +43,7 @@ def test_build_dataset_from_config_writes_resumable_manifest_and_reuses_rows(tmp
     assert {entry["reused_existing_output"] for entry in manifest["plan"]} == {False}
 
     first_run_metadata = _load_json(run_metadata_path)
+    assert first_run_metadata["run_kind"] == "legacy_task3_dataset_generation_orchestration"
     assert first_run_metadata["generated_rows"] == 3
     assert first_run_metadata["reused_rows"] == 0
 
@@ -83,12 +84,17 @@ def test_repository_task3_smoke_dataset_has_complete_metadata_and_hashes() -> No
 
 def test_task8_directional_smoke_dataset_has_direction_blocks() -> None:
     manifest_path = DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR / "dataset.json"
+    run_metadata_path = Path("outputs/runs/task8_directional_dataset_run_metadata.json")
     assert manifest_path.exists()
+    assert run_metadata_path.exists()
 
     manifest = _load_json(manifest_path)
+    run_metadata = _load_json(run_metadata_path)
     validate_resumable_manifest(manifest)
     validate_dataset_manifest(manifest)
 
+    assert run_metadata["run_kind"] == "task8_directional_dataset_generation"
+    assert run_metadata["dataset_manifest"] == str(manifest_path)
     regimes = {row["direction"]["direction_regime"] for row in manifest["rows"]}
     assert regimes == {
         "inplane_100_no_spread",

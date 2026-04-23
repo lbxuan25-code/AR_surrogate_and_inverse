@@ -1,7 +1,12 @@
 {
+  "config_role": "legacy_task3_orchestration_smoke",
+  "lifecycle_status": "legacy_archived",
+  "superseded_by": "configs/datasets/task8_directional_smoke_dataset.json",
   "dataset_id": "task3_orchestration_smoke_v1",
-  "description": "Small resumable smoke dataset for Task 3 dataset generation orchestration.",
+  "description": "Legacy small resumable smoke dataset for archived Task 3 dataset generation orchestration.",
   "output_dir": "outputs/datasets/task3_orchestration_smoke",
+  "run_metadata_path": "outputs/runs/task3_dataset_generation_run_metadata.json",
+  "run_kind": "legacy_task3_dataset_generation_orchestration",
   "sampling_policy_id": "fit_layer_transport_smoke_v1",
   "sampling_policy": {
     "sampling_policy_id": "fit_layer_transport_smoke_v1",

@@ -42,7 +42,7 @@
     19.0,
     20.0
   ],
-  "checkpoint": "outputs/checkpoints/task4_linear_surrogate/model.npz",
+  "checkpoint": "outputs/checkpoints/task9_directional_surrogate_smoke/model.npz",
   "dataset_id": "task8_directional_smoke_v1",
   "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "direction_support": {
@@ -88,7 +88,7 @@
   ],
   "model_type": "ridge_linear_spectrum_surrogate",
   "ridge_alpha": 1e-06,
-  "run_kind": "legacy_task4_linear_surrogate_training",
+  "run_kind": "task9_directional_surrogate_smoke_training",
   "splits": {
     "test": {
       "mae": 0.16258976994012278,

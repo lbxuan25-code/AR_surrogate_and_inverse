@@ -1,4 +1,4 @@
-"""Evaluation helpers for surrogate baselines."""
+"""Evaluation helpers for direction-aware surrogate smoke checkpoints."""
 
 from __future__ import annotations
 
@@ -19,9 +19,16 @@ from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import RidgeLinearSpectrumSurrogate
 from ar_inverse.surrogate.train import load_dataset_arrays
 
-DEFAULT_TASK5_CONFIG_PATH = Path("configs/surrogate/task5_evaluate_linear_surrogate.json")
-DEFAULT_TASK5_REPORT_DIR = Path("outputs/runs/task5_surrogate_evaluation")
-DEFAULT_TASK5_RUN_METADATA_PATH = Path("outputs/runs/task5_surrogate_evaluation_run_metadata.json")
+DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH = Path("configs/surrogate/task9_directional_evaluation_smoke.json")
+DEFAULT_DIRECTIONAL_EVALUATION_REPORT_DIR = Path("outputs/runs/task9_directional_evaluation_smoke")
+DEFAULT_DIRECTIONAL_EVALUATION_RUN_METADATA_PATH = Path(
+    "outputs/runs/task9_directional_evaluation_smoke_run_metadata.json"
+)
+
+# Deprecated compatibility aliases for historical Task 5 callers.
+DEFAULT_TASK5_CONFIG_PATH = DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH
+DEFAULT_TASK5_REPORT_DIR = DEFAULT_DIRECTIONAL_EVALUATION_REPORT_DIR
+DEFAULT_TASK5_RUN_METADATA_PATH = DEFAULT_DIRECTIONAL_EVALUATION_RUN_METADATA_PATH
 
 
 def load_evaluation_config(path: Path | str) -> dict[str, Any]:
@@ -108,8 +115,9 @@ def _group_records_by_key(row_records: list[dict[str, Any]], key: str) -> dict[s
 
 
 def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
+    title = str(report.get("report_title", "Task 9 Directional Surrogate Smoke Evaluation"))
     lines = [
-        "# Task 5 Surrogate Evaluation And Calibration",
+        f"# {title}",
         "",
         "## Summary",
         "",
@@ -179,8 +187,10 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFIG_PATH) -> tuple[Path, Path]:
-    """Evaluate the trained surrogate and write Task 5 reports."""
+def evaluate_surrogate_from_config(
+    config_path: Path | str = DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH,
+) -> tuple[Path, Path]:
+    """Evaluate a direction-aware smoke checkpoint and write reports."""
 
     config_file = Path(config_path)
     config = load_evaluation_config(config_file)
@@ -223,9 +233,11 @@ def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFI
     diagnostics = calibration_diagnostics(row_records, thresholds)
     policy = fallback_policy(regime_report, thresholds, direction_regime_report)
     forward_metadata_family = manifest["rows"][0]["forward_metadata"]
+    run_kind = str(config.get("run_kind", "task9_directional_evaluation_smoke"))
 
     report = {
-        "run_kind": "task5_surrogate_evaluation_and_calibration",
+        "run_kind": run_kind,
+        "report_title": str(config.get("report_title", "Task 9 Directional Surrogate Smoke Evaluation")),
         "model": {
             "checkpoint": str(config["checkpoint"]),
             "model_type": "ridge_linear_spectrum_surrogate",
@@ -254,10 +266,10 @@ def evaluate_surrogate_from_config(config_path: Path | str = DEFAULT_TASK5_CONFI
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     _write_markdown_report(markdown_path, report)
 
-    run_metadata_path = Path(config.get("run_metadata_path", DEFAULT_TASK5_RUN_METADATA_PATH))
+    run_metadata_path = Path(config.get("run_metadata_path", DEFAULT_DIRECTIONAL_EVALUATION_RUN_METADATA_PATH))
     run_metadata_path.parent.mkdir(parents=True, exist_ok=True)
     run_metadata = {
-        "run_kind": "task5_surrogate_evaluation_and_calibration",
+        "run_kind": run_kind,
         "config": config_file.as_posix(),
         "report": report_path.as_posix(),
         "markdown_report": markdown_path.as_posix(),

@@ -9,8 +9,8 @@ import numpy as np
 
 from ar_inverse.surrogate.models import RidgeLinearSpectrumSurrogate
 from ar_inverse.surrogate.train import (
-    DEFAULT_TASK4_CHECKPOINT_DIR,
-    DEFAULT_TASK4_CONFIG_PATH,
+    DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR,
+    DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
     load_dataset_arrays,
     train_surrogate_from_config,
 )
@@ -21,7 +21,7 @@ def _load_json(path: Path) -> dict[str, object]:
 
 
 def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path) -> None:
-    config = _load_json(DEFAULT_TASK4_CONFIG_PATH)
+    config = _load_json(DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH)
     config["checkpoint_dir"] = str(tmp_path / "checkpoint")
     config["run_metadata_path"] = str(tmp_path / "run_metadata.json")
     config_path = tmp_path / "task4_config.json"
@@ -35,6 +35,7 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
     assert Path(config["run_metadata_path"]).exists()
 
     metrics = _load_json(metrics_path)
+    assert metrics["run_kind"] == "task9_directional_surrogate_smoke_training"
     assert metrics["model_type"] == "ridge_linear_spectrum_surrogate"
     assert metrics["dataset_id"] == "task8_directional_smoke_v1"
     assert metrics["direction_support"]["direction_regime_counts"]["named_mode_narrow_spread"] == 1
@@ -47,13 +48,14 @@ def test_train_surrogate_from_config_writes_checkpoint_metrics_and_card(tmp_path
 
     model_card = model_card_path.read_text(encoding="utf-8")
     assert "Forward Metadata Family" in model_card
+    assert "Task 9 Directional Surrogate Smoke Checkpoint" in model_card
     assert "task8_directional_smoke_v1" in model_card
     assert "Direction Support" in model_card
 
 
 def test_saved_surrogate_checkpoint_predicts_full_spectrum() -> None:
     dataset = load_dataset_arrays("outputs/datasets/task8_directional_smoke/dataset.json")
-    model = RidgeLinearSpectrumSurrogate.load(DEFAULT_TASK4_CHECKPOINT_DIR / "model.npz")
+    model = RidgeLinearSpectrumSurrogate.load(DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR / "model.npz")
 
     prediction = model.predict(dataset["features"])
 
@@ -62,12 +64,12 @@ def test_saved_surrogate_checkpoint_predicts_full_spectrum() -> None:
     assert np.all(np.isfinite(prediction))
 
 
-def test_repository_task4_artifacts_record_dataset_and_held_out_metrics() -> None:
-    checkpoint_dir = DEFAULT_TASK4_CHECKPOINT_DIR
+def test_repository_task9_smoke_artifacts_record_dataset_and_held_out_metrics() -> None:
+    checkpoint_dir = DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR
     checkpoint_path = checkpoint_dir / "model.npz"
     metrics_path = checkpoint_dir / "metrics.json"
     model_card_path = checkpoint_dir / "model_card.md"
-    run_metadata_path = Path("outputs/runs/task4_linear_surrogate_run_metadata.json")
+    run_metadata_path = Path("outputs/runs/task9_directional_surrogate_smoke_run_metadata.json")
 
     assert checkpoint_path.exists()
     assert metrics_path.exists()
@@ -77,6 +79,7 @@ def test_repository_task4_artifacts_record_dataset_and_held_out_metrics() -> Non
     metrics = _load_json(metrics_path)
     run_metadata = _load_json(run_metadata_path)
 
+    assert metrics["run_kind"] == "task9_directional_surrogate_smoke_training"
     assert metrics["dataset_manifest"] == "outputs/datasets/task8_directional_smoke/dataset.json"
     assert metrics["direction_support"]["direction_modes"] == ["inplane_100", "inplane_110"]
     assert metrics["held_out_splits"] == ["validation", "test"]
@@ -87,7 +90,7 @@ def test_repository_task4_artifacts_record_dataset_and_held_out_metrics() -> Non
 
 
 def test_train_surrogate_cli_writes_outputs(tmp_path) -> None:
-    config = _load_json(DEFAULT_TASK4_CONFIG_PATH)
+    config = _load_json(DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH)
     config["checkpoint_dir"] = str(tmp_path / "cli_checkpoint")
     config["run_metadata_path"] = str(tmp_path / "cli_run_metadata.json")
     config_path = tmp_path / "task4_cli_config.json"

@@ -84,7 +84,7 @@ def fallback_policy(
             "Direct forward rechecks are still required for final inverse candidates."
         )
     return {
-        "policy_id": "task5_direct_forward_fallback_v1",
+        "policy_id": "task9_directional_direct_forward_fallback_v1",
         "safe_error_thresholds": {
             "rmse": float(thresholds["rmse"]),
             "max_abs_error": float(thresholds["max_abs_error"]),

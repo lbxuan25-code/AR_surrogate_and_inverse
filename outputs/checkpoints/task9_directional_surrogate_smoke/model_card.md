@@ -1,4 +1,4 @@
-# Legacy Task 4 Linear Surrogate Baseline
+# Task 9 Directional Surrogate Smoke Checkpoint
 
 ## Purpose
 
@@ -9,7 +9,7 @@ This is a naming-clean smoke artifact and not the formal large Task 9 surrogate 
 
 - Type: ridge-linear spectrum surrogate
 - Ridge alpha: `1e-06`
-- Checkpoint: `outputs/checkpoints/task4_linear_surrogate/model.npz`
+- Checkpoint: `outputs/checkpoints/task9_directional_surrogate_smoke/model.npz`
 - Feature order: `delta_zz_s, delta_xx_s, delta_zx_d, delta_perp_z, delta_perp_x, delta_zz_d, delta_xx_d, delta_zx_s, direction_inplane_100, direction_inplane_110, direction_named_mode, direction_diagnostic_raw_angle, direction_has_spread, direction_spread_half_width, direction_spread_num_samples, direction_raw_interface_angle, barrier_z, gamma, temperature_kelvin, nk`
 
 ## Dataset

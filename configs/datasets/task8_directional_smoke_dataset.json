@@ -1,9 +1,11 @@
 {
   "allow_diagnostic_raw_angles": false,
+  "config_role": "current_directional_contract_dataset_smoke_entry",
   "dataset_id": "task8_directional_smoke_v1",
   "description": "Direction-aware smoke dataset covering supported named modes and narrow spread.",
   "output_dir": "outputs/datasets/task8_directional_smoke",
   "run_metadata_path": "outputs/runs/task8_directional_dataset_run_metadata.json",
+  "run_kind": "task8_directional_dataset_generation",
   "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
   "sampling_policy": {
     "sampling_policy_id": "directional_fit_layer_transport_smoke_v1",
