@@ -17,8 +17,10 @@ Current stage note:
 - Task 9 completed the canonical direction-aware surrogate smoke loop.
 - Task 10A completed the canonical non-smoke pilot preparation: configs,
   runbook, and lightweight validation are now in the repository.
-- The current `TODO.md` task is Task 10B: run the prepared pilot on the server
-  and return compact artifacts to GitHub for local review.
+- Task 10B completed: the server-run pilot artifacts were returned, reviewed
+  locally, and accepted.
+- The current `TODO.md` task is Task 11A: prepare the production server
+  contract without launching the production run.
 - Heavy execution remains deferred to explicit server-run tasks reviewed only
   after compact artifacts are returned to GitHub.
 

@@ -2,59 +2,6 @@
 
 ## Current Task
 
-### Task 10B — Run the pilot on the server and validate the returned artifacts
-
-#### Goal
-Execute the pilot on the server using the Task 10A configs, then return compact
-validation artifacts to GitHub so local Codex can verify correctness.
-
-#### Server-side execution model
-The server is the only place where the following should be run:
-- pilot dataset generation
-- pilot training
-- pilot evaluation
-
-#### Returned artifacts required for Task 10B review
-The server run must return compact artifacts only. At minimum:
-- pilot dataset config actually used
-- pilot training config actually used
-- pilot evaluation config actually used
-- pilot dataset manifest or a compact manifest if the full one is too large
-- pilot run metadata
-- pilot training metrics
-- pilot evaluation report
-- pilot evaluation markdown or summary note
-- a short server run note containing:
-  - forward repository commit used
-  - training repository commit used
-  - exact commands run
-  - output directories used
-
-Heavy artifacts such as:
-- full forward-output directories
-- large checkpoints
-- large raw spectra collections
-
-should stay on the server unless a later task explicitly promotes a small
-canonical sample into the repository.
-
-#### Acceptance checklist for Task 10B
-- [ ] returned pilot manifest is valid and uses `ar_inverse_dataset_row_v2`
-- [ ] returned pilot data preserve the direction block and forward provenance
-- [ ] returned pilot covers only supported named modes and narrow spread
-- [ ] returned training metrics exist
-- [ ] returned evaluation report exists
-- [ ] returned run metadata identify one fixed forward metadata family
-- [ ] local Codex review finds no schema, naming, or regime mismatch
-- [ ] only after this review may Task 10 be marked complete
-
-#### Promotion rule
-Only after Task 10B is complete and reviewed may Task 11 move into Current Task.
-
----
-
-## Backlog
-
 ### Task 11A — Prepare the production server contract
 
 #### Goal
@@ -99,6 +46,8 @@ Only after Task 11A is complete may Task 11B move into Current Task.
 
 ---
 
+## Backlog
+
 ### Task 11B — Run the first production server job and return compact review artifacts
 
 #### Goal
@@ -127,6 +76,35 @@ Do not commit heavyweight production outputs unless explicitly requested.
 ---
 
 ## Archive
+
+### Task 10B — Run the pilot on the server and validate the returned artifacts
+
+Completed 2026-04-23.
+
+#### Verification
+- GitHub review commit accepted:
+  `be2c1f178902e087418bf199a6f5541ee1433019`.
+- Returned pilot manifest:
+  `outputs/datasets/task10_directional_pilot/dataset.json`.
+- Returned pilot dataset run metadata:
+  `outputs/runs/task10_directional_dataset_run_metadata.json`.
+- Returned pilot training metrics:
+  `outputs/checkpoints/task10_directional_surrogate_pilot/metrics.json`.
+- Returned pilot model card:
+  `outputs/checkpoints/task10_directional_surrogate_pilot/model_card.md`.
+- Returned pilot training run metadata:
+  `outputs/runs/task10_directional_surrogate_pilot_run_metadata.json`.
+- Returned pilot evaluation report:
+  `outputs/runs/task10_directional_evaluation_pilot/evaluation_report.json`.
+- Returned pilot evaluation markdown:
+  `outputs/runs/task10_directional_evaluation_pilot/evaluation_report.md`.
+- Returned pilot evaluation run metadata:
+  `outputs/runs/task10_directional_evaluation_pilot_run_metadata.json`.
+- Returned server run note:
+  `outputs/runs/task10_pilot_server_run_note.md`.
+- Local review confirmed `ar_inverse_dataset_row_v2` rows, preserved direction
+  blocks and forward provenance, supported named modes plus narrow spread only,
+  and one clean forward metadata family with `git_dirty: false`.
 
 ### Task 10A — Prepare the small non-smoke pilot for server execution
 

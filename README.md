@@ -9,10 +9,13 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 10B, run the prepared small non-smoke pilot on the
-  server and return compact review artifacts.
+- Current TODO task: Task 11A, prepare the production server contract without
+  launching the production run yet.
+- Task 10B is complete: the prepared small non-smoke pilot was run on the
+  server, compact review artifacts were returned to GitHub, and local review
+  accepted the result.
 - Task 10A is complete: the canonical pilot dataset config, training config,
-  evaluation config, and server runbook are prepared for manual server
+  evaluation config, and server runbook were prepared for manual server
   execution.
 - Task 8 is complete: the forward direction contract is integrated into
   dataset rows, feature intake, evaluation reports, inverse configs, and
