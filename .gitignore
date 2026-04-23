@@ -1,0 +1,6 @@
+# Ignore only transient local caches.
+# All generated results, manifests, reports, datasets, and checkpoints remain trackable.
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
