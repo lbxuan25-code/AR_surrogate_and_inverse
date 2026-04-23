@@ -1,0 +1,1098 @@
+{
+  "calibration_diagnostics": {
+    "max_abs_error": 0.2772479169542714,
+    "max_abs_error_threshold": 0.1,
+    "max_rmse": 0.1430434179045793,
+    "mean_max_abs_error": 0.12422916126952627,
+    "mean_rmse": 0.06461781351768739,
+    "num_rows": 8,
+    "rmse_threshold": 0.05,
+    "unsafe_fraction": 0.625
+  },
+  "dataset": {
+    "dataset_id": "task11_directional_production_v1",
+    "manifest": "outputs/datasets/task11_directional_production/dataset.json",
+    "sampling_policy_id": "task11_directional_production_v1"
+  },
+  "direction_regime_report": {
+    "inplane_100_no_spread": {
+      "max_abs_error": 0.2772479169542714,
+      "max_rmse": 0.1430434179045793,
+      "mean_rmse": 0.10415659168595445,
+      "num_rows": 2,
+      "row_ids": [
+        "task11_prod_validation_inplane_100_core",
+        "task11_prod_test_inplane_100_core"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task11_prod_validation_inplane_100_core",
+        "task11_prod_test_inplane_100_core"
+      ]
+    },
+    "inplane_110_no_spread": {
+      "max_abs_error": 0.19370092235554953,
+      "max_rmse": 0.1004207933644543,
+      "mean_rmse": 0.09387026128671683,
+      "num_rows": 2,
+      "row_ids": [
+        "task11_prod_validation_inplane_110_core",
+        "task11_prod_test_inplane_110_core"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task11_prod_validation_inplane_110_core",
+        "task11_prod_test_inplane_110_core"
+      ]
+    },
+    "named_mode_narrow_spread": {
+      "max_abs_error": 0.13769295376209323,
+      "max_rmse": 0.07165395846015316,
+      "mean_rmse": 0.030222200549039138,
+      "num_rows": 4,
+      "row_ids": [
+        "task11_prod_validation_inplane_100_spread",
+        "task11_prod_validation_inplane_110_spread",
+        "task11_prod_test_inplane_100_spread",
+        "task11_prod_test_inplane_110_spread"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task11_prod_validation_inplane_100_spread"
+      ]
+    }
+  },
+  "evaluation_scope": {
+    "held_out_splits": [
+      "validation",
+      "test"
+    ],
+    "num_held_out_rows": 8
+  },
+  "fallback_policy": {
+    "default_action": "direct_forward_required_for_unseen_or_unsafe_regimes",
+    "policy_id": "task9_directional_direct_forward_fallback_v1",
+    "safe_direction_regimes": [],
+    "safe_error_thresholds": {
+      "max_abs_error": 0.1,
+      "rmse": 0.05
+    },
+    "safe_transport_regimes": [
+      "high_barrier|low_gamma|high_temp"
+    ],
+    "summary": "Surrogate acceleration is disabled for unsafe transport regimes. Inverse workflows must use direct external forward calls there.",
+    "unsafe_direction_regimes": [
+      "inplane_100_no_spread",
+      "inplane_110_no_spread",
+      "named_mode_narrow_spread"
+    ],
+    "unsafe_transport_regimes": [
+      "high_barrier|high_gamma|high_temp",
+      "low_barrier|low_gamma|high_temp"
+    ]
+  },
+  "forward_metadata_family": {
+    "allow_weak_delta_zx_s": false,
+    "fit_layer_policy": {
+      "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+      "free_channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "strongly_regularized_channels": [
+        "delta_zz_d",
+        "delta_xx_d"
+      ],
+      "weak_optional_channels": [
+        "delta_zx_s"
+      ]
+    },
+    "fit_layer_request_label": "task11_prod_train_inplane_100_core_a",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_role": "authoritative_formal_round2_baseline",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "forward_interface_version": "ar_forward_v1",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false,
+    "normal_state_family": "base",
+    "normal_state_policy": "repository_fixed_base_normal_state",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_control_mode": "delta_from_baseline_meV",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "pairing_source": "task_h_fit_layer_controls",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "truth_layer": "round2_physical_pairing_channels",
+    "weak_channel_policy": {
+      "channel": "delta_zx_s",
+      "default_task_c_freeze_applied": true,
+      "default_value": {
+        "im": 0.0,
+        "re": 0.0
+      }
+    }
+  },
+  "model": {
+    "checkpoint": "outputs/checkpoints/task11_directional_surrogate_production/model.npz",
+    "model_type": "ridge_linear_spectrum_surrogate"
+  },
+  "report_title": "Task 11 Directional Surrogate Production Evaluation",
+  "row_errors": [
+    {
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_regime": "inplane_100_no_spread",
+      "metrics": {
+        "mae": 0.051125410861490056,
+        "max_abs_error": 0.12466751289667644,
+        "rmse": 0.06526976546732961
+      },
+      "row_id": "task11_prod_validation_inplane_100_core",
+      "safe_for_inverse_acceleration": false,
+      "split": "validation",
+      "transport_controls": {
+        "barrier_z": 0.58,
+        "gamma": 0.92,
+        "nk": 31,
+        "temperature_kelvin": 3.1
+      },
+      "transport_regime": "low_barrier|low_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "inplane_110_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
+      "direction_regime": "inplane_110_no_spread",
+      "metrics": {
+        "mae": 0.07803127037752558,
+        "max_abs_error": 0.19370092235554953,
+        "rmse": 0.1004207933644543
+      },
+      "row_id": "task11_prod_validation_inplane_110_core",
+      "safe_for_inverse_acceleration": false,
+      "split": "validation",
+      "transport_controls": {
+        "barrier_z": 0.72,
+        "gamma": 1.18,
+        "nk": 31,
+        "temperature_kelvin": 3.6
+      },
+      "transport_regime": "high_barrier|high_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.0,
+          "crystal_label": "100",
+          "direction_mode": "inplane_100",
+          "half_width": 0.032724923474893676,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 9,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.0,
+            "crystal_label": "100",
+            "direction_mode": "inplane_100",
+            "half_width": 0.032724923474893676,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 9,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.0,
+              "crystal_label": "100",
+              "direction_mode": "inplane_100",
+              "half_width": 0.032724923474893676,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 9,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": -0.032724923474893676,
+                "mean_mismatch_penalty": 0.7555508275401459,
+                "num_channels": 62,
+                "num_filtered_channels": 0,
+                "num_input_channels": 62,
+                "num_same_band_channels": 62,
+                "relative_angle": -0.032724923474893676,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.02454369260617026,
+                "mean_mismatch_penalty": 0.7519389675494371,
+                "num_channels": 76,
+                "num_filtered_channels": 0,
+                "num_input_channels": 76,
+                "num_same_band_channels": 76,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.016362461737446838,
+                "mean_mismatch_penalty": 0.8513657618768955,
+                "num_channels": 83,
+                "num_filtered_channels": 0,
+                "num_input_channels": 83,
+                "num_same_band_channels": 83,
+                "relative_angle": -0.016362461737446838,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.008181230868723417,
+                "mean_mismatch_penalty": 0.9503237112831531,
+                "num_channels": 97,
+                "num_filtered_channels": 0,
+                "num_input_channels": 97,
+                "num_same_band_channels": 97,
+                "relative_angle": -0.008181230868723417,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.0,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 99,
+                "num_filtered_channels": 0,
+                "num_input_channels": 99,
+                "num_same_band_channels": 99,
+                "relative_angle": 0.0,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.008181230868723417,
+                "mean_mismatch_penalty": 0.9505337068910908,
+                "num_channels": 97,
+                "num_filtered_channels": 0,
+                "num_input_channels": 97,
+                "num_same_band_channels": 97,
+                "relative_angle": 0.008181230868723417,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.01636246173744684,
+                "mean_mismatch_penalty": 0.8483036742952688,
+                "num_channels": 83,
+                "num_filtered_channels": 0,
+                "num_input_channels": 83,
+                "num_same_band_channels": 83,
+                "relative_angle": 0.01636246173744684,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.02454369260617026,
+                "mean_mismatch_penalty": 0.7555594032664095,
+                "num_channels": 76,
+                "num_filtered_channels": 0,
+                "num_input_channels": 76,
+                "num_same_band_channels": 76,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.032724923474893676,
+                "mean_mismatch_penalty": 0.7523389902483721,
+                "num_channels": 63,
+                "num_filtered_channels": 0,
+                "num_input_channels": 63,
+                "num_same_band_channels": 63,
+                "relative_angle": 0.032724923474893676,
+                "weight": 0.1111111111111111
+              }
+            ],
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_regime": "named_mode_narrow_spread",
+      "metrics": {
+        "mae": 0.05501606336292692,
+        "max_abs_error": 0.13769295376209323,
+        "rmse": 0.07165395846015316
+      },
+      "row_id": "task11_prod_validation_inplane_100_spread",
+      "safe_for_inverse_acceleration": false,
+      "split": "validation",
+      "transport_controls": {
+        "barrier_z": 0.82,
+        "gamma": 1.02,
+        "nk": 31,
+        "temperature_kelvin": 4.4
+      },
+      "transport_regime": "high_barrier|high_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.04908738521234052,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 9,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.7853981633974483,
+            "crystal_label": "110",
+            "direction_mode": "inplane_110",
+            "half_width": 0.04908738521234052,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 9,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.7853981633974483,
+              "crystal_label": "110",
+              "direction_mode": "inplane_110",
+              "half_width": 0.04908738521234052,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 9,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": 0.7363107781851077,
+                "mean_mismatch_penalty": 0.8167199559213729,
+                "num_channels": 50,
+                "num_filtered_channels": 0,
+                "num_input_channels": 50,
+                "num_same_band_channels": 50,
+                "relative_angle": -0.04908738521234052,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7485826244881929,
+                "mean_mismatch_penalty": 0.5929011595666068,
+                "num_channels": 59,
+                "num_filtered_channels": 0,
+                "num_input_channels": 59,
+                "num_same_band_channels": 59,
+                "relative_angle": -0.03681553890925539,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.760854470791278,
+                "mean_mismatch_penalty": 0.8278782646827841,
+                "num_channels": 67,
+                "num_filtered_channels": 0,
+                "num_input_channels": 67,
+                "num_same_band_channels": 67,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7731263170943632,
+                "mean_mismatch_penalty": 0.8751330370225006,
+                "num_channels": 95,
+                "num_filtered_channels": 0,
+                "num_input_channels": 95,
+                "num_same_band_channels": 95,
+                "relative_angle": -0.01227184630308513,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7853981633974483,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 101,
+                "num_filtered_channels": 0,
+                "num_input_channels": 101,
+                "num_same_band_channels": 101,
+                "relative_angle": 0.0,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7976700097005334,
+                "mean_mismatch_penalty": 0.8751139891771558,
+                "num_channels": 95,
+                "num_filtered_channels": 0,
+                "num_input_channels": 95,
+                "num_same_band_channels": 95,
+                "relative_angle": 0.01227184630308513,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8099418560036186,
+                "mean_mismatch_penalty": 0.8278194178932432,
+                "num_channels": 67,
+                "num_filtered_channels": 0,
+                "num_input_channels": 67,
+                "num_same_band_channels": 67,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8222137023067037,
+                "mean_mismatch_penalty": 0.5928076681368176,
+                "num_channels": 59,
+                "num_filtered_channels": 0,
+                "num_input_channels": 59,
+                "num_same_band_channels": 59,
+                "relative_angle": 0.03681553890925539,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8344855486097889,
+                "mean_mismatch_penalty": 0.8165631612314893,
+                "num_channels": 50,
+                "num_filtered_channels": 0,
+                "num_input_channels": 50,
+                "num_same_band_channels": 50,
+                "relative_angle": 0.04908738521234052,
+                "weight": 0.1111111111111111
+              }
+            ],
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
+      "direction_regime": "named_mode_narrow_spread",
+      "metrics": {
+        "mae": 0.010431111053337064,
+        "max_abs_error": 0.0259261364890937,
+        "rmse": 0.013375227637903898
+      },
+      "row_id": "task11_prod_validation_inplane_110_spread",
+      "safe_for_inverse_acceleration": true,
+      "split": "validation",
+      "transport_controls": {
+        "barrier_z": 0.96,
+        "gamma": 0.88,
+        "nk": 31,
+        "temperature_kelvin": 5.0
+      },
+      "transport_regime": "high_barrier|low_gamma|high_temp",
+      "unsafe_reasons": []
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "inplane_100_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_regime": "inplane_100_no_spread",
+      "metrics": {
+        "mae": 0.1101362249368614,
+        "max_abs_error": 0.2772479169542714,
+        "rmse": 0.1430434179045793
+      },
+      "row_id": "task11_prod_test_inplane_100_core",
+      "safe_for_inverse_acceleration": false,
+      "split": "test",
+      "transport_controls": {
+        "barrier_z": 0.4,
+        "gamma": 0.74,
+        "nk": 31,
+        "temperature_kelvin": 6.1
+      },
+      "transport_regime": "low_barrier|low_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "inplane_110_no_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": null,
+        "forward_direction_provenance": {
+          "metadata_directional_spread": null,
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
+      "direction_regime": "inplane_110_no_spread",
+      "metrics": {
+        "mae": 0.0651833094310254,
+        "max_abs_error": 0.16973514843550608,
+        "rmse": 0.08731972920897936
+      },
+      "row_id": "task11_prod_test_inplane_110_core",
+      "safe_for_inverse_acceleration": false,
+      "split": "test",
+      "transport_controls": {
+        "barrier_z": 0.62,
+        "gamma": 1.22,
+        "nk": 31,
+        "temperature_kelvin": 6.4
+      },
+      "transport_regime": "high_barrier|high_gamma|high_temp",
+      "unsafe_reasons": [
+        "rmse>0.05",
+        "max_abs_error>0.1"
+      ]
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "100",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_100",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.0,
+          "crystal_label": "100",
+          "direction_mode": "inplane_100",
+          "half_width": 0.02454369260617026,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 9,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.0,
+            "crystal_label": "100",
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 9,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_100",
+            "interface_angle": 0.0
+          },
+          "transport_summary": {
+            "direction_crystal_label": "100",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_100",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.0,
+              "crystal_label": "100",
+              "direction_mode": "inplane_100",
+              "half_width": 0.02454369260617026,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 9,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": -0.02454369260617026,
+                "mean_mismatch_penalty": 0.7519389675494371,
+                "num_channels": 76,
+                "num_filtered_channels": 0,
+                "num_input_channels": 76,
+                "num_same_band_channels": 76,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.018407769454627694,
+                "mean_mismatch_penalty": 0.8239639553045379,
+                "num_channels": 81,
+                "num_filtered_channels": 0,
+                "num_input_channels": 81,
+                "num_same_band_channels": 81,
+                "relative_angle": -0.018407769454627694,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.01227184630308513,
+                "mean_mismatch_penalty": 0.9141538444535199,
+                "num_channels": 86,
+                "num_filtered_channels": 0,
+                "num_input_channels": 86,
+                "num_same_band_channels": 86,
+                "relative_angle": -0.01227184630308513,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": -0.006135923151542565,
+                "mean_mismatch_penalty": 0.9713511993942172,
+                "num_channels": 97,
+                "num_filtered_channels": 0,
+                "num_input_channels": 97,
+                "num_same_band_channels": 97,
+                "relative_angle": -0.006135923151542565,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.0,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 99,
+                "num_filtered_channels": 0,
+                "num_input_channels": 99,
+                "num_same_band_channels": 99,
+                "relative_angle": 0.0,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.006135923151542565,
+                "mean_mismatch_penalty": 0.9714899279002968,
+                "num_channels": 97,
+                "num_filtered_channels": 0,
+                "num_input_channels": 97,
+                "num_same_band_channels": 97,
+                "relative_angle": 0.006135923151542565,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.01227184630308513,
+                "mean_mismatch_penalty": 0.9127723515190451,
+                "num_channels": 86,
+                "num_filtered_channels": 0,
+                "num_input_channels": 86,
+                "num_same_band_channels": 86,
+                "relative_angle": 0.01227184630308513,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.018407769454627694,
+                "mean_mismatch_penalty": 0.821360922117438,
+                "num_channels": 81,
+                "num_filtered_channels": 0,
+                "num_input_channels": 81,
+                "num_same_band_channels": 81,
+                "relative_angle": 0.018407769454627694,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.02454369260617026,
+                "mean_mismatch_penalty": 0.7555594032664095,
+                "num_channels": 76,
+                "num_filtered_channels": 0,
+                "num_input_channels": 76,
+                "num_same_band_channels": 76,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.1111111111111111
+              }
+            ],
+            "interface_angle": 0.0
+          }
+        },
+        "interface_angle": 0.0
+      },
+      "direction_regime": "named_mode_narrow_spread",
+      "metrics": {
+        "mae": 0.023151585332824038,
+        "max_abs_error": 0.056855713304829414,
+        "rmse": 0.030496896551842137
+      },
+      "row_id": "task11_prod_test_inplane_100_spread",
+      "safe_for_inverse_acceleration": true,
+      "split": "test",
+      "transport_controls": {
+        "barrier_z": 0.9,
+        "gamma": 1.12,
+        "nk": 31,
+        "temperature_kelvin": 4.9
+      },
+      "transport_regime": "high_barrier|high_gamma|high_temp",
+      "unsafe_reasons": []
+    },
+    {
+      "direction": {
+        "direction_crystal_label": "110",
+        "direction_dimensionality": "2D in-plane",
+        "direction_is_named_mode": true,
+        "direction_mode": "inplane_110",
+        "direction_regime": "named_mode_narrow_spread",
+        "direction_schema_version": "ar_inverse_direction_v1",
+        "direction_support_tier": "A",
+        "directional_spread": {
+          "averaging_rule": "uniform_symmetric",
+          "central_interface_angle": 0.7853981633974483,
+          "crystal_label": "110",
+          "direction_mode": "inplane_110",
+          "half_width": 0.032724923474893676,
+          "max_half_width": 0.09817477042468103,
+          "num_samples": 9,
+          "support_tier": "A"
+        },
+        "forward_direction_provenance": {
+          "metadata_directional_spread": {
+            "averaging_rule": "uniform_symmetric",
+            "central_interface_angle": 0.7853981633974483,
+            "crystal_label": "110",
+            "direction_mode": "inplane_110",
+            "half_width": 0.032724923474893676,
+            "max_half_width": 0.09817477042468103,
+            "num_samples": 9,
+            "support_tier": "A"
+          },
+          "request_transport": {
+            "direction_mode": "inplane_110",
+            "interface_angle": 0.7853981633974483
+          },
+          "transport_summary": {
+            "direction_crystal_label": "110",
+            "direction_dimensionality": "2D in-plane",
+            "direction_is_named_mode": true,
+            "direction_mode": "inplane_110",
+            "direction_support_tier": "A",
+            "directional_spread": {
+              "averaging_rule": "uniform_symmetric",
+              "central_interface_angle": 0.7853981633974483,
+              "crystal_label": "110",
+              "direction_mode": "inplane_110",
+              "half_width": 0.032724923474893676,
+              "max_half_width": 0.09817477042468103,
+              "num_samples": 9,
+              "support_tier": "A"
+            },
+            "directional_spread_samples": [
+              {
+                "interface_angle": 0.7526732399225546,
+                "mean_mismatch_penalty": 0.6985036946604894,
+                "num_channels": 60,
+                "num_filtered_channels": 0,
+                "num_input_channels": 60,
+                "num_same_band_channels": 60,
+                "relative_angle": -0.032724923474893676,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.760854470791278,
+                "mean_mismatch_penalty": 0.8278782646827841,
+                "num_channels": 67,
+                "num_filtered_channels": 0,
+                "num_input_channels": 67,
+                "num_same_band_channels": 67,
+                "relative_angle": -0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7690357016600015,
+                "mean_mismatch_penalty": 0.772509251785946,
+                "num_channels": 89,
+                "num_filtered_channels": 0,
+                "num_input_channels": 89,
+                "num_same_band_channels": 89,
+                "relative_angle": -0.016362461737446838,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7772169325287248,
+                "mean_mismatch_penalty": 0.9443993397097852,
+                "num_channels": 99,
+                "num_filtered_channels": 0,
+                "num_input_channels": 99,
+                "num_same_band_channels": 99,
+                "relative_angle": -0.008181230868723417,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7853981633974483,
+                "mean_mismatch_penalty": 1.0,
+                "num_channels": 101,
+                "num_filtered_channels": 0,
+                "num_input_channels": 101,
+                "num_same_band_channels": 101,
+                "relative_angle": 0.0,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.7935793942661717,
+                "mean_mismatch_penalty": 0.944390237253146,
+                "num_channels": 99,
+                "num_filtered_channels": 0,
+                "num_input_channels": 99,
+                "num_same_band_channels": 99,
+                "relative_angle": 0.008181230868723417,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8017606251348951,
+                "mean_mismatch_penalty": 0.7724779514032141,
+                "num_channels": 89,
+                "num_filtered_channels": 0,
+                "num_input_channels": 89,
+                "num_same_band_channels": 89,
+                "relative_angle": 0.01636246173744684,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8099418560036186,
+                "mean_mismatch_penalty": 0.8278194178932432,
+                "num_channels": 67,
+                "num_filtered_channels": 0,
+                "num_input_channels": 67,
+                "num_same_band_channels": 67,
+                "relative_angle": 0.02454369260617026,
+                "weight": 0.1111111111111111
+              },
+              {
+                "interface_angle": 0.8181230868723419,
+                "mean_mismatch_penalty": 0.6984196222953526,
+                "num_channels": 60,
+                "num_filtered_channels": 0,
+                "num_input_channels": 60,
+                "num_same_band_channels": 60,
+                "relative_angle": 0.032724923474893676,
+                "weight": 0.1111111111111111
+              }
+            ],
+            "interface_angle": 0.7853981633974483
+          }
+        },
+        "interface_angle": 0.7853981633974483
+      },
+      "direction_regime": "named_mode_narrow_spread",
+      "metrics": {
+        "mae": 0.004610312881412865,
+        "max_abs_error": 0.008006985958190271,
+        "rmse": 0.005362719546257362
+      },
+      "row_id": "task11_prod_test_inplane_110_spread",
+      "safe_for_inverse_acceleration": true,
+      "split": "test",
+      "transport_controls": {
+        "barrier_z": 1.08,
+        "gamma": 0.82,
+        "nk": 31,
+        "temperature_kelvin": 5.6
+      },
+      "transport_regime": "high_barrier|low_gamma|high_temp",
+      "unsafe_reasons": []
+    }
+  ],
+  "run_kind": "task11_directional_evaluation_production",
+  "transport_regime_report": {
+    "high_barrier|high_gamma|high_temp": {
+      "max_abs_error": 0.19370092235554953,
+      "max_rmse": 0.1004207933644543,
+      "mean_rmse": 0.07247284439635723,
+      "num_rows": 4,
+      "row_ids": [
+        "task11_prod_validation_inplane_110_core",
+        "task11_prod_validation_inplane_100_spread",
+        "task11_prod_test_inplane_110_core",
+        "task11_prod_test_inplane_100_spread"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task11_prod_validation_inplane_110_core",
+        "task11_prod_validation_inplane_100_spread",
+        "task11_prod_test_inplane_110_core"
+      ]
+    },
+    "high_barrier|low_gamma|high_temp": {
+      "max_abs_error": 0.0259261364890937,
+      "max_rmse": 0.013375227637903898,
+      "mean_rmse": 0.00936897359208063,
+      "num_rows": 2,
+      "row_ids": [
+        "task11_prod_validation_inplane_110_spread",
+        "task11_prod_test_inplane_110_spread"
+      ],
+      "safe_for_inverse_acceleration": true,
+      "unsafe_row_ids": []
+    },
+    "low_barrier|low_gamma|high_temp": {
+      "max_abs_error": 0.2772479169542714,
+      "max_rmse": 0.1430434179045793,
+      "mean_rmse": 0.10415659168595445,
+      "num_rows": 2,
+      "row_ids": [
+        "task11_prod_validation_inplane_100_core",
+        "task11_prod_test_inplane_100_core"
+      ],
+      "safe_for_inverse_acceleration": false,
+      "unsafe_row_ids": [
+        "task11_prod_validation_inplane_100_core",
+        "task11_prod_test_inplane_100_core"
+      ]
+    }
+  }
+}
