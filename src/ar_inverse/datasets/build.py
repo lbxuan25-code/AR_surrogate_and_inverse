@@ -174,12 +174,14 @@ def load_dataset_config(path: Path | str) -> dict[str, Any]:
     if not isinstance(config, dict):
         raise ValueError("Dataset config must be a JSON object.")
 
-    required = ("dataset_id", "sampling_policy_id", "samples")
+    required = ("dataset_id", "sampling_policy_id")
     missing = [key for key in required if key not in config]
     if missing:
         raise ValueError(f"Dataset config is missing required key(s): {', '.join(missing)}.")
-    if not isinstance(config["samples"], list) or not config["samples"]:
-        raise ValueError("Dataset config must contain a non-empty samples list.")
+    has_samples = isinstance(config.get("samples"), list) and bool(config.get("samples"))
+    has_sample_grids = isinstance(config.get("sample_grids"), list) and bool(config.get("sample_grids"))
+    if not has_samples and not has_sample_grids:
+        raise ValueError("Dataset config must contain a non-empty samples list or sample_grids list.")
     return config
 
 
@@ -208,6 +210,102 @@ def sample_from_config(
             "num_bias": 41,
         },
     )
+
+
+def materialize_dataset_samples(config: dict[str, Any]) -> list[SmokeSampleSpec]:
+    """Expand explicit samples and compact sample grids into concrete sample specs."""
+
+    allow_diagnostic_raw_angles = bool(config.get("allow_diagnostic_raw_angles", False))
+    sample_entries: list[dict[str, Any]] = []
+    for sample in list(config.get("samples", [])):
+        if not isinstance(sample, dict):
+            raise ValueError("Dataset config sample entries must be JSON objects.")
+        sample_entries.append(sample)
+    sample_entries.extend(_expand_sample_grids(config.get("sample_grids", [])))
+    if not sample_entries:
+        raise ValueError("Dataset config did not materialize any samples.")
+    samples = [
+        sample_from_config(sample, allow_diagnostic_raw_angles=allow_diagnostic_raw_angles)
+        for sample in sample_entries
+    ]
+    expected_num_rows = config.get("expected_num_rows")
+    if expected_num_rows is not None and int(expected_num_rows) != len(samples):
+        raise ValueError(
+            f"Dataset config expected_num_rows={expected_num_rows} but materialized {len(samples)} samples."
+        )
+    row_ids = [sample.row_id for sample in samples]
+    if len(set(row_ids)) != len(row_ids):
+        raise ValueError("Dataset config materialized duplicate row_id values.")
+    return samples
+
+
+def _expand_sample_grids(sample_grids: Any) -> list[dict[str, Any]]:
+    if sample_grids in (None, []):
+        return []
+    if not isinstance(sample_grids, list):
+        raise ValueError("sample_grids must be a list when provided.")
+
+    expanded: list[dict[str, Any]] = []
+    for grid in sample_grids:
+        if not isinstance(grid, dict):
+            raise ValueError("sample_grids entries must be JSON objects.")
+        required = ("row_prefix", "split", "pairing_controls_options", "transport_controls_options", "direction_options")
+        missing = [key for key in required if key not in grid]
+        if missing:
+            raise ValueError(f"sample_grids entry is missing required key(s): {', '.join(missing)}.")
+
+        pairing_options = grid["pairing_controls_options"]
+        transport_options = grid["transport_controls_options"]
+        direction_options = grid["direction_options"]
+        if not isinstance(pairing_options, list) or not pairing_options:
+            raise ValueError("pairing_controls_options must be a non-empty list.")
+        if not isinstance(transport_options, list) or not transport_options:
+            raise ValueError("transport_controls_options must be a non-empty list.")
+        if not isinstance(direction_options, list) or not direction_options:
+            raise ValueError("direction_options must be a non-empty list.")
+
+        row_prefix = str(grid["row_prefix"])
+        split = str(grid["split"])
+        bias_grid = dict(grid.get("bias_grid", {})) or {
+            "bias_min_mev": -20.0,
+            "bias_max_mev": 20.0,
+            "num_bias": 41,
+        }
+
+        for direction_index, direction in enumerate(direction_options):
+            if direction is not None and not isinstance(direction, dict):
+                raise ValueError("direction_options entries must be JSON objects or null.")
+            for pairing_index, pairing_controls in enumerate(pairing_options):
+                if not isinstance(pairing_controls, dict):
+                    raise ValueError("pairing_controls_options entries must be JSON objects.")
+                for transport_index, transport_controls in enumerate(transport_options):
+                    if not isinstance(transport_controls, dict):
+                        raise ValueError("transport_controls_options entries must be JSON objects.")
+                    direction_label = _sample_grid_direction_label(direction, direction_index)
+                    expanded.append(
+                        {
+                            "row_id": (
+                                f"{row_prefix}_{direction_label}_p{pairing_index:02d}_t{transport_index:02d}"
+                            ),
+                            "split": split,
+                            "pairing_controls": pairing_controls,
+                            "transport_controls": transport_controls,
+                            "direction": direction,
+                            "bias_grid": bias_grid,
+                        }
+                    )
+    return expanded
+
+
+def _sample_grid_direction_label(direction: dict[str, Any] | None, direction_index: int) -> str:
+    if direction is None:
+        return f"legacy_d{direction_index:02d}"
+    mode = direction.get("direction_mode")
+    if mode is None:
+        return f"raw_angle_d{direction_index:02d}"
+    if direction.get("directional_spread"):
+        return f"{mode}_spread_d{direction_index:02d}"
+    return f"{mode}_d{direction_index:02d}"
 
 
 def _plan_entry(
@@ -303,10 +401,7 @@ def build_dataset_from_config(
     output_path.mkdir(parents=True, exist_ok=True)
     spectra_dir.mkdir(parents=True, exist_ok=True)
 
-    samples = [
-        sample_from_config(sample, allow_diagnostic_raw_angles=allow_diagnostic_raw_angles)
-        for sample in config["samples"]
-    ]
+    samples = materialize_dataset_samples(config)
     reusable_rows = {} if force else _load_reusable_rows(manifest_path, output_path)
 
     rows: list[dict[str, object]] = []

@@ -2,34 +2,205 @@
 
 ## Current Task
 
-### Task 11B — Run the first production server job and return compact review artifacts
+### Task 12B — Run the first medium-scale neural surrogate validation job
 
 #### Goal
-Run the first server-scale production dataset generation and surrogate training,
-then return compact review artifacts to GitHub for local Codex validation.
+Run the first medium-scale server-side neural surrogate validation job using the
+Task 12A configs, then return compact artifacts to GitHub for local review.
 
-#### Returned artifacts required for Task 11B review
+This is the first task that should be treated as the beginning of formal neural
+surrogate training, but it is still a validation-scale job rather than the
+final large-scale production campaign.
+
+#### Intended scale
+Target a medium-scale dataset budget large enough to test neural capacity
+meaningfully, for example:
+- roughly 300 to 600 total rows
+- train / validation / test split with explicit regime coverage
+- preserved coverage across:
+  - `inplane_100_no_spread`
+  - `inplane_110_no_spread`
+  - `named_mode_narrow_spread`
+
+Do not widen the direction domain during this task.
+
+#### Returned artifacts required for Task 12B review
 At minimum:
-- production run metadata
-- production metrics
-- production evaluation report
-- production model card
-- production server run note
-- compact dataset family metadata proving the frozen forward metadata family was used
+- dataset run metadata
+- training metrics
+- model card
+- training run metadata
+- evaluation report
+- evaluation markdown
+- evaluation run metadata
+- Task 12 server run note
+- compact dataset family metadata, or the full manifest if still reviewable
 
-Do not commit heavyweight production outputs unless explicitly requested.
+Heavy outputs such as:
+- full forward-output directories
+- large neural checkpoints
+- copied raw spectra collections
+
+should stay on the server unless a later task explicitly requests a compact
+canonical sample.
+
+#### Acceptance checklist for Task 12B
+- [ ] medium-scale generation used the Task 12 canonical config
+- [ ] returned artifacts preserve the frozen forward metadata family
+- [ ] returned artifacts preserve the validated direction contract only
+- [ ] neural training completed and produced checkpoints/metrics
+- [ ] evaluation report exists
+- [ ] neural validation is meaningfully stronger than the ridge baseline on at
+      least one held-out metric or regime
+- [ ] local review confirms no schema / naming / contract mismatch
+- [ ] only after this review may Task 13A move into Current Task
+
+#### Promotion rule
+Only after Task 12B is complete and reviewed may Task 13A move into Current Task.
+
+---
+
+### Task 13A — Prepare the large-scale surrogate dataset contract
+
+#### Goal
+Freeze the first large-scale dataset and training contract for heavy server use,
+using the validated neural stack and the still-frozen direction contract.
+
+#### Scope
+Do:
+- define the first large-scale dataset config;
+- define the first large-scale neural training config;
+- define the first large-scale evaluation config;
+- freeze the sampling budget and regime quotas;
+- write a large-scale server handoff note.
+
+Do not:
+- start the large-scale run yet;
+- widen the direction domain;
+- add `c_axis` or diagnostic raw-angle primary rows.
+
+#### Suggested scale planning targets
+The contract should be written so the later heavy run can target something like:
+- 2,000 to 5,000 total rows
+- explicit quotas across supported direction regimes
+- explicit quotas across transport regimes
+- fixed bias-grid and `nk` policy
+- restart-safe run metadata and artifact return rules
 
 #### Acceptance checklist
-- [ ] server-scale generation used the frozen production config
-- [ ] returned artifacts identify the frozen forward metadata family
-- [ ] first production training run started successfully
-- [ ] metrics and evaluation report exist
-- [ ] model card states supported direction regimes and fallback rules
-- [ ] local review confirms consistency before any later task proceeds
+- [ ] one canonical large-scale dataset config exists
+- [ ] one canonical large-scale neural training config exists
+- [ ] one canonical large-scale evaluation config exists
+- [ ] regime quotas are explicit
+- [ ] transport sampling policy is explicit
+- [ ] the frozen forward metadata family remains explicit
+- [ ] a large-scale server handoff note exists
+
+#### Promotion rule
+Only after Task 13A is complete may Task 13B move into Current Task.
+
+---
+
+### Task 13B — Launch the first heavy large-scale surrogate campaign
+
+#### Goal
+Run the first truly heavy server-side surrogate campaign:
+- large-scale forward dataset generation
+- large-scale neural surrogate training
+- large-scale evaluation
+- compact returned artifacts for local acceptance
+
+This is the first task that should be treated as the full heavy surrogate
+training campaign.
+
+#### Returned artifacts required for Task 13B review
+At minimum:
+- large-scale dataset run metadata
+- large-scale training metrics
+- large-scale model card
+- large-scale evaluation report
+- large-scale evaluation markdown
+- large-scale training/evaluation run metadata
+- server run note
+- compact dataset family metadata proving the frozen direction and forward
+  contracts used by the heavy run
+
+Do not commit heavyweight outputs unless explicitly promoted.
+
+#### Acceptance checklist
+- [ ] heavy run used the frozen large-scale contract
+- [ ] large-scale neural training completed successfully
+- [ ] returned metrics/evaluation reports exist
+- [ ] local review confirms forward-family and direction-contract stability
+- [ ] surrogate now defines clearly documented safe and unsafe regimes for later
+      inverse acceleration work
 
 ---
 
 ## Archive
+
+### Task 12A — Prepare the neural surrogate training stack
+
+Completed 2026-04-23.
+
+#### Verification
+- Neural surrogate model code and dual-path checkpoint loader:
+  `src/ar_inverse/surrogate/models.py`.
+- Training code now supports both ridge and neural `model_type`:
+  `src/ar_inverse/surrogate/train.py`.
+- Evaluation code now reads ridge or neural checkpoints:
+  `src/ar_inverse/surrogate/evaluate.py`.
+- Dataset config now supports compact `sample_grids` expansion for canonical
+  medium-scale planning:
+  `src/ar_inverse/datasets/build.py`.
+- Canonical Task 12 medium-scale dataset config:
+  `configs/datasets/task12_directional_medium_dataset.json`.
+- Canonical Task 12 neural training config:
+  `configs/surrogate/task12_directional_neural_medium.json`.
+- Canonical Task 12 neural evaluation config:
+  `configs/surrogate/task12_directional_neural_evaluation_medium.json`.
+- Task 12 server handoff note:
+  `docs/task12_neural_medium_server_handoff.md`.
+- Lightweight Task 12 neural contract test:
+  `tests/test_task12_neural_contract.py`.
+- Local `pytest` passed:
+  `tests/test_task12_neural_contract.py`,
+  `tests/test_task11_production_contract.py`,
+  `tests/test_surrogate_training.py`,
+  `tests/test_surrogate_evaluation.py`.
+- Task 12A intentionally did not run medium-scale dataset generation locally
+  and did not run server-scale production generation locally.
+- Neural smoke checks remained local-only and tiny; no medium-scale outputs were
+  fabricated in the workspace.
+
+### Task 11B — Run the first production server job and return compact review artifacts
+
+Completed 2026-04-23.
+
+#### Verification
+- Returned production dataset run metadata:
+  `outputs/runs/task11_directional_dataset_run_metadata.json`.
+- Returned production manifest:
+  `outputs/datasets/task11_directional_production/dataset.json`.
+- Returned production metrics:
+  `outputs/checkpoints/task11_directional_surrogate_production/metrics.json`.
+- Returned production model card:
+  `outputs/checkpoints/task11_directional_surrogate_production/model_card.md`.
+- Returned production training run metadata:
+  `outputs/runs/task11_directional_surrogate_production_run_metadata.json`.
+- Returned production evaluation report:
+  `outputs/runs/task11_directional_evaluation_production/evaluation_report.json`.
+- Returned production evaluation markdown:
+  `outputs/runs/task11_directional_evaluation_production/evaluation_report.md`.
+- Returned production evaluation run metadata:
+  `outputs/runs/task11_directional_evaluation_production_run_metadata.json`.
+- Returned production server run note:
+  `outputs/runs/task11_production_server_run_note.md`.
+- Local review confirmed preserved `ar_inverse_dataset_row_v2` rows, preserved
+  direction blocks and forward provenance, and one frozen forward metadata
+  family with `git_dirty: false`.
+- Task 11B intentionally remained a compact production-style validation run,
+  not the first large-scale neural campaign.
 
 ### Task 11A — Prepare the production server contract
 

@@ -1,0 +1,49 @@
+{
+  "config_role": "current_directional_neural_medium_training_entry",
+  "execution_mode": "server_only_medium_neural_validation",
+  "model_type": "neural_mlp_spectrum_surrogate",
+  "dataset_manifest": "outputs/datasets/task12_directional_medium_neural/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task12_directional_neural_medium",
+  "run_metadata_path": "outputs/runs/task12_directional_neural_medium_run_metadata.json",
+  "run_kind": "task12_directional_neural_medium_training",
+  "model_card_title": "Task 12 Directional Neural Medium-Scale Checkpoint",
+  "model_card_purpose_lines": [
+    "Medium-scale direction-aware neural checkpoint mapping fit-layer, direction, and transport controls to full AR conductance spectra.",
+    "This is the canonical Task 12 neural validation config prepared for server execution and local artifact review."
+  ],
+  "model_card_limitations_lines": [
+    "This Task 12 neural checkpoint must be generated on the server from the frozen Task 12 medium-scale dataset contract.",
+    "It remains limited to supported named in-plane modes and narrow named-mode-centered spread only under the frozen forward metadata family.",
+    "Returned medium-scale artifacts must be reviewed locally before any later large-scale contract is accepted."
+  ],
+  "hidden_layer_widths": [256, 256, 128],
+  "activation": "gelu",
+  "optimizer": "adamw",
+  "learning_rate": 0.0005,
+  "batch_size": 32,
+  "max_epochs": 250,
+  "early_stopping_patience": 25,
+  "random_seed": 1201,
+  "device": "auto",
+  "held_out_splits": ["validation", "test"],
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this Task 12 contract"
+  },
+  "frozen_forward_metadata_family": {
+    "forward_interface_version": "ar_forward_v1",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p≈0 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false
+  }
+}

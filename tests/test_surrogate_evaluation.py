@@ -6,7 +6,9 @@ import sys
 from pathlib import Path
 
 from ar_inverse.surrogate.calibration import direction_regime_label, transport_regime_label
+from ar_inverse.surrogate.models import NEURAL_MLP_MODEL_TYPE
 from ar_inverse.surrogate.evaluate import DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH, evaluate_surrogate_from_config
+from ar_inverse.surrogate.train import DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH, train_surrogate_from_config
 
 
 def _load_json(path: Path) -> dict[str, object]:
@@ -103,3 +105,40 @@ def test_direction_regime_label_is_stable() -> None:
         )
         == "named_mode_narrow_spread"
     )
+
+
+def test_evaluate_surrogate_from_config_reads_neural_checkpoint(tmp_path) -> None:
+    train_config = _load_json(DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH)
+    train_config["model_type"] = NEURAL_MLP_MODEL_TYPE
+    train_config["checkpoint_dir"] = str(tmp_path / "neural_checkpoint")
+    train_config["run_metadata_path"] = str(tmp_path / "neural_train_metadata.json")
+    train_config["hidden_layer_widths"] = [16]
+    train_config["activation"] = "relu"
+    train_config["optimizer"] = "adam"
+    train_config["learning_rate"] = 0.01
+    train_config["batch_size"] = 2
+    train_config["max_epochs"] = 10
+    train_config["early_stopping_patience"] = 2
+    train_config["random_seed"] = 11
+    train_config["device"] = "cpu"
+    train_config_path = tmp_path / "task12_neural_train.json"
+    train_config_path.write_text(json.dumps(train_config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    checkpoint_path, _, _ = train_surrogate_from_config(train_config_path)
+
+    eval_config = _load_json(DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH)
+    eval_config["checkpoint"] = str(checkpoint_path)
+    eval_config["report_dir"] = str(tmp_path / "neural_eval")
+    eval_config["run_metadata_path"] = str(tmp_path / "neural_eval_metadata.json")
+    eval_config["run_kind"] = "test_task12_neural_evaluation"
+    eval_config["device"] = "cpu"
+    eval_config_path = tmp_path / "task12_neural_eval.json"
+    eval_config_path.write_text(json.dumps(eval_config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    report_path, markdown_path = evaluate_surrogate_from_config(eval_config_path)
+    report = _load_json(report_path)
+    run_metadata = _load_json(Path(eval_config["run_metadata_path"]))
+
+    assert markdown_path.exists()
+    assert report["model"]["model_type"] == NEURAL_MLP_MODEL_TYPE
+    assert run_metadata["model_type"] == NEURAL_MLP_MODEL_TYPE
+    assert report["evaluation_scope"]["held_out_splits"] == ["validation", "test"]

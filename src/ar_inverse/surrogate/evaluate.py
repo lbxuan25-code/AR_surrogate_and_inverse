@@ -1,4 +1,4 @@
-"""Evaluation helpers for direction-aware surrogate smoke checkpoints."""
+"""Evaluation helpers for direction-aware surrogate checkpoints."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from ar_inverse.surrogate.calibration import (
     transport_regime_label,
 )
 from ar_inverse.surrogate.metrics import regression_metrics
-from ar_inverse.surrogate.models import RidgeLinearSpectrumSurrogate
+from ar_inverse.surrogate.models import load_surrogate_checkpoint
 from ar_inverse.surrogate.train import load_dataset_arrays
 
 DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH = Path("configs/surrogate/task9_directional_evaluation_smoke.json")
@@ -122,6 +122,7 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
         "## Summary",
         "",
         f"- Model: `{report['model']['checkpoint']}`",
+        f"- Model type: `{report['model']['model_type']}`",
         f"- Dataset: `{report['dataset']['manifest']}`",
         f"- Held-out splits: `{', '.join(report['evaluation_scope']['held_out_splits'])}`",
         f"- Safe RMSE threshold: `{report['fallback_policy']['safe_error_thresholds']['rmse']}`",
@@ -190,15 +191,16 @@ def _write_markdown_report(path: Path, report: dict[str, Any]) -> None:
 def evaluate_surrogate_from_config(
     config_path: Path | str = DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH,
 ) -> tuple[Path, Path]:
-    """Evaluate a direction-aware smoke checkpoint and write reports."""
+    """Evaluate a direction-aware checkpoint and write reports."""
 
     config_file = Path(config_path)
     config = load_evaluation_config(config_file)
     thresholds = _safe_thresholds(config)
 
     dataset = load_dataset_arrays(config["dataset_manifest"])
-    model = RidgeLinearSpectrumSurrogate.load(config["checkpoint"])
-    predictions = model.predict(dataset["features"])
+    model = load_surrogate_checkpoint(config["checkpoint"])
+    prediction_device = str(config.get("device", "cpu")) if model.model_type == "neural_mlp_spectrum_surrogate" else None
+    predictions = model.predict(dataset["features"], device=prediction_device)
     targets = dataset["targets"]
     splits = dataset["splits"]
     row_ids = dataset["row_ids"]
@@ -240,7 +242,7 @@ def evaluate_surrogate_from_config(
         "report_title": str(config.get("report_title", "Task 9 Directional Surrogate Smoke Evaluation")),
         "model": {
             "checkpoint": str(config["checkpoint"]),
-            "model_type": "ridge_linear_spectrum_surrogate",
+            "model_type": model.model_type,
         },
         "dataset": {
             "dataset_id": manifest["dataset_id"],
@@ -275,6 +277,7 @@ def evaluate_surrogate_from_config(
         "markdown_report": markdown_path.as_posix(),
         "checkpoint": str(config["checkpoint"]),
         "dataset_manifest": str(dataset["manifest_path"]),
+        "model_type": model.model_type,
         "unsafe_transport_regimes": policy["unsafe_transport_regimes"],
         "unsafe_direction_regimes": policy["unsafe_direction_regimes"],
         "forward_metadata_family": forward_metadata_family,

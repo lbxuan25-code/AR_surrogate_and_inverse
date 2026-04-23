@@ -7,7 +7,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ar_inverse.surrogate.models import RidgeLinearSpectrumSurrogate
+from ar_inverse.surrogate.models import NEURAL_MLP_MODEL_TYPE, RidgeLinearSpectrumSurrogate, load_surrogate_checkpoint
 from ar_inverse.surrogate.train import (
     DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR,
     DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
@@ -123,3 +123,47 @@ def test_train_surrogate_cli_writes_outputs(tmp_path) -> None:
     assert str(Path(config["checkpoint_dir"]) / "model.npz") in result.stdout
     assert str(Path(config["checkpoint_dir"]) / "metrics.json") in result.stdout
     assert str(Path(config["checkpoint_dir"]) / "model_card.md") in result.stdout
+
+
+def test_train_neural_surrogate_from_config_writes_pt_checkpoint_and_metadata(tmp_path) -> None:
+    config = _load_json(DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH)
+    config["model_type"] = NEURAL_MLP_MODEL_TYPE
+    config["checkpoint_dir"] = str(tmp_path / "neural_checkpoint")
+    config["run_metadata_path"] = str(tmp_path / "neural_run_metadata.json")
+    config["hidden_layer_widths"] = [16, 16]
+    config["activation"] = "relu"
+    config["optimizer"] = "adam"
+    config["learning_rate"] = 0.01
+    config["batch_size"] = 2
+    config["max_epochs"] = 12
+    config["early_stopping_patience"] = 3
+    config["random_seed"] = 7
+    config["device"] = "cpu"
+    config["run_kind"] = "test_task12_neural_training"
+    config_path = tmp_path / "task12_neural_config.json"
+    config_path.write_text(json.dumps(config, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    checkpoint_path, metrics_path, model_card_path = train_surrogate_from_config(config_path)
+
+    assert checkpoint_path.suffix == ".pt"
+    assert checkpoint_path.exists()
+    assert metrics_path.exists()
+    assert model_card_path.exists()
+
+    metrics = _load_json(metrics_path)
+    run_metadata = _load_json(Path(config["run_metadata_path"]))
+    model = load_surrogate_checkpoint(checkpoint_path)
+    dataset = load_dataset_arrays("outputs/datasets/task8_directional_smoke/dataset.json")
+    prediction = model.predict(dataset["features"], device="cpu")
+
+    assert metrics["model_type"] == NEURAL_MLP_MODEL_TYPE
+    assert metrics["training"]["optimizer"] == "adam"
+    assert metrics["training"]["batch_size"] == 2
+    assert metrics["training"]["random_seed"] == 7
+    assert metrics["training"]["requested_device"] == "cpu"
+    assert run_metadata["model_type"] == NEURAL_MLP_MODEL_TYPE
+    assert run_metadata["optimizer"] == "adam"
+    assert run_metadata["batch_size"] == 2
+    assert run_metadata["requested_device"] == "cpu"
+    assert prediction.shape == dataset["targets"].shape
+    assert np.all(np.isfinite(prediction))

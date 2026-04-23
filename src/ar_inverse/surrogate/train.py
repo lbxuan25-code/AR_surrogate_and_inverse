@@ -1,4 +1,4 @@
-"""Training pipeline for direction-aware surrogate smoke checkpoints."""
+"""Training pipeline for direction-aware surrogate checkpoints."""
 
 from __future__ import annotations
 
@@ -12,7 +12,15 @@ from ar_inverse.direction import SUPPORTED_DIRECTION_MODES, direction_regime_fro
 from ar_inverse.datasets.schema import file_sha256, validate_dataset_manifest
 from ar_inverse.metadata import assert_forward_metadata_complete
 from ar_inverse.surrogate.metrics import regression_metrics
-from ar_inverse.surrogate.models import DEFAULT_FEATURE_SPEC, RidgeLinearSpectrumSurrogate
+from ar_inverse.surrogate.models import (
+    DEFAULT_FEATURE_SPEC,
+    NEURAL_MLP_MODEL_TYPE,
+    RIDGE_MODEL_TYPE,
+    NeuralMLPSpectrumSurrogate,
+    RidgeLinearSpectrumSurrogate,
+    checkpoint_filename_for_model_type,
+    normalize_model_type,
+)
 
 DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH = Path("configs/surrogate/task9_directional_surrogate_smoke.json")
 DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR = Path("outputs/checkpoints/task9_directional_surrogate_smoke")
@@ -156,17 +164,19 @@ def load_dataset_arrays(manifest_path: Path | str) -> dict[str, Any]:
 
 
 def _split_metrics(
-    model: RidgeLinearSpectrumSurrogate,
+    model: RidgeLinearSpectrumSurrogate | NeuralMLPSpectrumSurrogate,
     features: np.ndarray,
     targets: np.ndarray,
     splits: np.ndarray,
+    *,
+    device: str | None = None,
 ) -> dict[str, dict[str, float | int]]:
     metrics: dict[str, dict[str, float | int]] = {}
     for split in ("train", "validation", "test"):
         mask = splits == split
         if not bool(np.any(mask)):
             continue
-        prediction = model.predict(features[mask])
+        prediction = model.predict(features[mask], device=device)
         split_metrics = regression_metrics(prediction, targets[mask])
         split_metrics["num_rows"] = int(np.sum(mask))
         metrics[split] = split_metrics
@@ -210,10 +220,7 @@ def _write_model_card(
         "",
         "## Model",
         "",
-        "- Type: ridge-linear spectrum surrogate",
-        f"- Ridge alpha: `{config.get('ridge_alpha', 1.0e-6)}`",
-        f"- Checkpoint: `{checkpoint_path.as_posix()}`",
-        f"- Feature order: `{', '.join(DEFAULT_FEATURE_SPEC.names)}`",
+        *_model_card_model_lines(config, metrics, checkpoint_path),
         "",
         "## Dataset",
         "",
@@ -276,10 +283,41 @@ def _model_card_lines(lines: Any, *, default_lines: tuple[str, ...]) -> list[str
     return list(lines)
 
 
+def _model_card_model_lines(config: dict[str, Any], metrics: dict[str, Any], checkpoint_path: Path) -> list[str]:
+    model_type = normalize_model_type(metrics["model_type"])
+    lines = [
+        f"- Type: `{model_type}`",
+        f"- Checkpoint: `{checkpoint_path.as_posix()}`",
+        f"- Feature order: `{', '.join(DEFAULT_FEATURE_SPEC.names)}`",
+    ]
+    if model_type == RIDGE_MODEL_TYPE:
+        lines.insert(1, f"- Ridge alpha: `{config.get('ridge_alpha', 1.0e-6)}`")
+        return lines
+
+    training = dict(metrics.get("training", {}))
+    lines.extend(
+        [
+            f"- Hidden layer widths: `{training.get('hidden_layer_widths', [])}`",
+            f"- Depth: `{training.get('depth', 0)}`",
+            f"- Activation: `{training.get('activation', config.get('activation', 'relu'))}`",
+            f"- Optimizer: `{training.get('optimizer', config.get('optimizer', 'adam'))}`",
+            f"- Learning rate: `{training.get('learning_rate', config.get('learning_rate', 1.0e-3))}`",
+            f"- Batch size: `{training.get('batch_size', config.get('batch_size', 32))}`",
+            f"- Epoch limit: `{training.get('epoch_limit', config.get('max_epochs', 100))}`",
+            f"- Best epoch: `{training.get('best_epoch', training.get('epochs_completed', 0))}`",
+            f"- Early-stopping patience: `{training.get('early_stopping_patience', config.get('early_stopping_patience', 10))}`",
+            f"- Random seed: `{training.get('random_seed', config.get('random_seed', 0))}`",
+            f"- Requested device: `{training.get('requested_device', config.get('device', 'auto'))}`",
+            f"- Resolved device: `{training.get('resolved_device', 'cpu')}`",
+        ]
+    )
+    return lines
+
+
 def train_surrogate_from_config(
     config_path: Path | str = DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
 ) -> tuple[Path, Path, Path]:
-    """Train a direction-aware smoke checkpoint and write metrics/model card."""
+    """Train a direction-aware surrogate checkpoint and write metrics/model card."""
 
     config_file = Path(config_path)
     config = load_training_config(config_file)
@@ -292,16 +330,44 @@ def train_surrogate_from_config(
     if not bool(np.any(train_mask)):
         raise ValueError("Training dataset must contain at least one train row.")
 
-    ridge_alpha = float(config.get("ridge_alpha", 1.0e-6))
-    model = RidgeLinearSpectrumSurrogate.fit(
-        features[train_mask],
-        targets[train_mask],
-        ridge_alpha=ridge_alpha,
-    )
+    held_out_splits = list(config.get("held_out_splits", ["validation", "test"]))
+    model_type = normalize_model_type(config.get("model_type"))
+    prediction_device: str | None = None
+
+    if model_type == RIDGE_MODEL_TYPE:
+        ridge_alpha = float(config.get("ridge_alpha", 1.0e-6))
+        model = RidgeLinearSpectrumSurrogate.fit(
+            features[train_mask],
+            targets[train_mask],
+            ridge_alpha=ridge_alpha,
+        )
+        training_summary = {
+            "ridge_alpha": ridge_alpha,
+        }
+    else:
+        validation_mask = splits == "validation"
+        validation_features = features[validation_mask] if bool(np.any(validation_mask)) else None
+        validation_targets = targets[validation_mask] if bool(np.any(validation_mask)) else None
+        model, training_summary = NeuralMLPSpectrumSurrogate.fit(
+            features[train_mask],
+            targets[train_mask],
+            validation_features=validation_features,
+            validation_targets=validation_targets,
+            hidden_layer_widths=_hidden_layer_widths_from_config(config),
+            activation_name=str(config.get("activation", "relu")),
+            optimizer_name=str(config.get("optimizer", "adam")),
+            learning_rate=float(config.get("learning_rate", 1.0e-3)),
+            batch_size=int(config.get("batch_size", 32)),
+            max_epochs=int(config.get("max_epochs", 100)),
+            early_stopping_patience=int(config.get("early_stopping_patience", 10)),
+            random_seed=int(config.get("random_seed", 0)),
+            device=str(config.get("device", "auto")),
+        )
+        prediction_device = "cpu"
 
     checkpoint_dir = Path(config["checkpoint_dir"])
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    checkpoint_path = checkpoint_dir / "model.npz"
+    checkpoint_path = checkpoint_dir / checkpoint_filename_for_model_type(model_type)
     metrics_path = checkpoint_dir / "metrics.json"
     model_card_path = checkpoint_dir / "model_card.md"
 
@@ -309,17 +375,20 @@ def train_surrogate_from_config(
     run_kind = str(config.get("run_kind", "task9_directional_surrogate_smoke_training"))
     metrics = {
         "run_kind": run_kind,
-        "model_type": "ridge_linear_spectrum_surrogate",
-        "ridge_alpha": ridge_alpha,
+        "model_type": model_type,
         "dataset_manifest": str(dataset["manifest_path"]),
         "dataset_id": dataset["manifest"]["dataset_id"],
         "feature_spec": DEFAULT_FEATURE_SPEC.to_dict(),
         "bias_mev": dataset["bias_mev"],
         "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
-        "splits": _split_metrics(model, features, targets, splits),
-        "held_out_splits": ["validation", "test"],
+        "splits": _split_metrics(model, features, targets, splits, device=prediction_device),
+        "held_out_splits": held_out_splits,
         "checkpoint": checkpoint_path.as_posix(),
     }
+    if model_type == RIDGE_MODEL_TYPE:
+        metrics["ridge_alpha"] = float(training_summary["ridge_alpha"])
+    else:
+        metrics["training"] = training_summary
     metrics_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     _write_model_card(
         model_card_path,
@@ -339,12 +408,48 @@ def train_surrogate_from_config(
         "model_card": model_card_path.as_posix(),
         "dataset_manifest": str(dataset["manifest_path"]),
         "dataset_id": dataset["manifest"]["dataset_id"],
+        "model_type": model_type,
         "forward_metadata_family": dataset["manifest"]["rows"][0]["forward_metadata"],
         "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
-        "held_out_splits": ["validation", "test"],
+        "held_out_splits": held_out_splits,
     }
+    if model_type == RIDGE_MODEL_TYPE:
+        run_metadata["ridge_alpha"] = float(training_summary["ridge_alpha"])
+    else:
+        run_metadata.update(
+            {
+                "optimizer": training_summary["optimizer"],
+                "learning_rate": training_summary["learning_rate"],
+                "batch_size": training_summary["batch_size"],
+                "epoch_limit": training_summary["epoch_limit"],
+                "epochs_completed": training_summary["epochs_completed"],
+                "best_epoch": training_summary["best_epoch"],
+                "early_stopping_patience": training_summary["early_stopping_patience"],
+                "random_seed": training_summary["random_seed"],
+                "requested_device": training_summary["requested_device"],
+                "resolved_device": training_summary["resolved_device"],
+                "hidden_layer_widths": training_summary["hidden_layer_widths"],
+                "depth": training_summary["depth"],
+                "activation": training_summary["activation"],
+            }
+        )
     run_metadata_path.write_text(json.dumps(run_metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return checkpoint_path, metrics_path, model_card_path
+
+
+def _hidden_layer_widths_from_config(config: dict[str, Any]) -> tuple[int, ...]:
+    widths = config.get("hidden_layer_widths")
+    if widths is not None:
+        if not isinstance(widths, list) or not widths:
+            raise ValueError("hidden_layer_widths must be a non-empty list when provided.")
+        return tuple(int(width) for width in widths)
+    depth = int(config.get("depth", 2))
+    hidden_width = int(config.get("hidden_width", 128))
+    if depth < 1:
+        raise ValueError("depth must be at least 1.")
+    if hidden_width < 1:
+        raise ValueError("hidden_width must be at least 1.")
+    return tuple(hidden_width for _ in range(depth))
 
 
 def _direction_support_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:

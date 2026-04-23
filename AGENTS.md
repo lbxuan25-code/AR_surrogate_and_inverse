@@ -9,23 +9,22 @@ It is not the source of truth for forward physics.
 The forward truth chain lives in the external LNO327 AR forward repository and
 must be consumed only through its stable public `forward` interface.
 
-The current development cycle is focused on direction-aware surrogate
-preparation, pilot validation, and production-handoff preparation under a split
-local-edit / server-run workflow.
+The current development cycle has moved past workflow validation and compact
+production-style ridge baselines. The new priority is to introduce a first
+neural surrogate training stack under the same frozen direction and forward
+contracts.
 
 Current stage note:
-- Task 9 completed the canonical direction-aware surrogate smoke loop.
-- Task 10A completed the canonical non-smoke pilot preparation: configs,
-  runbook, and lightweight validation are now in the repository.
-- Task 10B completed: the server-run pilot artifacts were returned, reviewed
-  locally, and accepted.
-- Task 11A completed: the canonical production dataset/training/evaluation
-  configs, frozen forward-family contract, handoff note, and lightweight
-  validation are now in the repository.
-- The current `TODO.md` task is Task 11B: run the first production server job
-  and return compact review artifacts for local validation.
-- Heavy execution remains deferred to explicit server-run tasks reviewed only
-  after compact artifacts are returned to GitHub.
+- Task 9 completed the canonical direction-aware smoke loop.
+- Task 10A/10B completed the pilot preparation and pilot server validation.
+- Task 11A/11B completed the compact production-contract validation run.
+- Task 12A completed: the first neural surrogate stack, medium-scale canonical
+  configs, handoff note, and lightweight wiring tests are now in the
+  repository.
+- The current `TODO.md` task is Task 12B: run the first medium-scale neural
+  surrogate validation job on the server and return compact artifacts.
+- Large-scale heavy surrogate campaigns belong to later tasks only after Task
+  12B review is accepted.
 
 ## Source Of Truth
 
@@ -33,7 +32,8 @@ Priority order:
 
 1. this repository's `TODO.md`
 2. committed configs, docs, and lightweight validation tests in this repository
-3. dataset metadata, run metadata, and forward-interface version metadata
+3. dataset metadata, run metadata, checkpoint metadata, and forward-interface
+   version metadata
 4. the external forward repository's public `forward` API contract
 5. the external forward repository's published directional capability contract
 6. local code and tests
@@ -44,7 +44,7 @@ direction contract, the external forward metadata and contract win.
 
 ## Workflow Model
 
-This repository now uses a split execution workflow.
+This repository uses a split execution workflow.
 
 ### Local Codex workspace responsibilities
 Local Codex may:
@@ -52,13 +52,14 @@ Local Codex may:
 - edit configs;
 - edit docs and runbooks;
 - add or update lightweight validation tests;
+- add new model implementations and training/evaluation wiring;
 - prepare server commands and output expectations;
 - review compact server-returned artifacts after they are committed back.
 
 Local Codex must not:
-- silently run heavy pilot dataset generation;
-- silently run heavy surrogate training;
-- silently run heavy evaluation;
+- silently run medium-scale or large-scale dataset generation;
+- silently run medium-scale or large-scale neural training;
+- silently run medium-scale or large-scale evaluation;
 - pretend a server-run task completed before returned artifacts are reviewed.
 
 ### GitHub handoff responsibilities
@@ -72,7 +73,7 @@ server-side run.
 ### Server responsibilities
 The server is where heavy execution happens:
 - dataset generation
-- surrogate training
+- neural or baseline surrogate training
 - evaluation
 - large output creation
 
@@ -155,6 +156,29 @@ This repository must follow the forward repository's current directional rules.
 - if included, they must be explicitly labeled, documented, and separated or
   down-weighted
 
+## Model-Stack Rules
+
+The repository now has two distinct surrogate phases.
+
+### Baseline phase
+The ridge-linear surrogate remains:
+- a baseline comparator,
+- a compatibility path for older tasks,
+- a simple calibration reference.
+
+Do not remove it unless a later task explicitly authorizes retirement.
+
+### Neural phase
+The first neural surrogate stack must:
+- preserve the current feature contract unless a task explicitly changes it;
+- support full-spectrum prediction on a fixed bias grid;
+- record full training metadata in run artifacts;
+- produce checkpoint formats that evaluation/report code can read without
+  ambiguity.
+
+Do not introduce a neural architecture that silently changes the meaning of the
+input feature contract or the output spectrum contract.
+
 ## Execution Protocol
 
 At any moment, only the single task in `TODO.md -> Current Task` may be
@@ -169,6 +193,8 @@ Before marking a preparation task complete:
 - run only the lightweight tests or checks explicitly allowed by the task;
 - verify config paths and docs are consistent;
 - verify no heavy output has been fabricated;
+- verify checkpoint/readback/report code is wired consistently across supported
+  `model_type` options;
 - update `TODO.md` only after the preparation stage is genuinely complete.
 
 ### For server-run tasks
@@ -209,6 +235,23 @@ When direction-aware training is implemented, feature intake must distinguish:
 Do not let model code collapse supported named modes, diagnostic-only angles,
 and unsupported modes into one ambiguous feature path.
 
+## Evaluation Rules
+
+Neural-stack promotion should be judged against the ridge baseline, not only by
+whether the code runs.
+
+When Task 12B or later medium/large neural runs are reviewed, compare against
+the ridge baseline on at least:
+- held-out RMSE
+- held-out max absolute error
+- unsafe fraction
+- direction-regime report
+- transport-regime report
+
+Do not claim the neural stack is validated merely because it trained
+successfully. It must show meaningful improvement on at least one held-out
+metric or regime.
+
 ## Scientific Reporting Rules
 
 Inverse outputs must be candidate families, not unique microscopic truth claims.
@@ -241,7 +284,7 @@ Every server-run task should have a committed runbook note that states:
 
 Heavy outputs such as:
 - full forward-output directories
-- large raw pilot or production datasets
+- large raw pilot, medium-scale, or large-scale datasets
 - large checkpoints
 - bulky spectrum collections
 
@@ -262,13 +305,16 @@ decides they are small canonical examples.
 
 ## Cleanliness Rules
 
-Do not leave behind obsolete configs, stale manifests, or legacy angle-only
-assumptions that can contaminate later tasks.
+Do not leave behind obsolete configs, stale manifests, legacy angle-only
+assumptions, or ambiguous baseline-vs-neural code paths that can contaminate
+later tasks.
 
-When replacing an old schema or feature assumption:
+When replacing or extending an old training path:
 - update the docs;
 - update the config examples;
 - update tests;
 - remove or clearly deprecate the obsolete path.
 
-No silent dual-standard behavior is allowed for direction semantics.
+No silent dual-standard behavior is allowed for direction semantics, and no
+silent dual-standard behavior is allowed for ridge-vs-neural checkpoint/report
+semantics.

@@ -9,8 +9,14 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 11B, run the first production server job and return
-  compact review artifacts for local validation.
+- Current TODO task: Task 12B, run the first medium-scale neural surrogate
+  validation job on the server and return compact artifacts for local review.
+- Task 12A is complete: the first neural surrogate stack, dual-path ridge and
+  neural checkpoint wiring, canonical medium-scale dataset config, neural
+  training/evaluation configs, and Task 12 handoff note are prepared.
+- Task 11B is complete: the first production server-scale dataset generation,
+  surrogate training, and evaluation run returned compact review artifacts and
+  passed local review under the frozen forward metadata family.
 - Task 11A is complete: the canonical production dataset config, training
   config, evaluation config, frozen forward-family contract, and production
   server handoff note are prepared for manual server execution.
@@ -39,6 +45,11 @@ It does not copy or reimplement forward physics code.
   `configs/surrogate/task11_directional_surrogate_production.json`,
   `configs/surrogate/task11_directional_evaluation_production.json`, and
   `docs/task11_production_server_handoff.md`.
+- The canonical Task 12 neural validation entry points are:
+  `configs/datasets/task12_directional_medium_dataset.json`,
+  `configs/surrogate/task12_directional_neural_medium.json`,
+  `configs/surrogate/task12_directional_neural_evaluation_medium.json`, and
+  `docs/task12_neural_medium_server_handoff.md`.
 - Historical `task3`, `task4`, and `task5` paths are legacy / archived
   baseline names. They remain loadable for compatibility but are not the current
   canonical stage names.
@@ -278,6 +289,33 @@ raw angles, arbitrary or wide mixtures, and experiment-side direction mixtures
 in the surrogate truth dataset. It also freezes the forward metadata family
 validated in Task 10B; any later server run must return compact artifacts that
 identify that same family for local review.
+
+Task 11B completed the first server production run using this contract and
+returned compact review artifacts that passed local validation. The returned
+manifest kept `ar_inverse_dataset_row_v2`, the supported named modes plus
+narrow spread only, and the frozen clean forward metadata family.
+
+## Task 12 Neural Medium-Scale Handoff
+
+Task 12A prepared the first neural surrogate stack and the canonical
+medium-scale validation contract without launching the medium-scale run
+locally. Task 12B is the server-run and returned-artifact review phase. Use
+these committed configs:
+
+- `configs/datasets/task12_directional_medium_dataset.json`
+- `configs/surrogate/task12_directional_neural_medium.json`
+- `configs/surrogate/task12_directional_neural_evaluation_medium.json`
+
+The neural server handoff note is:
+
+- `docs/task12_neural_medium_server_handoff.md`
+
+The Task 12 neural stack keeps the same structured feature contract as the
+ridge baseline, preserves the same frozen direction domain, and adds a simple
+feed-forward checkpoint path with explicit optimizer, epoch, batch-size, seed,
+and device metadata. The medium-scale dataset contract targets `352` rows and
+still excludes `c_axis`, diagnostic raw-angle primary rows, arbitrary wide
+spread, and experiment-side direction mixtures.
 
 ## Task 1 Smoke Path
 
