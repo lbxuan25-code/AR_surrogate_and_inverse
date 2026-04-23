@@ -1,3 +1,13 @@
+Metadata-Version: 2.4
+Name: ar-surrogate-and-inverse
+Version: 0.1.0
+Summary: AR surrogate training, inverse search, and experiment-fitting orchestration.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.26
+Provides-Extra: dev
+Requires-Dist: pytest>=8.2; extra == "dev"
+
 # AR Surrogate And Inverse
 
 Training, surrogate, inverse-search, and experiment-fitting orchestration for

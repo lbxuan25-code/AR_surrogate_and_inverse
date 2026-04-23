@@ -1,0 +1,28 @@
+{
+  "config_role": "current_directional_evaluation_pilot_entry",
+  "execution_mode": "server_only_non_smoke_pilot",
+  "checkpoint": "outputs/checkpoints/task10_directional_surrogate_pilot/model.npz",
+  "dataset_manifest": "outputs/datasets/task10_directional_pilot/dataset.json",
+  "report_dir": "outputs/runs/task10_directional_evaluation_pilot",
+  "run_metadata_path": "outputs/runs/task10_directional_evaluation_pilot_run_metadata.json",
+  "run_kind": "task10_directional_evaluation_pilot",
+  "report_title": "Task 10 Directional Surrogate Pilot Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.05,
+    "max_abs_error": 0.1
+  },
+  "direction_contract": {
+    "primary_supported_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "diagnostic_raw_angles": "excluded from primary pilot pool",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  }
+}

@@ -1,0 +1,363 @@
+{
+  "config_role": "current_directional_contract_pilot_entry",
+  "execution_mode": "server_only_non_smoke_pilot",
+  "dataset_id": "task10_directional_pilot_v1",
+  "description": "Small non-smoke direction-aware pilot dataset for server execution only. Covers supported named modes and narrow named-mode-centered spread without raw-angle primary data.",
+  "output_dir": "outputs/datasets/task10_directional_pilot",
+  "run_metadata_path": "outputs/runs/task10_directional_dataset_run_metadata.json",
+  "run_kind": "task10_directional_dataset_generation",
+  "sampling_policy_id": "task10_directional_pilot_v1",
+  "allow_diagnostic_raw_angles": false,
+  "direction_contract": {
+    "primary_supported_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "secondary_supported_regime": "narrow named-mode-centered spread only",
+    "diagnostic_raw_angles": "excluded from primary pilot pool",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "sampling_policy": {
+    "sampling_policy_id": "task10_directional_pilot_v1",
+    "policy_kind": "directional_contract_pilot",
+    "description": "Small non-smoke pilot covering supported named in-plane modes with a narrow-spread subset around those modes.",
+    "direction_regimes": {
+      "primary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": null,
+        "generic_raw_angles": "excluded"
+      },
+      "secondary_supported_regime": {
+        "direction_modes": [
+          "inplane_100",
+          "inplane_110"
+        ],
+        "directional_spread": "narrow named-mode-centered, half_width <= pi/32"
+      },
+      "diagnostic_only_regime": {
+        "generic_raw_angles": "explicit opt-in only; excluded from primary pilot"
+      },
+      "unsupported_regime": {
+        "c_axis": "rejected at config validation time"
+      }
+    },
+    "fit_layer_pairing_controls": {
+      "mode": "delta_from_baseline_meV",
+      "channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "weak_delta_zx_s": "closed"
+    },
+    "transport_controls": {
+      "barrier_z": "small pilot sweep",
+      "gamma": "small pilot sweep",
+      "temperature_kelvin": "small pilot sweep",
+      "nk": "fixed moderate odd grid for pilot"
+    },
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ]
+  },
+  "samples": [
+    {
+      "row_id": "task10_pilot_train_inplane_100_core_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.22,
+        "delta_perp_x": -0.09
+      },
+      "transport_controls": {
+        "barrier_z": 0.35,
+        "gamma": 0.85,
+        "temperature_kelvin": 2.0,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_110_core_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.14,
+        "delta_zx_d": 0.11
+      },
+      "transport_controls": {
+        "barrier_z": 0.55,
+        "gamma": 1.05,
+        "temperature_kelvin": 3.0,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_100_core_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_z": 0.09,
+        "delta_zz_s": 0.12
+      },
+      "transport_controls": {
+        "barrier_z": 0.75,
+        "gamma": 1.25,
+        "temperature_kelvin": 4.5,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_110_core_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_x": 0.06,
+        "delta_xx_s": -0.05
+      },
+      "transport_controls": {
+        "barrier_z": 0.95,
+        "gamma": 0.9,
+        "temperature_kelvin": 5.5,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_100_spread_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.16,
+        "delta_zx_d": 0.08
+      },
+      "transport_controls": {
+        "barrier_z": 0.45,
+        "gamma": 1.15,
+        "temperature_kelvin": 2.5,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.04908738521234052,
+          "num_samples": 5
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_110_spread_a",
+      "split": "train",
+      "pairing_controls": {
+        "delta_xx_s": -0.09,
+        "delta_perp_z": 0.07
+      },
+      "transport_controls": {
+        "barrier_z": 0.65,
+        "gamma": 0.8,
+        "temperature_kelvin": 3.5,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.032724923474893676,
+          "num_samples": 5
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_100_core_c",
+      "split": "train",
+      "pairing_controls": {
+        "delta_zz_s": 0.1,
+        "delta_perp_z": 0.05
+      },
+      "transport_controls": {
+        "barrier_z": 0.25,
+        "gamma": 1.3,
+        "temperature_kelvin": 1.5,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_train_inplane_110_spread_b",
+      "split": "train",
+      "pairing_controls": {
+        "delta_perp_x": 0.05,
+        "delta_zx_d": 0.06
+      },
+      "transport_controls": {
+        "barrier_z": 0.85,
+        "gamma": 1.0,
+        "temperature_kelvin": 4.0,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.02454369260617026,
+          "num_samples": 7
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_validation_inplane_100_core",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_xx_s": -0.08,
+        "delta_zz_s": 0.14
+      },
+      "transport_controls": {
+        "barrier_z": 0.6,
+        "gamma": 0.95,
+        "temperature_kelvin": 3.2,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_validation_inplane_110_spread",
+      "split": "validation",
+      "pairing_controls": {
+        "delta_perp_z": 0.11,
+        "delta_perp_x": -0.03
+      },
+      "transport_controls": {
+        "barrier_z": 0.7,
+        "gamma": 1.2,
+        "temperature_kelvin": 2.8,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110",
+        "directional_spread": {
+          "direction_mode": "inplane_110",
+          "half_width": 0.04908738521234052,
+          "num_samples": 5
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_test_inplane_110_core",
+      "split": "test",
+      "pairing_controls": {
+        "delta_zz_s": 0.18,
+        "delta_zx_d": 0.09
+      },
+      "transport_controls": {
+        "barrier_z": 0.5,
+        "gamma": 0.75,
+        "temperature_kelvin": 6.0,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_110"
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    },
+    {
+      "row_id": "task10_pilot_test_inplane_100_spread",
+      "split": "test",
+      "pairing_controls": {
+        "delta_xx_s": -0.1,
+        "delta_perp_z": 0.12
+      },
+      "transport_controls": {
+        "barrier_z": 1.05,
+        "gamma": 1.1,
+        "temperature_kelvin": 4.8,
+        "nk": 21
+      },
+      "direction": {
+        "direction_mode": "inplane_100",
+        "directional_spread": {
+          "direction_mode": "inplane_100",
+          "half_width": 0.032724923474893676,
+          "num_samples": 7
+        }
+      },
+      "bias_grid": {
+        "bias_min_mev": -20.0,
+        "bias_max_mev": 20.0,
+        "num_bias": 81
+      }
+    }
+  ]
+}

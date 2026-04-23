@@ -1,0 +1,20 @@
+{
+  "config_role": "current_directional_surrogate_pilot_entry",
+  "execution_mode": "server_only_non_smoke_pilot",
+  "dataset_manifest": "outputs/datasets/task10_directional_pilot/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/task10_directional_surrogate_pilot",
+  "run_metadata_path": "outputs/runs/task10_directional_surrogate_pilot_run_metadata.json",
+  "run_kind": "task10_directional_surrogate_pilot_training",
+  "model_card_title": "Task 10 Directional Surrogate Pilot Checkpoint",
+  "ridge_alpha": 1.0e-6,
+  "direction_contract": {
+    "primary_supported_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "diagnostic_raw_angles": "excluded from primary pilot pool",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  }
+}
