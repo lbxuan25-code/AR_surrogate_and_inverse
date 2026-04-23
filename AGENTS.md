@@ -13,12 +13,11 @@ The current development cycle is focused on integrating the forward repository's
 directional capability contract into this repository's dataset, surrogate,
 inverse, and experiment-fitting layers.
 
-Current stage note: Task 8 completed the direction-contract integration. The
-current `TODO.md` task is Task 9, but the repository has only a smoke-scale
-directional surrogate checkpoint/evaluation namespace so far; the formal
-non-smoke Task 9 training expansion has not started. Historical `task3`,
-`task4`, and `task5` names are legacy / archived baseline names unless
-explicitly invoked.
+Current stage note: Task 8 completed the direction-contract integration, and
+Task 9 completed the canonical direction-aware surrogate smoke training loop.
+The current `TODO.md` task is Task 10, the small non-smoke pilot dataset and
+pilot training/evaluation validation. Historical `task3`, `task4`, and `task5`
+names are legacy / archived baseline names unless explicitly invoked.
 
 ## Source Of Truth
 

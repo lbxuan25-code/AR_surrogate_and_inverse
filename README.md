@@ -9,11 +9,14 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 9, first direction-aware surrogate training.
+- Current TODO task: Task 10, small non-smoke pilot dataset and pilot
+  training/evaluation validation.
 - Task 8 is complete: the forward direction contract is integrated into
   dataset rows, feature intake, evaluation reports, inverse configs, and
   experiment reports.
-- The current smoke-scale naming-clean entry points are:
+- Task 9 is complete: the direction-aware surrogate smoke training loop runs
+  end to end under canonical naming.
+- The canonical smoke entry points retained for verification are:
   `configs/datasets/task8_directional_smoke_dataset.json`,
   `configs/surrogate/task9_directional_surrogate_smoke.json`, and
   `configs/surrogate/task9_directional_evaluation_smoke.json`.
@@ -202,7 +205,8 @@ It writes:
 - `outputs/runs/task9_directional_surrogate_smoke_run_metadata.json`
 
 This remains a smoke-scale artifact over the Task 8 directional dataset. It is
-not the formal large Task 9 training expansion.
+not the Task 10 non-smoke pilot dataset/training run and not a server-scale
+training expansion.
 
 Evaluate it with:
 
