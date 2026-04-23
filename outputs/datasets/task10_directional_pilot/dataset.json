@@ -5,7 +5,7 @@
   "plan": [
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_100_core_a.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_100_core_a",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -13,7 +13,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_110_core_a.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_110_core_a",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -21,7 +21,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_100_core_b.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_100_core_b",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -29,7 +29,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_110_core_b.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_110_core_b",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -37,7 +37,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_100_spread_a.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_100_spread_a",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -45,7 +45,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_110_spread_a.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_110_spread_a",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -53,7 +53,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_100_core_c.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_100_core_c",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -61,7 +61,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_train_inplane_110_spread_b.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_train_inplane_110_spread_b",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "train",
@@ -69,7 +69,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_validation_inplane_100_core.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_validation_inplane_100_core",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "validation",
@@ -77,7 +77,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_validation_inplane_110_spread.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_validation_inplane_110_spread",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "validation",
@@ -85,7 +85,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_test_inplane_110_core.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_test_inplane_110_core",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "test",
@@ -93,7 +93,7 @@
     },
     {
       "forward_output_path": "forward_outputs/task10_pilot_test_inplane_100_spread.json",
-      "reused_existing_output": false,
+      "reused_existing_output": true,
       "row_id": "task10_pilot_test_inplane_100_spread",
       "sampling_policy_id": "task10_directional_pilot_v1",
       "split": "test",

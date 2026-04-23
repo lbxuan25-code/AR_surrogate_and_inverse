@@ -97,9 +97,9 @@
       }
     }
   },
-  "generated_rows": 12,
+  "generated_rows": 0,
   "num_rows": 12,
-  "reused_rows": 0,
+  "reused_rows": 12,
   "run_kind": "task10_directional_dataset_generation",
   "sampling_policy_id": "task10_directional_pilot_v1",
   "source_config": "configs/datasets/task10_directional_pilot_dataset.json"

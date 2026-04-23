@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Smoke-scale direction-aware checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.
-This is the Task 9 smoke-loop artifact, not the Task 10 non-smoke pilot or a server-scale training run.
+Small non-smoke direction-aware pilot checkpoint mapping fit-layer, direction, and transport controls to AR conductance spectra.
+This is the Task 10 pilot artifact prepared for server execution review, not the Task 9 smoke-loop artifact and not a server-scale production run.
 
 ## Model
 
@@ -64,6 +64,6 @@ This is the Task 9 smoke-loop artifact, not the Task 10 non-smoke pilot or a ser
 
 ## Limitations
 
-This checkpoint is trained on the tiny Task 8 directional smoke dataset and is intended only
-to verify direction-aware feature intake, checkpointing, metrics, and dataset metadata plumbing.
-The non-smoke pilot and server-scale training expansions belong to later tasks.
+This checkpoint is trained on the Task 10 directional pilot dataset and remains a compact pilot artifact.
+It verifies direction-aware feature intake, checkpointing, metrics, and returned-artifact review under the split local-edit and server-run workflow.
+Production-scale dataset generation and training belong to later tasks.
