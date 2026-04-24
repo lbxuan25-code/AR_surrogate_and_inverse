@@ -21,16 +21,21 @@ Current stage note:
 - Task 13A completed: the first high-accuracy large-scale contract, residual
   neural path, composite loss wiring, ensemble-capable evaluation path, and
   large-scale handoff note are now in the repository.
+- Task 13B completed: the first high-accuracy heavy surrogate campaign
+  returned large-scale compact artifacts, preserved the frozen forward-family
+  and direction contracts, passed uncertainty-aware local review, and is
+  accepted as the current high-accuracy surrogate family for later inverse
+  acceleration work.
 - Task 12B completed: the first medium-scale neural surrogate validation run
   returned compact artifacts, preserved the frozen forward-family and direction
   contracts, and passed local review.
 - Task 12A completed: the first neural surrogate stack, medium-scale canonical
   configs, handoff note, and lightweight wiring tests are now in the
   repository.
-- The current `TODO.md` task is Task 13B: launch the first high-accuracy heavy
-  surrogate campaign using the frozen Task 13 large-scale contract.
-- Large-scale heavy surrogate campaigns now begin with Task 13B under the
-  frozen Task 13A contract and remain subject to returned-artifact review.
+- No active `TODO.md` task is currently assigned after Task 13B acceptance.
+- Any later large-scale heavy surrogate campaign remains subject to explicit
+  `TODO.md` promotion, the frozen forward-family and direction contracts, and
+  returned-artifact review.
 
 ## Source Of Truth
 

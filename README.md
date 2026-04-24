@@ -9,8 +9,11 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- Current TODO task: Task 13B, launch the first high-accuracy heavy surrogate
-  campaign on the server using the frozen Task 13 contract.
+- No active TODO task is currently assigned after Task 13B acceptance.
+- Task 13B is complete: the first high-accuracy heavy surrogate campaign
+  returned large-scale dataset metadata, high-accuracy ensemble training
+  artifacts, uncertainty-aware evaluation reports, and a server run note; local
+  review accepted the result under the frozen Task 13 contract.
 - Task 13A is complete: the canonical large-scale dataset, training, and
   evaluation contracts are prepared; the residual high-accuracy path, composite
   loss, and ensemble-capable evaluation wiring are now in the repository.

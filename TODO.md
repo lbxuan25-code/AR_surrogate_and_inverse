@@ -2,7 +2,18 @@
 
 ## Current Task
 
+No active task is currently assigned.
+
+The most recent accepted task is Task 13B. Do not start a new backlog task
+until it is explicitly promoted into this section.
+
+---
+
+## Archive
+
 ### Task 13B — Launch the first high-accuracy heavy surrogate campaign
+
+Completed 2026-04-24.
 
 #### Goal
 Run the first truly heavy, accuracy-driven server-side surrogate campaign using
@@ -63,35 +74,35 @@ The large-scale campaign is not accepted merely because it trains successfully.
 It must show that the heavy model is at least as reliable as Task 12B and is
 better justified for production inverse acceleration.
 
-#### Accuracy acceptance targets
-Task 13B should be accepted only if all of the following hold:
+#### Accuracy acceptance review
+Task 13B was accepted after local review confirmed all of the following:
 
 Global held-out requirements:
-- [ ] evaluation report exists
-- [ ] mean held-out RMSE remains within the configured production-safe range
-- [ ] mean held-out max absolute error remains within the configured production-safe range
-- [ ] held-out unsafe fraction is no worse than Task 12B and remains near zero
+- [x] evaluation report exists
+- [x] mean held-out RMSE remains within the configured production-safe range
+- [x] mean held-out max absolute error remains within the configured production-safe range
+- [x] held-out unsafe fraction is no worse than Task 12B and remains near zero
 
 Direction-regime requirements:
-- [ ] `inplane_100_no_spread` remains safe for inverse acceleration
-- [ ] `inplane_110_no_spread` remains safe for inverse acceleration
-- [ ] `named_mode_narrow_spread` remains safe for inverse acceleration
+- [x] `inplane_100_no_spread` remains safe for inverse acceleration
+- [x] `inplane_110_no_spread` remains safe for inverse acceleration
+- [x] `named_mode_narrow_spread` remains safe for inverse acceleration
 
 Robustness requirements:
-- [ ] no supported held-out direction regime collapses relative to Task 12B
-- [ ] no major transport regime becomes newly unsafe without being explicitly documented
-- [ ] evaluation includes per-regime metrics and worst-case rows
+- [x] no supported held-out direction regime collapses relative to Task 12B
+- [x] no major transport regime becomes newly unsafe without being explicitly documented
+- [x] evaluation includes per-regime metrics and worst-case rows
 
 Uncertainty requirements:
-- [ ] ensemble disagreement or equivalent uncertainty summary exists
-- [ ] disagreement-triggered fallback policy is explicit
-- [ ] high-disagreement or unsafe regions are documented as direct-forward-required
+- [x] ensemble disagreement or equivalent uncertainty summary exists
+- [x] disagreement-triggered fallback policy is explicit
+- [x] high-disagreement or unsafe regions are documented as direct-forward-required
 
 Contract requirements:
-- [ ] heavy run used the frozen large-scale dataset config
-- [ ] heavy run used the frozen forward metadata family
-- [ ] heavy run preserved the validated direction contract only
-- [ ] local review confirms no schema / naming / contract mismatch
+- [x] heavy run used the frozen large-scale dataset config
+- [x] heavy run used the frozen forward metadata family
+- [x] heavy run preserved the validated direction contract only
+- [x] local review confirms no schema / naming / contract mismatch
 
 #### Failure rule
 If the heavy run achieves lower average error but introduces unstable or unsafe
@@ -103,9 +114,57 @@ artifacts define a clearly documented, uncertainty-aware, high-accuracy
 surrogate family suitable for later inverse acceleration under the frozen
 direction contract.
 
----
-
-## Archive
+#### Verification
+- Returned large-scale dataset run metadata:
+  `outputs/runs/task13_directional_large_accuracy_dataset_run_metadata.json`.
+- Returned large-scale manifest:
+  `outputs/datasets/task13_directional_large_accuracy/dataset.json`.
+- Returned high-accuracy training metrics:
+  `outputs/checkpoints/task13_directional_high_accuracy_large/metrics.json`.
+- Returned high-accuracy model card:
+  `outputs/checkpoints/task13_directional_high_accuracy_large/model_card.md`.
+- Returned high-accuracy training run metadata:
+  `outputs/runs/task13_directional_high_accuracy_large_run_metadata.json`.
+- Returned ensemble manifest:
+  `outputs/checkpoints/task13_directional_high_accuracy_large/ensemble_manifest.json`.
+- Returned high-accuracy evaluation report:
+  `outputs/runs/task13_directional_high_accuracy_evaluation_large/evaluation_report.json`.
+- Returned high-accuracy evaluation markdown:
+  `outputs/runs/task13_directional_high_accuracy_evaluation_large/evaluation_report.md`.
+- Returned high-accuracy evaluation run metadata:
+  `outputs/runs/task13_directional_high_accuracy_evaluation_large_run_metadata.json`.
+- Returned Task 13 server run note:
+  `outputs/runs/task13_high_accuracy_large_server_run_note.md`.
+- Local review confirmed the canonical Task 13 config produced `4096` rows with
+  the required `3072 / 512 / 512` train / validation / test split.
+- Local review confirmed preserved truth-grade direction coverage:
+  `1024` `inplane_100_no_spread`,
+  `1024` `inplane_110_no_spread`,
+  `2048` `named_mode_narrow_spread`,
+  no `c_axis`, and no diagnostic raw-angle primary rows.
+- Local review confirmed one frozen clean forward metadata family across all
+  returned rows with
+  `forward_interface_version: ar_forward_v1`,
+  `output_schema_version: ar_forward_output_v1`,
+  `pairing_convention_id: round2_physical_channels_task_h_fit_layer_v1`,
+  `git_commit: b85a5cb304acbfd5d51133251ef57293bd0abd2b`,
+  and `git_dirty: false`.
+- Local review confirmed the repaired evaluation JSON is valid and non-empty.
+- Evaluation over `1024` held-out rows reported mean RMSE `0.0009115299`,
+  max RMSE `0.0045115779`, mean max absolute error `0.0022476590`,
+  max absolute error `0.0079531531`, and unsafe fraction `0.0`.
+- Ensemble uncertainty review reported mean member std `0.0007527140`,
+  max member std `0.0047321580`, high-disagreement fraction `0.0`, and fixed
+  disagreement fallback thresholds `mean_std = 0.005`, `max_std = 0.025`.
+- Local review compared Task 13B against the committed Task 12B plain neural
+  baseline and Task 11 ridge baseline. Task 13B improved held-out reliability
+  relative to Task 12B while greatly exceeding the ridge baseline:
+  Task 13B mean held-out RMSE `0.0009115299` vs Task 12B mean held-out RMSE
+  `0.0024540644`, and Task 13B max absolute error `0.0079531531` vs Task 12B
+  max absolute error `0.0145308234`.
+- All held-out transport regimes and all held-out direction regimes remain
+  safe for inverse acceleration under the configured thresholds. Final inverse
+  candidates still require direct forward recheck.
 
 ### Task 13A — Freeze the high-accuracy large-scale surrogate contract and upgrade the training stack
 

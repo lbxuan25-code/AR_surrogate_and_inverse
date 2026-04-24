@@ -87,4 +87,5 @@ This Task 13 contract upgrades the neural stack beyond the Task 12 plain-MLP com
 
 This Task 13 high-accuracy checkpoint must be generated on the server from the frozen Task 13 large-scale dataset contract.
 It remains limited to supported named in-plane modes and narrow named-mode-centered spread only under the frozen forward metadata family.
-Final disagreement-trigger fallback thresholds remain pending held-out calibration before the formal Task 13B launch note is accepted.
+Task 13B accepted fixed disagreement-trigger fallback thresholds of `mean_std = 0.005` and `max_std = 0.025`; held-out rows above either threshold require direct forward scoring.
+Final inverse candidates still require direct forward recheck even when surrogate error and ensemble disagreement stay below these thresholds.

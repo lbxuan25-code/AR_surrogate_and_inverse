@@ -6,13 +6,17 @@
 
 ## Exact Commands Run
 
+python scripts/datasets/build_dataset.py --config configs/datasets/task13_directional_large_accuracy_dataset.json
 python scripts/surrogate/train_surrogate.py --config configs/surrogate/task13_directional_high_accuracy_large.json
 python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/task13_directional_high_accuracy_evaluation_large.json
 
-## Existing Dataset Reused
+## Dataset Generation
 
 - outputs/datasets/task13_directional_large_accuracy/dataset.json
 - outputs/runs/task13_directional_large_accuracy_dataset_run_metadata.json
+- generated_rows = 4096
+- reused_rows = 0
+- split = 3072 train / 512 validation / 512 test
 
 ## Launch Addendum Used
 
@@ -22,8 +26,20 @@ python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/task13
 
 ## Output Directories Used
 
+- outputs/datasets/task13_directional_large_accuracy
 - outputs/checkpoints/task13_directional_high_accuracy_large
 - outputs/runs/task13_directional_high_accuracy_evaluation_large
+
+## Returned Artifact Repair
+
+The Task 13B evaluation JSON was checked after repair and is non-empty valid
+JSON:
+
+- outputs/runs/task13_directional_high_accuracy_evaluation_large/evaluation_report.json
+- size = 4153997 bytes
+- held_out_rows = 1024
+- unsafe_fraction = 0.0
+- high_disagreement_fraction = 0.0
 
 ## Heavy Artifacts Kept On Server
 
