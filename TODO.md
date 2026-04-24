@@ -2,7 +2,53 @@
 
 ## Current Task
 
+### Task 14C — Probe the expanded bias window contract at [-40, 40] meV
+
+#### Task type
+Local Codex preparation first, then manual server run later.
+
+#### Goal
+Freeze one probe contract that expands the bias window from the old
+`[-20, 20] meV` range to the new canonical probe range:
+
+- `bias_min_mev = -40.0`
+- `bias_max_mev = 40.0`
+- `num_bias = 241`
+
+This task prepares the probe only. The heavy or medium server run belongs to the
+later promoted server task.
+
+#### Fixed files
+Codex must create exactly:
+- `configs/datasets/task14_bias40_probe_dataset.json`
+- `configs/surrogate/task14_bias40_probe_training.json`
+- `configs/surrogate/task14_bias40_probe_evaluation.json`
+- `docs/task14_bias40_probe_handoff.md`
+- `tests/test_task14_bias40_probe_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_bias40_probe_contract.py -q`
+
+No local dataset generation, no local training, no local evaluation.
+
+#### Acceptance checklist
+- [ ] canonical bias40 probe dataset config exists
+- [ ] canonical bias40 probe training config exists
+- [ ] canonical bias40 probe evaluation config exists
+- [ ] handoff note exists
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14C is complete may Task 14D move into Current Task.
+
+---
+
+## Archive
+
 ### Task 14B — Build the RMFT-projected anchor dataset contract
+
+Completed 2026-04-24.
 
 #### Task type
 Local Codex task only. Do not run server generation or training in this task.
@@ -16,62 +62,46 @@ Freeze one canonical dataset contract whose pairing samples come primarily from:
 This task must replace the old baseline-neighborhood 5-parameter philosophy as
 the canonical source of later inverse-ready training data.
 
-#### Fixed design
-Codex must implement exactly this data-source structure:
-
-1. `anchor` samples:
-   projected RMFT points directly.
-
-2. `neighborhood` samples:
-   small local perturbations around projected RMFT anchors.
-
-3. `bridge` samples:
-   a small number of sparse interpolation-style points between nearby projected
-   RMFT anchors, only to reduce holes between sparse RMFT regions.
-
-The canonical dataset contract file must be:
-- `configs/datasets/task14_rmft_anchor_dataset.json`
-
-The canonical audit report document must be:
-- `docs/task14_rmft_projection_audit.md`
-
-The canonical audit metadata output path must be:
-- `outputs/runs/task14_rmft_projection_audit.json`
-
-#### Fixed prohibitions
-Codex must not:
-- define symmetry labels as training labels;
-- use PCA or latent manifold compression;
-- use the old `delta_from_baseline_meV` local 5-parameter box as the canonical
-  main source of pairing samples;
-- generate heavy datasets locally.
-
 #### Required local changes
-Codex must:
-1. Add dataset-schema support for storing full gauge-fixed 7+1 pairing channels.
-2. Add the canonical Task 14 RMFT-anchor dataset config.
-3. Add the audit document skeleton describing what must be reported after the
-   later server-side audit run.
-4. Add one lightweight contract test:
+Codex completed all required local changes:
+
+1. Added the canonical RMFT-anchor contract config:
+   `configs/datasets/task14_rmft_anchor_dataset.json`
+2. Added the server-side audit document skeleton:
+   `docs/task14_rmft_projection_audit.md`
+3. Added the lightweight contract test:
    `tests/test_task14_rmft_anchor_contract.py`
+4. Updated the dataset schema note so `ar_inverse_dataset_row_v3` and
+   `controls.pairing_representation` are documented in
+   `docs/dataset_schema.md`
 
 #### Required local validation
-Codex may run only:
+Allowed lightweight checks completed:
 - `pytest tests/test_task14_pairing_representation.py tests/test_task14_rmft_anchor_contract.py -q`
 
 #### Acceptance checklist
-- [ ] one canonical RMFT-anchor dataset config exists
-- [ ] anchor / neighborhood / bridge sample roles are explicit
-- [ ] the old baseline-neighborhood path is no longer the canonical pairing source
-- [ ] full gauge-fixed 7+1 channels are recorded in the schema
-- [ ] no heavy local outputs were created
+- [x] one canonical RMFT-anchor dataset config exists
+- [x] anchor / neighborhood / bridge sample roles are explicit
+- [x] the old baseline-neighborhood path is no longer the canonical pairing source
+- [x] full gauge-fixed 7+1 channels are recorded in the schema
+- [x] no heavy local outputs were created
 
-#### Promotion rule
-Only after Task 14B is complete may Task 14C move into Current Task.
+#### Verification
+- The canonical contract config explicitly freezes `anchor`,
+  `neighborhood`, and `bridge` sample roles under the RMFT-projected source
+  family.
+- The contract explicitly forbids `delta_from_baseline_meV` as the canonical
+  main pairing source and forbids symmetry labels as training labels.
+- The canonical audit output path is fixed as
+  `outputs/runs/task14_rmft_projection_audit.json`.
+- The audit skeleton records what the later server-side audit must report for
+  representation version, anchor/neighborhood/bridge counts, weak-channel
+  statistics, and legacy-path replacement checks.
+- Lightweight validation passed:
+  `tests/test_task14_pairing_representation.py tests/test_task14_rmft_anchor_contract.py`
+  (`7 passed`).
 
 ---
-
-## Archive
 
 ### Task 14A — Freeze the complete 7+1 pairing representation contract
 
@@ -144,48 +174,6 @@ Allowed lightweight checks completed:
 ---
 
 ## Backlog
-
-### Task 14C — Probe the expanded bias window contract at [-40, 40] meV
-
-#### Task type
-Local Codex preparation first, then manual server run later.
-
-#### Goal
-Freeze one probe contract that expands the bias window from the old
-`[-20, 20] meV` range to the new canonical probe range:
-
-- `bias_min_mev = -40.0`
-- `bias_max_mev = 40.0`
-- `num_bias = 241`
-
-This task prepares the probe only. The heavy or medium server run belongs to the
-later promoted server task.
-
-#### Fixed files
-Codex must create exactly:
-- `configs/datasets/task14_bias40_probe_dataset.json`
-- `configs/surrogate/task14_bias40_probe_training.json`
-- `configs/surrogate/task14_bias40_probe_evaluation.json`
-- `docs/task14_bias40_probe_handoff.md`
-- `tests/test_task14_bias40_probe_contract.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_task14_bias40_probe_contract.py -q`
-
-No local dataset generation, no local training, no local evaluation.
-
-#### Acceptance checklist
-- [ ] canonical bias40 probe dataset config exists
-- [ ] canonical bias40 probe training config exists
-- [ ] canonical bias40 probe evaluation config exists
-- [ ] handoff note exists
-- [ ] no heavy local outputs were created
-
-#### Promotion rule
-Only after Task 14C is complete may Task 14D move into Current Task.
-
----
 
 ### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
 

@@ -11,6 +11,7 @@ they do not store or copy forward physics implementation details.
 
 - Row schema: `ar_inverse_dataset_row_v1`
 - Direction-aware row schema: `ar_inverse_dataset_row_v2`
+- Pairing-aware row schema: `ar_inverse_dataset_row_v3`
 - Manifest schema: `ar_inverse_dataset_manifest_v1`
 
 ## Dataset Row
@@ -55,6 +56,33 @@ The direction block includes:
 Old `ar_inverse_dataset_row_v1` smoke manifests remain loadable when possible,
 but new generation configs must write `ar_inverse_dataset_row_v2` rows with a
 direction block.
+
+Pairing-aware rows use `ar_inverse_dataset_row_v3` and store the canonical
+gauge-fixed projected pairing payload under:
+
+- `controls.pairing_representation`
+
+That payload must include:
+
+- `pairing_representation_version`
+- `gauge_anchor_channel`
+- `global_phase_rotation_rad`
+- `weak_channel_active`
+- `channels`
+
+`channels` must contain the full projected 7+1 complex channels:
+
+- `delta_zz_s`
+- `delta_zz_d`
+- `delta_xx_s`
+- `delta_xx_d`
+- `delta_zx_d`
+- `delta_perp_z`
+- `delta_perp_x`
+- `delta_zx_s`
+
+No PCA, latent compression, or other lossy reduction is allowed after the
+projected 7+1 representation has been formed.
 
 ## Forward Output Reference
 

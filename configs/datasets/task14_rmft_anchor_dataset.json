@@ -1,0 +1,107 @@
+{
+  "config_role": "current_task14_rmft_anchor_dataset_contract",
+  "execution_mode": "local_contract_only_inverse_ready_preparation",
+  "dataset_id": "task14_rmft_anchor_dataset_v1",
+  "description": "Canonical Task 14 RMFT-projected anchor dataset contract. Freezes anchor, neighborhood, and bridge sample roles around projected RMFT points in the full gauge-fixed 7+1 pairing representation without reverting to the old delta_from_baseline_meV 5-control box as the canonical pairing source.",
+  "sampling_policy_id": "task14_rmft_anchor_dataset_v1",
+  "audit_metadata_output_path": "outputs/runs/task14_rmft_projection_audit.json",
+  "allow_diagnostic_raw_angles": false,
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only, half_width <= pi/32",
+    "diagnostic_raw_angles": "excluded from the primary truth-grade pool unless a later task explicitly promotes them",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "pairing_representation_contract": {
+    "pairing_representation_version": "projected_7plus1_gauge_fixed_v1",
+    "storage_block": "controls.pairing_representation",
+    "row_schema_version": "ar_inverse_dataset_row_v3",
+    "channels": [
+      "delta_zz_s",
+      "delta_zz_d",
+      "delta_xx_s",
+      "delta_xx_d",
+      "delta_zx_d",
+      "delta_perp_z",
+      "delta_perp_x",
+      "delta_zx_s"
+    ],
+    "gauge_anchor_priority": [
+      "delta_zz_s",
+      "delta_zz_d",
+      "delta_xx_s",
+      "delta_xx_d",
+      "delta_zx_d",
+      "delta_perp_z",
+      "delta_perp_x",
+      "delta_zx_s"
+    ],
+    "global_phase_only": true,
+    "further_compression": "forbidden",
+    "weak_channel_name": "delta_zx_s",
+    "required_metadata_keys": [
+      "pairing_representation_version",
+      "gauge_anchor_channel",
+      "global_phase_rotation_rad",
+      "weak_channel_active"
+    ]
+  },
+  "pairing_source_contract": {
+    "canonical_source_kind": "rmft_projected_anchor_family",
+    "canonical_source_summary": "Primary pairing coverage must come from projected RMFT anchor points, local neighborhoods around those anchors, and sparse bridge samples between nearby anchors.",
+    "sample_roles": {
+      "anchor": {
+        "role": "projected RMFT point directly",
+        "priority": "primary",
+        "expected_origin": "projected original RMFT anchor data"
+      },
+      "neighborhood": {
+        "role": "small local perturbation around one projected RMFT anchor",
+        "priority": "primary",
+        "expected_origin": "anchor-local perturbation"
+      },
+      "bridge": {
+        "role": "sparse interpolation-style point between nearby projected anchors",
+        "priority": "secondary",
+        "expected_origin": "anchor-pair bridge"
+      }
+    },
+    "anchor_sampling_requirements": {
+      "rmft_anchor_points": "required",
+      "projection_into_full_7plus1": "required",
+      "global_phase_removed_only": "required"
+    },
+    "legacy_noncanonical_sources": {
+      "delta_from_baseline_meV": "forbidden as the canonical main source",
+      "baseline_neighborhood_5control_box": "legacy only, not canonical"
+    },
+    "forbidden_training_labels": [
+      "symmetry_label"
+    ],
+    "forbidden_compression": [
+      "pca",
+      "latent_manifold",
+      "learned_low_dimensional_pairing_coordinates"
+    ]
+  },
+  "audit_requirements": {
+    "report_document": "docs/task14_rmft_projection_audit.md",
+    "metadata_output_path": "outputs/runs/task14_rmft_projection_audit.json",
+    "must_report": [
+      "forward metadata family used for projection and generation",
+      "representation version and gauge-anchor priority",
+      "anchor, neighborhood, and bridge row counts",
+      "direction-regime counts",
+      "weak_channel_active statistics",
+      "bridge-parent provenance",
+      "proof that delta_from_baseline_meV is not the canonical main pairing source",
+      "proof that symmetry labels are not used as training labels"
+    ]
+  }
+}
