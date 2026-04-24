@@ -1,0 +1,56 @@
+{
+  "config_role": "current_task14_bias40_probe_dataset_contract",
+  "execution_mode": "local_preparation_bias40_probe_contract",
+  "dataset_id": "task14_bias40_probe_dataset_v1",
+  "description": "Canonical Task 14 bias40 probe dataset contract. This probe widens only the bias window to [-40, 40] meV on a 241-point grid while keeping the Task 14 pairing representation and the currently accepted direction contract fixed for later manual server execution.",
+  "output_dir": "outputs/datasets/task14_bias40_probe",
+  "run_metadata_path": "outputs/runs/task14_bias40_probe_dataset_run_metadata.json",
+  "run_kind": "task14_bias40_probe_dataset_generation",
+  "sampling_policy_id": "task14_bias40_probe_dataset_v1",
+  "upstream_pairing_source_contract": "configs/datasets/task14_rmft_anchor_dataset.json",
+  "allow_diagnostic_raw_angles": false,
+  "probe_scope": {
+    "changed_axis": "bias_window_only",
+    "unchanged_axes": [
+      "pairing_representation_contract",
+      "direction_contract",
+      "current nuisance-domain sweep",
+      "fixed nk"
+    ],
+    "purpose": "Probe wider-bias spectral behavior before later expanded nuisance-domain and TB-pilot tasks are promoted."
+  },
+  "fixed_bias_grid": {
+    "bias_min_mev": -40.0,
+    "bias_max_mev": 40.0,
+    "num_bias": 241
+  },
+  "pairing_representation_contract": {
+    "pairing_representation_version": "projected_7plus1_gauge_fixed_v1",
+    "storage_block": "controls.pairing_representation",
+    "row_schema_version": "ar_inverse_dataset_row_v3",
+    "global_phase_only": true,
+    "further_compression": "forbidden"
+  },
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only, half_width <= pi/32",
+    "diagnostic_raw_angles": "excluded from this Task 14C probe contract",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "probe_transport_contract": {
+    "barrier_z": "hold current pre-14D structured sweep fixed during the bias40 probe",
+    "gamma": "hold current pre-14D structured sweep fixed during the bias40 probe",
+    "temperature_kelvin": "hold current pre-14D structured sweep fixed during the bias40 probe",
+    "nk": 41
+  },
+  "expected_manual_server_artifacts": {
+    "dataset_manifest": "outputs/datasets/task14_bias40_probe/dataset.json",
+    "run_metadata": "outputs/runs/task14_bias40_probe_dataset_run_metadata.json"
+  }
+}

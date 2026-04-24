@@ -1,0 +1,51 @@
+{
+  "config_role": "current_task14_bias40_probe_evaluation_contract",
+  "execution_mode": "local_preparation_bias40_probe_contract",
+  "checkpoint": "outputs/checkpoints/task14_bias40_probe/ensemble_manifest.json",
+  "dataset_manifest": "outputs/datasets/task14_bias40_probe/dataset.json",
+  "report_dir": "outputs/runs/task14_bias40_probe_evaluation",
+  "run_metadata_path": "outputs/runs/task14_bias40_probe_evaluation_run_metadata.json",
+  "run_kind": "task14_bias40_probe_evaluation",
+  "report_title": "Task 14 Bias40 Probe Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.04,
+    "max_abs_error": 0.10
+  },
+  "ensemble_disagreement_thresholds": {
+    "mean_std": 0.0075,
+    "max_std": 0.035
+  },
+  "device": "auto",
+  "pairing_representation_contract": {
+    "pairing_representation_version": "projected_7plus1_gauge_fixed_v1",
+    "storage_block": "controls.pairing_representation",
+    "global_phase_only": true,
+    "further_compression": "forbidden"
+  },
+  "output_spectrum_contract": {
+    "bias_min_mev": -40.0,
+    "bias_max_mev": 40.0,
+    "num_bias": 241
+  },
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from this Task 14C probe contract"
+  },
+  "uncertainty_contract": {
+    "ensemble_enabled": true,
+    "disagreement_summary": "per_spectrum_mean_std_and_max_std",
+    "threshold_status": "probe_only_task14c_v1",
+    "probe_scope": "bias_window_only"
+  }
+}

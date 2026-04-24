@@ -2,7 +2,56 @@
 
 ## Current Task
 
+### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Replace the old low/high structured nuisance sweep with one explicit continuous
+experimental-generality nuisance contract.
+
+#### Fixed target ranges
+Codex must use these exact initial target ranges:
+
+- `barrier_z`: continuous sampling in `[0.10, 1.50]`
+- `gamma`: continuous sampling in `[0.40, 1.80]`
+- `temperature_kelvin`: continuous sampling in `[1.0, 15.0]`
+
+Use a two-tier policy:
+- dense core region;
+- sparse guard-band region.
+
+Codex must document the exact split between core and guard-band in the new
+sampling-policy note.
+
+#### Fixed files
+Codex must create or update exactly:
+- `docs/task14_transport_domain_contract.md`
+- `tests/test_task14_transport_domain_contract.py`
+
+and update the relevant sampling/config code paths needed for later dataset
+contracts to use those ranges.
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_transport_domain_contract.py -q`
+
+#### Acceptance checklist
+- [ ] nuisance target ranges are explicit
+- [ ] core vs guard-band policy is explicit
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14D is complete may Task 14E move into Current Task.
+
+---
+
+## Archive
+
 ### Task 14C — Probe the expanded bias window contract at [-40, 40] meV
+
+Completed 2026-04-24.
 
 #### Task type
 Local Codex preparation first, then manual server run later.
@@ -19,7 +68,7 @@ This task prepares the probe only. The heavy or medium server run belongs to the
 later promoted server task.
 
 #### Fixed files
-Codex must create exactly:
+Codex completed the required local preparation files:
 - `configs/datasets/task14_bias40_probe_dataset.json`
 - `configs/surrogate/task14_bias40_probe_training.json`
 - `configs/surrogate/task14_bias40_probe_evaluation.json`
@@ -27,24 +76,38 @@ Codex must create exactly:
 - `tests/test_task14_bias40_probe_contract.py`
 
 #### Required local validation
-Codex may run only:
+Allowed lightweight validation completed:
 - `pytest tests/test_task14_bias40_probe_contract.py -q`
 
-No local dataset generation, no local training, no local evaluation.
+No local dataset generation, no local training, and no local evaluation were
+run.
 
 #### Acceptance checklist
-- [ ] canonical bias40 probe dataset config exists
-- [ ] canonical bias40 probe training config exists
-- [ ] canonical bias40 probe evaluation config exists
-- [ ] handoff note exists
-- [ ] no heavy local outputs were created
+- [x] canonical bias40 probe dataset config exists
+- [x] canonical bias40 probe training config exists
+- [x] canonical bias40 probe evaluation config exists
+- [x] handoff note exists
+- [x] no heavy local outputs were created
 
-#### Promotion rule
-Only after Task 14C is complete may Task 14D move into Current Task.
+#### Verification
+- The canonical probe dataset contract now exists at
+  `configs/datasets/task14_bias40_probe_dataset.json`.
+- The canonical probe training contract now exists at
+  `configs/surrogate/task14_bias40_probe_training.json`.
+- The canonical probe evaluation contract now exists at
+  `configs/surrogate/task14_bias40_probe_evaluation.json`.
+- The canonical handoff note now exists at
+  `docs/task14_bias40_probe_handoff.md`.
+- All three contracts freeze the widened bias window exactly as:
+  `bias_min_mev = -40.0`,
+  `bias_max_mev = 40.0`,
+  `num_bias = 241`.
+- The handoff note clearly records that Task 14C is a preparation-only step
+  and that the later server task must execute the exact frozen files.
+- Lightweight validation passed:
+  `tests/test_task14_bias40_probe_contract.py` (`2 passed`).
 
 ---
-
-## Archive
 
 ### Task 14B — Build the RMFT-projected anchor dataset contract
 
@@ -170,55 +233,6 @@ Allowed lightweight checks completed:
   and
   `tests/test_surrogate_training.py tests/test_surrogate_evaluation.py`
   (`11 passed`).
-
----
-
-## Backlog
-
-### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Replace the old low/high structured nuisance sweep with one explicit continuous
-experimental-generality nuisance contract.
-
-#### Fixed target ranges
-Codex must use these exact initial target ranges:
-
-- `barrier_z`: continuous sampling in `[0.10, 1.50]`
-- `gamma`: continuous sampling in `[0.40, 1.80]`
-- `temperature_kelvin`: continuous sampling in `[1.0, 15.0]`
-
-Use a two-tier policy:
-- dense core region;
-- sparse guard-band region.
-
-Codex must document the exact split between core and guard-band in the new
-sampling-policy note.
-
-#### Fixed files
-Codex must create or update exactly:
-- `docs/task14_transport_domain_contract.md`
-- `tests/test_task14_transport_domain_contract.py`
-
-and update the relevant sampling/config code paths needed for later dataset
-contracts to use those ranges.
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_task14_transport_domain_contract.py -q`
-
-#### Acceptance checklist
-- [ ] nuisance target ranges are explicit
-- [ ] core vs guard-band policy is explicit
-- [ ] no heavy local outputs were created
-
-#### Promotion rule
-Only after Task 14D is complete may Task 14E move into Current Task.
-
----
 
 ### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
 
