@@ -1,0 +1,442 @@
+{
+  "bias_mev": [
+    -20.0,
+    -19.666666666666668,
+    -19.333333333333332,
+    -19.0,
+    -18.666666666666668,
+    -18.333333333333332,
+    -18.0,
+    -17.666666666666668,
+    -17.333333333333332,
+    -17.0,
+    -16.666666666666668,
+    -16.333333333333332,
+    -16.0,
+    -15.666666666666668,
+    -15.333333333333334,
+    -15.0,
+    -14.666666666666668,
+    -14.333333333333334,
+    -14.0,
+    -13.666666666666668,
+    -13.333333333333334,
+    -13.0,
+    -12.666666666666668,
+    -12.333333333333334,
+    -12.0,
+    -11.666666666666668,
+    -11.333333333333334,
+    -11.0,
+    -10.666666666666668,
+    -10.333333333333334,
+    -10.0,
+    -9.666666666666668,
+    -9.333333333333334,
+    -9.0,
+    -8.666666666666668,
+    -8.333333333333334,
+    -8.0,
+    -7.666666666666668,
+    -7.333333333333334,
+    -7.0,
+    -6.666666666666668,
+    -6.333333333333334,
+    -6.0,
+    -5.666666666666668,
+    -5.333333333333334,
+    -5.0,
+    -4.666666666666668,
+    -4.333333333333334,
+    -4.0,
+    -3.666666666666668,
+    -3.3333333333333357,
+    -3.0,
+    -2.666666666666668,
+    -2.3333333333333357,
+    -2.0,
+    -1.6666666666666679,
+    -1.3333333333333357,
+    -1.0,
+    -0.6666666666666679,
+    -0.3333333333333357,
+    0.0,
+    0.33333333333333215,
+    0.6666666666666643,
+    1.0,
+    1.3333333333333321,
+    1.6666666666666643,
+    2.0,
+    2.333333333333332,
+    2.6666666666666643,
+    3.0,
+    3.333333333333332,
+    3.6666666666666643,
+    4.0,
+    4.333333333333332,
+    4.666666666666664,
+    5.0,
+    5.333333333333332,
+    5.666666666666664,
+    6.0,
+    6.333333333333332,
+    6.666666666666664,
+    7.0,
+    7.333333333333332,
+    7.666666666666664,
+    8.0,
+    8.333333333333332,
+    8.666666666666664,
+    9.0,
+    9.333333333333332,
+    9.666666666666664,
+    10.0,
+    10.333333333333332,
+    10.666666666666664,
+    11.0,
+    11.333333333333332,
+    11.666666666666664,
+    12.0,
+    12.333333333333329,
+    12.666666666666664,
+    13.0,
+    13.333333333333329,
+    13.666666666666664,
+    14.0,
+    14.333333333333329,
+    14.666666666666664,
+    15.0,
+    15.333333333333329,
+    15.666666666666664,
+    16.0,
+    16.33333333333333,
+    16.666666666666664,
+    17.0,
+    17.33333333333333,
+    17.666666666666664,
+    18.0,
+    18.33333333333333,
+    18.666666666666664,
+    19.0,
+    19.33333333333333,
+    19.666666666666664,
+    20.0
+  ],
+  "checkpoint": "outputs/checkpoints/task13_directional_high_accuracy_large/ensemble_manifest.json",
+  "dataset_id": "task13_directional_large_accuracy_v1",
+  "dataset_manifest": "outputs/datasets/task13_directional_large_accuracy/dataset.json",
+  "direction_support": {
+    "diagnostic_raw_angle_rows": 0,
+    "direction_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "direction_regime_counts": {
+      "inplane_100_no_spread": 1024,
+      "inplane_110_no_spread": 1024,
+      "named_mode_narrow_spread": 2048
+    },
+    "legacy_angle_only_rows": 0
+  },
+  "ensemble": {
+    "aggregation": "mean",
+    "disagreement_summary": "per_spectrum_mean_std_and_max_std",
+    "enabled": true,
+    "member_checkpoints": [
+      "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_1103.pt",
+      "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_2207.pt",
+      "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_3301.pt"
+    ],
+    "member_count": 3,
+    "seeds": [
+      1103,
+      2207,
+      3301
+    ]
+  },
+  "feature_spec": {
+    "names": [
+      "delta_zz_s",
+      "delta_xx_s",
+      "delta_zx_d",
+      "delta_perp_z",
+      "delta_perp_x",
+      "delta_zz_d",
+      "delta_xx_d",
+      "delta_zx_s",
+      "direction_inplane_100",
+      "direction_inplane_110",
+      "direction_named_mode",
+      "direction_diagnostic_raw_angle",
+      "direction_has_spread",
+      "direction_spread_half_width",
+      "direction_spread_num_samples",
+      "direction_raw_interface_angle",
+      "barrier_z",
+      "gamma",
+      "temperature_kelvin",
+      "nk"
+    ]
+  },
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "members": [
+    {
+      "checkpoint": "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_1103.pt",
+      "seed": 1103,
+      "splits": {
+        "test": {
+          "mae": 0.0009461877925692665,
+          "max_abs_error": 0.007937938247703613,
+          "num_rows": 512,
+          "rmse": 0.001445115737695859
+        },
+        "train": {
+          "mae": 0.0007632203233977216,
+          "max_abs_error": 0.007116492668351571,
+          "num_rows": 3072,
+          "rmse": 0.0011499914318632567
+        },
+        "validation": {
+          "mae": 0.0010252588432732729,
+          "max_abs_error": 0.009858177252424438,
+          "num_rows": 512,
+          "rmse": 0.001616764433475552
+        }
+      },
+      "training": {
+        "activation": "gelu",
+        "architecture_kind": "residual_mlp",
+        "batch_size": 48,
+        "best_epoch": 96,
+        "best_monitored_loss": 0.00014574904344044626,
+        "best_reconstruction_loss": 7.360777584608513e-05,
+        "best_shape_loss": 4.838188698386148e-05,
+        "best_train_loss": 8.086505914661757e-05,
+        "best_validation_loss": 0.00014574904344044626,
+        "depth": 5,
+        "early_stopping_patience": 40,
+        "epoch_limit": 450,
+        "epochs_completed": 136,
+        "hidden_width": 384,
+        "learning_rate": 0.0004,
+        "loss_contract": {
+          "bias_weighting": {
+            "central_bias_half_width_mev": 4.0,
+            "central_weight": 2.5,
+            "kind": "center_window",
+            "outer_weight": 1.0
+          },
+          "kind": "weighted_mse_plus_first_difference",
+          "reconstruction_weight": 1.0,
+          "shape_weight": 0.15
+        },
+        "model_type": "neural_residual_mlp_spectrum_surrogate",
+        "normalization": "layernorm",
+        "num_blocks": 5,
+        "optimizer": "adamw",
+        "random_seed": 1103,
+        "requested_device": "auto",
+        "residual_hidden_width": 384,
+        "residual_num_blocks": 5,
+        "resolved_device": "cuda",
+        "weight_decay": 5e-05
+      }
+    },
+    {
+      "checkpoint": "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_2207.pt",
+      "seed": 2207,
+      "splits": {
+        "test": {
+          "mae": 0.0011147601070965526,
+          "max_abs_error": 0.009879458337268776,
+          "num_rows": 512,
+          "rmse": 0.0016878794106374888
+        },
+        "train": {
+          "mae": 0.0011368338575956421,
+          "max_abs_error": 0.009244320094099923,
+          "num_rows": 3072,
+          "rmse": 0.0016921190158008528
+        },
+        "validation": {
+          "mae": 0.0010594810288452562,
+          "max_abs_error": 0.011068835810538635,
+          "num_rows": 512,
+          "rmse": 0.0016191767643457453
+        }
+      },
+      "training": {
+        "activation": "gelu",
+        "architecture_kind": "residual_mlp",
+        "batch_size": 48,
+        "best_epoch": 91,
+        "best_monitored_loss": 0.00014240083692129701,
+        "best_reconstruction_loss": 0.00012201774563891377,
+        "best_shape_loss": 5.6297519165582344e-05,
+        "best_train_loss": 0.0001304623738178634,
+        "best_validation_loss": 0.00014240083692129701,
+        "depth": 5,
+        "early_stopping_patience": 40,
+        "epoch_limit": 450,
+        "epochs_completed": 131,
+        "hidden_width": 384,
+        "learning_rate": 0.0004,
+        "loss_contract": {
+          "bias_weighting": {
+            "central_bias_half_width_mev": 4.0,
+            "central_weight": 2.5,
+            "kind": "center_window",
+            "outer_weight": 1.0
+          },
+          "kind": "weighted_mse_plus_first_difference",
+          "reconstruction_weight": 1.0,
+          "shape_weight": 0.15
+        },
+        "model_type": "neural_residual_mlp_spectrum_surrogate",
+        "normalization": "layernorm",
+        "num_blocks": 5,
+        "optimizer": "adamw",
+        "random_seed": 2207,
+        "requested_device": "auto",
+        "residual_hidden_width": 384,
+        "residual_num_blocks": 5,
+        "resolved_device": "cuda",
+        "weight_decay": 5e-05
+      }
+    },
+    {
+      "checkpoint": "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_3301.pt",
+      "seed": 3301,
+      "splits": {
+        "test": {
+          "mae": 0.0008452912376285367,
+          "max_abs_error": 0.009043556914719364,
+          "num_rows": 512,
+          "rmse": 0.001332493196830583
+        },
+        "train": {
+          "mae": 0.0006878756717611083,
+          "max_abs_error": 0.00660883541673174,
+          "num_rows": 3072,
+          "rmse": 0.0010234130596618802
+        },
+        "validation": {
+          "mae": 0.0009331190803161954,
+          "max_abs_error": 0.009199414379777338,
+          "num_rows": 512,
+          "rmse": 0.0014874530673152468
+        }
+      },
+      "training": {
+        "activation": "gelu",
+        "architecture_kind": "residual_mlp",
+        "batch_size": 48,
+        "best_epoch": 110,
+        "best_monitored_loss": 0.00012360516120679677,
+        "best_reconstruction_loss": 0.00013411184744427374,
+        "best_shape_loss": 5.8622595872748207e-05,
+        "best_train_loss": 0.0001429052369985584,
+        "best_validation_loss": 0.00012360516120679677,
+        "depth": 5,
+        "early_stopping_patience": 40,
+        "epoch_limit": 450,
+        "epochs_completed": 150,
+        "hidden_width": 384,
+        "learning_rate": 0.0004,
+        "loss_contract": {
+          "bias_weighting": {
+            "central_bias_half_width_mev": 4.0,
+            "central_weight": 2.5,
+            "kind": "center_window",
+            "outer_weight": 1.0
+          },
+          "kind": "weighted_mse_plus_first_difference",
+          "reconstruction_weight": 1.0,
+          "shape_weight": 0.15
+        },
+        "model_type": "neural_residual_mlp_spectrum_surrogate",
+        "normalization": "layernorm",
+        "num_blocks": 5,
+        "optimizer": "adamw",
+        "random_seed": 3301,
+        "requested_device": "auto",
+        "residual_hidden_width": 384,
+        "residual_num_blocks": 5,
+        "resolved_device": "cuda",
+        "weight_decay": 5e-05
+      }
+    }
+  ],
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "run_kind": "task13_directional_high_accuracy_large_training",
+  "splits": {
+    "test": {
+      "mae": 0.0006793420738235913,
+      "max_abs_error": 0.005816001424285178,
+      "num_rows": 512,
+      "rmse": 0.0010833164463790272
+    },
+    "train": {
+      "mae": 0.000575921202485121,
+      "max_abs_error": 0.005343628938332956,
+      "num_rows": 3072,
+      "rmse": 0.0008713884118444987
+    },
+    "validation": {
+      "mae": 0.000703205101857127,
+      "max_abs_error": 0.007953144826837066,
+      "num_rows": 512,
+      "rmse": 0.001186995056943268
+    }
+  },
+  "training": {
+    "activation": "gelu",
+    "architecture_kind": "residual_mlp",
+    "batch_size": 48,
+    "best_epoch": 96,
+    "best_monitored_loss": 0.00014574904344044626,
+    "best_reconstruction_loss": 7.360777584608513e-05,
+    "best_shape_loss": 4.838188698386148e-05,
+    "best_train_loss": 8.086505914661757e-05,
+    "best_validation_loss": 0.00014574904344044626,
+    "depth": 5,
+    "early_stopping_patience": 40,
+    "ensemble_aggregation": "mean",
+    "ensemble_disagreement_summary": "per_spectrum_mean_std_and_max_std",
+    "ensemble_enabled": true,
+    "ensemble_member_count": 3,
+    "ensemble_seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "epoch_limit": 450,
+    "epochs_completed": 136,
+    "hidden_width": 384,
+    "learning_rate": 0.0004,
+    "loss_contract": {
+      "bias_weighting": {
+        "central_bias_half_width_mev": 4.0,
+        "central_weight": 2.5,
+        "kind": "center_window",
+        "outer_weight": 1.0
+      },
+      "kind": "weighted_mse_plus_first_difference",
+      "reconstruction_weight": 1.0,
+      "shape_weight": 0.15
+    },
+    "model_type": "neural_residual_mlp_spectrum_surrogate",
+    "normalization": "layernorm",
+    "num_blocks": 5,
+    "optimizer": "adamw",
+    "random_seed": 1103,
+    "requested_device": "auto",
+    "residual_hidden_width": 384,
+    "residual_num_blocks": 5,
+    "resolved_device": "cuda",
+    "weight_decay": 5e-05
+  }
+}

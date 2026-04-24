@@ -1,0 +1,29 @@
+{
+  "aggregation": "mean",
+  "dataset_id": "task13_directional_large_accuracy_v1",
+  "dataset_manifest": "outputs/datasets/task13_directional_large_accuracy/dataset.json",
+  "disagreement_summary": "per_spectrum_mean_std_and_max_std",
+  "ensemble_schema_version": "ar_inverse_surrogate_ensemble_v1",
+  "loss_contract": {
+    "bias_weighting": {
+      "central_bias_half_width_mev": 4.0,
+      "central_weight": 2.5,
+      "kind": "center_window",
+      "outer_weight": 1.0
+    },
+    "kind": "weighted_mse_plus_first_difference",
+    "reconstruction_weight": 1.0,
+    "shape_weight": 0.15
+  },
+  "member_checkpoints": [
+    "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_1103.pt",
+    "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_2207.pt",
+    "outputs/checkpoints/task13_directional_high_accuracy_large/members/model_seed_3301.pt"
+  ],
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "seeds": [
+    1103,
+    2207,
+    3301
+  ]
+}
