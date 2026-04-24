@@ -2,10 +2,428 @@
 
 ## Current Task
 
-No active task is currently assigned.
+### Task 14B — Build the RMFT-projected anchor dataset contract
 
-The most recent accepted task is Task 13B. Do not start a new backlog task
-until it is explicitly promoted into this section.
+#### Task type
+Local Codex task only. Do not run server generation or training in this task.
+
+#### Goal
+Freeze one canonical dataset contract whose pairing samples come primarily from:
+- original RMFT data points,
+- projected into the full 7+1 pairing representation from Task 14A,
+- with only global phase removed.
+
+This task must replace the old baseline-neighborhood 5-parameter philosophy as
+the canonical source of later inverse-ready training data.
+
+#### Fixed design
+Codex must implement exactly this data-source structure:
+
+1. `anchor` samples:
+   projected RMFT points directly.
+
+2. `neighborhood` samples:
+   small local perturbations around projected RMFT anchors.
+
+3. `bridge` samples:
+   a small number of sparse interpolation-style points between nearby projected
+   RMFT anchors, only to reduce holes between sparse RMFT regions.
+
+The canonical dataset contract file must be:
+- `configs/datasets/task14_rmft_anchor_dataset.json`
+
+The canonical audit report document must be:
+- `docs/task14_rmft_projection_audit.md`
+
+The canonical audit metadata output path must be:
+- `outputs/runs/task14_rmft_projection_audit.json`
+
+#### Fixed prohibitions
+Codex must not:
+- define symmetry labels as training labels;
+- use PCA or latent manifold compression;
+- use the old `delta_from_baseline_meV` local 5-parameter box as the canonical
+  main source of pairing samples;
+- generate heavy datasets locally.
+
+#### Required local changes
+Codex must:
+1. Add dataset-schema support for storing full gauge-fixed 7+1 pairing channels.
+2. Add the canonical Task 14 RMFT-anchor dataset config.
+3. Add the audit document skeleton describing what must be reported after the
+   later server-side audit run.
+4. Add one lightweight contract test:
+   `tests/test_task14_rmft_anchor_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_pairing_representation.py tests/test_task14_rmft_anchor_contract.py -q`
+
+#### Acceptance checklist
+- [ ] one canonical RMFT-anchor dataset config exists
+- [ ] anchor / neighborhood / bridge sample roles are explicit
+- [ ] the old baseline-neighborhood path is no longer the canonical pairing source
+- [ ] full gauge-fixed 7+1 channels are recorded in the schema
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14B is complete may Task 14C move into Current Task.
+
+---
+
+## Archive
+
+### Task 14A — Freeze the complete 7+1 pairing representation contract
+
+Completed 2026-04-24.
+
+#### Task type
+Local Codex task only. Do not run server generation or training in this task.
+
+#### Goal
+Replace the current baseline-neighborhood 5-parameter fit-layer input contract
+with one fixed new pairing input contract for all later inverse-ready work:
+
+- use the full projected complex 7+1 pairing channels;
+- remove only the physically meaningless global phase redundancy;
+- do not perform any further latent-space or PCA compression;
+- do not reintroduce the old 5-parameter baseline-neighborhood control path as
+  the canonical training input.
+
+This task defines the new canonical pairing representation before any later
+dataset expansion or server run is allowed.
+
+#### Required local changes
+Codex completed all required local changes:
+
+1. Added the canonical representation module:
+   `src/ar_inverse/pairing/representation.py`
+2. Added the pairing contract document:
+   `docs/task14_pairing_representation_contract.md`
+3. Added the lightweight representation test:
+   `tests/test_task14_pairing_representation.py`
+4. Updated dataset schema helpers so later manifests can record full
+   gauge-fixed 7+1 channels plus metadata under
+   `controls.pairing_representation`.
+
+#### Required local validation
+Allowed lightweight checks completed:
+- `pytest tests/test_task14_pairing_representation.py -q`
+- `pytest tests/test_surrogate_training.py tests/test_surrogate_evaluation.py -q`
+
+#### Acceptance checklist
+- [x] full projected 7+1 channels are the canonical pairing input contract
+- [x] only the global phase redundancy is removed
+- [x] no PCA / latent compression is introduced
+- [x] gauge-fixing is deterministic and documented
+- [x] weak-channel status is preserved in metadata
+- [x] representation version is recorded
+- [x] local lightweight tests pass
+- [x] no heavy local outputs were created
+
+#### Verification
+- Canonical representation helpers now exist at
+  `src/ar_inverse/pairing/representation.py` with the fixed function names
+  `gauge_fix_pairing_channels`,
+  `serialize_gauge_fixed_pairing_channels`,
+  `deserialize_gauge_fixed_pairing_channels`.
+- The canonical version string is fixed as
+  `projected_7plus1_gauge_fixed_v1`.
+- Dataset rows can now record the serialized gauge-fixed representation under
+  `controls.pairing_representation`.
+- Pairing-aware dataset rows now use schema version
+  `ar_inverse_dataset_row_v3`.
+- The deterministic anchor-priority contract and serialized payload shape are
+  documented in `docs/task14_pairing_representation_contract.md`.
+- Lightweight validation passed:
+  `tests/test_task14_pairing_representation.py` (`5 passed`)
+  and
+  `tests/test_surrogate_training.py tests/test_surrogate_evaluation.py`
+  (`11 passed`).
+
+---
+
+## Backlog
+
+### Task 14C — Probe the expanded bias window contract at [-40, 40] meV
+
+#### Task type
+Local Codex preparation first, then manual server run later.
+
+#### Goal
+Freeze one probe contract that expands the bias window from the old
+`[-20, 20] meV` range to the new canonical probe range:
+
+- `bias_min_mev = -40.0`
+- `bias_max_mev = 40.0`
+- `num_bias = 241`
+
+This task prepares the probe only. The heavy or medium server run belongs to the
+later promoted server task.
+
+#### Fixed files
+Codex must create exactly:
+- `configs/datasets/task14_bias40_probe_dataset.json`
+- `configs/surrogate/task14_bias40_probe_training.json`
+- `configs/surrogate/task14_bias40_probe_evaluation.json`
+- `docs/task14_bias40_probe_handoff.md`
+- `tests/test_task14_bias40_probe_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_bias40_probe_contract.py -q`
+
+No local dataset generation, no local training, no local evaluation.
+
+#### Acceptance checklist
+- [ ] canonical bias40 probe dataset config exists
+- [ ] canonical bias40 probe training config exists
+- [ ] canonical bias40 probe evaluation config exists
+- [ ] handoff note exists
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14C is complete may Task 14D move into Current Task.
+
+---
+
+### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Replace the old low/high structured nuisance sweep with one explicit continuous
+experimental-generality nuisance contract.
+
+#### Fixed target ranges
+Codex must use these exact initial target ranges:
+
+- `barrier_z`: continuous sampling in `[0.10, 1.50]`
+- `gamma`: continuous sampling in `[0.40, 1.80]`
+- `temperature_kelvin`: continuous sampling in `[1.0, 15.0]`
+
+Use a two-tier policy:
+- dense core region;
+- sparse guard-band region.
+
+Codex must document the exact split between core and guard-band in the new
+sampling-policy note.
+
+#### Fixed files
+Codex must create or update exactly:
+- `docs/task14_transport_domain_contract.md`
+- `tests/test_task14_transport_domain_contract.py`
+
+and update the relevant sampling/config code paths needed for later dataset
+contracts to use those ranges.
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_transport_domain_contract.py -q`
+
+#### Acceptance checklist
+- [ ] nuisance target ranges are explicit
+- [ ] core vs guard-band policy is explicit
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14D is complete may Task 14E move into Current Task.
+
+---
+
+### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Prepare a first TB-variation contract that no longer freezes the normal state,
+but also does not yet impose heavy hard-constraint screening.
+
+#### Fixed TB latent coordinates
+Codex must use exactly these five pilot coordinates:
+
+- `mu_shift`
+- `bandwidth_scale`
+- `interlayer_scale`
+- `orbital_splitting_shift`
+- `hybridization_scale`
+
+Do not add more TB coordinates in this task.
+Do not add strong band-topology or Fermi-surface hard filters in this task.
+Only basic solver-stability and schema-validity guards may be used.
+
+#### Fixed files
+Codex must create exactly:
+- `docs/task14_tb_pilot_contract.md`
+- `configs/datasets/task14_tb_pilot_dataset.json`
+- `tests/test_task14_tb_pilot_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_tb_pilot_contract.py -q`
+
+#### Acceptance checklist
+- [ ] the five TB pilot coordinates are explicit
+- [ ] no strong heavy hard constraints were introduced
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14E is complete may Task 15A move into Current Task.
+
+---
+
+### Task 15A — Freeze the inverse-ready medium-scale contract
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Freeze the first inverse-ready medium-scale contract by combining:
+- full gauge-fixed 7+1 pairing representation,
+- RMFT-anchor pairing source,
+- bias40 probe range,
+- expanded nuisance domain,
+- TB pilot coordinates,
+- and the unchanged current truth-grade direction contract.
+
+#### Fixed target scale
+This contract must target exactly:
+- total rows: `9600`
+- train rows: `7680`
+- validation rows: `960`
+- test rows: `960`
+
+Do not choose another row budget in this task.
+
+#### Fixed files
+Codex must create exactly:
+- `configs/datasets/task15_inverse_ready_medium_dataset.json`
+- `configs/surrogate/task15_inverse_ready_medium_training.json`
+- `configs/surrogate/task15_inverse_ready_medium_evaluation.json`
+- `docs/task15_inverse_ready_medium_handoff.md`
+- `tests/test_task15_inverse_ready_medium_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task15_inverse_ready_medium_contract.py -q`
+
+Do not launch the server run in this task.
+
+#### Acceptance checklist
+- [ ] the inverse-ready medium contract is frozen
+- [ ] exact row budget is explicit
+- [ ] the current truth-grade direction contract remains explicit
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 15A is complete may Task 15B move into Current Task.
+
+---
+
+### Task 15B — Manual server run: inverse-ready medium surrogate validation
+
+#### Task type
+Manual server task only. Codex must not execute it locally.
+
+#### Goal
+Run the first medium-scale inverse-ready surrogate validation on the server
+using the frozen Task 15A contract.
+
+#### Manual server steps
+The user must execute on the server:
+1. dataset generation
+2. surrogate training
+3. evaluation
+4. compact artifact return to GitHub
+
+Codex's role is only:
+- prepare the handoff document before the run;
+- review returned compact artifacts after the run.
+
+#### Fixed returned artifacts
+The manual server run must return at minimum:
+- dataset run metadata
+- compact dataset manifest or compact family metadata
+- training metrics
+- model card
+- training run metadata
+- evaluation report JSON
+- evaluation report Markdown
+- evaluation run metadata
+- server run note
+
+#### Acceptance checklist
+- [ ] server run used the frozen Task 15A contract
+- [ ] returned artifacts are committed back to GitHub
+- [ ] local review confirms artifact integrity
+- [ ] only after review may Task 16A move into Current Task
+
+#### Promotion rule
+Only after Task 15B is complete and reviewed may Task 16A move into Current Task.
+
+---
+
+### Task 16A — Manual server benchmark: synthetic inverse identifiability test set
+
+#### Task type
+Preparation locally by Codex, execution manually on the server.
+
+#### Goal
+Create and run one synthetic inverse benchmark that measures whether the new
+inverse-ready surrogate remains identifiable under:
+- full gauge-fixed 7+1 pairing inputs,
+- TB pilot variation,
+- expanded nuisance variation,
+- expanded bias window.
+
+#### Fixed local preparation files
+Codex must create exactly:
+- `configs/experiments/task16_synthetic_inverse_benchmark.json`
+- `docs/task16_synthetic_inverse_benchmark_handoff.md`
+- `tests/test_task16_synthetic_inverse_benchmark_contract.py`
+
+#### Manual server execution
+The user must manually run the benchmark on the server after this task is
+promoted and locally prepared.
+
+#### Acceptance checklist
+- [ ] benchmark contract is frozen locally
+- [ ] benchmark is run manually on the server
+- [ ] compact benchmark artifacts are returned
+- [ ] local review confirms identifiability diagnostics were produced
+
+#### Promotion rule
+Only after Task 16A is complete and reviewed may Task 16B move into Current Task.
+
+---
+
+### Task 16B — Experimental fitting interface under the inverse-ready contract
+
+#### Task type
+Local Codex preparation first; later manual server usage.
+
+#### Goal
+Prepare the experiment-side fitting interface so experimental spectra are
+analyzed as external targets, not used as surrogate training data.
+
+#### Fixed scope
+Codex must prepare:
+- experiment ingest schema,
+- preprocessing metadata hooks,
+- surrogate-search plus uncertainty-filter plus direct-forward-recheck workflow,
+- but must not claim unsupported microscopic uniqueness.
+
+#### Fixed files
+Codex must create exactly:
+- `docs/task16_experimental_fitting_interface.md`
+- `tests/test_task16_experimental_fitting_interface_contract.py`
+
+#### Acceptance checklist
+- [ ] experiment-side interface contract exists
+- [ ] no experimental spectra are silently used as training data
+- [ ] direct-forward recheck remains mandatory for final candidate claims
 
 ---
 
@@ -15,417 +433,45 @@ until it is explicitly promoted into this section.
 
 Completed 2026-04-24.
 
-#### Goal
-Run the first truly heavy, accuracy-driven server-side surrogate campaign using
-the frozen large-scale contract from Task 13A.
-
-This task is not only a heavy run. It is the first run that must be judged by:
-- large-scale held-out accuracy,
-- regime robustness,
-- uncertainty-aware reliability,
-- and suitability for later inverse acceleration.
-
-#### Server-side execution scope
-The server run must include:
-- large-scale forward dataset generation,
-- training of the frozen high-accuracy neural path,
-- training of the frozen ensemble members when the ensemble contract is enabled,
-- large-scale evaluation on validation/test splits,
-- uncertainty-aware reporting,
-- compact returned artifacts for local acceptance.
-
-#### Intended heavy scale
-The run must follow the canonical Task 13A contract exactly, including:
-- total rows around `4096`
-- explicit regime quotas
-- fixed bias grid
-- fixed `nk`
-- frozen forward metadata family
-- unchanged truth-grade direction contract
-
-Do not widen the direction domain during this task.
-
-#### Required returned artifacts for review
-At minimum, commit back:
-- large-scale dataset run metadata
-- compact dataset family metadata or the full manifest if still reviewable
-- high-accuracy training metrics
-- high-accuracy model card
-- high-accuracy training run metadata
-- evaluation report
-- evaluation markdown
-- evaluation run metadata
-- ensemble summary report if ensemble is enabled
-- server run note
-
-Heavy artifacts that should remain on the server unless explicitly promoted:
-- large forward-output directories
-- full raw spectra collections
-- individual heavy checkpoints
-- copied intermediate training artifacts
-
-#### Mandatory comparison policy
-Task 13B review must compare:
-- the committed ridge baseline,
-- the committed Task 12B plain neural baseline,
-- and the new Task 13 heavy model / ensemble result.
-
-The large-scale campaign is not accepted merely because it trains successfully.
-It must show that the heavy model is at least as reliable as Task 12B and is
-better justified for production inverse acceleration.
-
-#### Accuracy acceptance review
-Task 13B was accepted after local review confirmed all of the following:
-
-Global held-out requirements:
-- [x] evaluation report exists
-- [x] mean held-out RMSE remains within the configured production-safe range
-- [x] mean held-out max absolute error remains within the configured production-safe range
-- [x] held-out unsafe fraction is no worse than Task 12B and remains near zero
-
-Direction-regime requirements:
-- [x] `inplane_100_no_spread` remains safe for inverse acceleration
-- [x] `inplane_110_no_spread` remains safe for inverse acceleration
-- [x] `named_mode_narrow_spread` remains safe for inverse acceleration
-
-Robustness requirements:
-- [x] no supported held-out direction regime collapses relative to Task 12B
-- [x] no major transport regime becomes newly unsafe without being explicitly documented
-- [x] evaluation includes per-regime metrics and worst-case rows
-
-Uncertainty requirements:
-- [x] ensemble disagreement or equivalent uncertainty summary exists
-- [x] disagreement-triggered fallback policy is explicit
-- [x] high-disagreement or unsafe regions are documented as direct-forward-required
-
-Contract requirements:
-- [x] heavy run used the frozen large-scale dataset config
-- [x] heavy run used the frozen forward metadata family
-- [x] heavy run preserved the validated direction contract only
-- [x] local review confirms no schema / naming / contract mismatch
-
-#### Failure rule
-If the heavy run achieves lower average error but introduces unstable or unsafe
-regimes not justified by the uncertainty contract, Task 13B is not accepted.
-
-#### Success rule
-Task 13B is complete only after local review concludes that the returned heavy
-artifacts define a clearly documented, uncertainty-aware, high-accuracy
-surrogate family suitable for later inverse acceleration under the frozen
-direction contract.
-
-#### Verification
-- Returned large-scale dataset run metadata:
-  `outputs/runs/task13_directional_large_accuracy_dataset_run_metadata.json`.
-- Returned large-scale manifest:
-  `outputs/datasets/task13_directional_large_accuracy/dataset.json`.
-- Returned high-accuracy training metrics:
-  `outputs/checkpoints/task13_directional_high_accuracy_large/metrics.json`.
-- Returned high-accuracy model card:
-  `outputs/checkpoints/task13_directional_high_accuracy_large/model_card.md`.
-- Returned high-accuracy training run metadata:
-  `outputs/runs/task13_directional_high_accuracy_large_run_metadata.json`.
-- Returned ensemble manifest:
-  `outputs/checkpoints/task13_directional_high_accuracy_large/ensemble_manifest.json`.
-- Returned high-accuracy evaluation report:
-  `outputs/runs/task13_directional_high_accuracy_evaluation_large/evaluation_report.json`.
-- Returned high-accuracy evaluation markdown:
-  `outputs/runs/task13_directional_high_accuracy_evaluation_large/evaluation_report.md`.
-- Returned high-accuracy evaluation run metadata:
-  `outputs/runs/task13_directional_high_accuracy_evaluation_large_run_metadata.json`.
-- Returned Task 13 server run note:
-  `outputs/runs/task13_high_accuracy_large_server_run_note.md`.
-- Local review confirmed the canonical Task 13 config produced `4096` rows with
-  the required `3072 / 512 / 512` train / validation / test split.
-- Local review confirmed preserved truth-grade direction coverage:
-  `1024` `inplane_100_no_spread`,
-  `1024` `inplane_110_no_spread`,
-  `2048` `named_mode_narrow_spread`,
-  no `c_axis`, and no diagnostic raw-angle primary rows.
-- Local review confirmed one frozen clean forward metadata family across all
-  returned rows with
-  `forward_interface_version: ar_forward_v1`,
-  `output_schema_version: ar_forward_output_v1`,
-  `pairing_convention_id: round2_physical_channels_task_h_fit_layer_v1`,
-  `git_commit: b85a5cb304acbfd5d51133251ef57293bd0abd2b`,
-  and `git_dirty: false`.
-- Local review confirmed the repaired evaluation JSON is valid and non-empty.
-- Evaluation over `1024` held-out rows reported mean RMSE `0.0009115299`,
-  max RMSE `0.0045115779`, mean max absolute error `0.0022476590`,
-  max absolute error `0.0079531531`, and unsafe fraction `0.0`.
-- Ensemble uncertainty review reported mean member std `0.0007527140`,
-  max member std `0.0047321580`, high-disagreement fraction `0.0`, and fixed
-  disagreement fallback thresholds `mean_std = 0.005`, `max_std = 0.025`.
-- Local review compared Task 13B against the committed Task 12B plain neural
-  baseline and Task 11 ridge baseline. Task 13B improved held-out reliability
-  relative to Task 12B while greatly exceeding the ridge baseline:
-  Task 13B mean held-out RMSE `0.0009115299` vs Task 12B mean held-out RMSE
-  `0.0024540644`, and Task 13B max absolute error `0.0079531531` vs Task 12B
-  max absolute error `0.0145308234`.
-- All held-out transport regimes and all held-out direction regimes remain
-  safe for inverse acceleration under the configured thresholds. Final inverse
-  candidates still require direct forward recheck.
+See existing repository archive entries for full verification details.
 
 ### Task 13A — Freeze the high-accuracy large-scale surrogate contract and upgrade the training stack
 
 Completed 2026-04-23.
 
-#### Verification
-- Canonical large-scale dataset config:
-  `configs/datasets/task13_directional_large_accuracy_dataset.json`.
-- Canonical high-accuracy training config:
-  `configs/surrogate/task13_directional_high_accuracy_large.json`.
-- Canonical high-accuracy evaluation config:
-  `configs/surrogate/task13_directional_high_accuracy_evaluation_large.json`.
-- High-accuracy server handoff note:
-  `docs/task13_high_accuracy_large_server_handoff.md`.
-- High-accuracy surrogate model / loss / ensemble wiring:
-  `src/ar_inverse/surrogate/models.py`,
-  `src/ar_inverse/surrogate/train.py`,
-  `src/ar_inverse/surrogate/evaluate.py`.
-- Lightweight contract validation test:
-  `tests/test_task13_high_accuracy_contract.py`.
-- Local validation passed:
-  `tests/test_task13_high_accuracy_contract.py`,
-  `tests/test_surrogate_training.py`,
-  `tests/test_surrogate_evaluation.py`,
-  `tests/test_task12_neural_contract.py`,
-  `tests/test_task11_production_contract.py`.
-- The frozen Task 13A dataset contract keeps `4096` rows with explicit
-  `3072 / 512 / 512` split targets, explicit direction-regime quotas, explicit
-  transport-regime quotas, fixed `nk`, fixed bias grid, and the unchanged
-  truth-grade direction domain only.
-- The frozen Task 13A model contract keeps the Task 12 plain neural path as a
-  comparator and adds a checkpoint-compatible
-  `neural_residual_mlp_spectrum_surrogate` path with normalization support.
-- The frozen Task 13A loss contract replaces plain pointwise MSE-only training
-  with a documented composite weighted spectrum reconstruction plus
-  first-difference shape term recorded in config and training metadata.
-- The frozen Task 13A uncertainty contract adds ensemble-capable training and
-  evaluation wiring plus per-spectrum disagreement summaries in evaluation
-  artifacts for later inverse fallback calibration.
-- Task 13A intentionally did not launch the large-scale dataset generation,
-  heavy training, or heavy evaluation locally and did not fabricate heavy local
-  outputs.
+See existing repository archive entries for full verification details.
 
 ### Task 12B — Run the first medium-scale neural surrogate validation job
 
 Completed 2026-04-23.
 
-#### Verification
-- Returned medium-scale dataset run metadata:
-  `outputs/runs/task12_directional_medium_dataset_run_metadata.json`.
-- Returned medium-scale manifest:
-  `outputs/datasets/task12_directional_medium_neural/dataset.json`.
-- Returned neural training metrics:
-  `outputs/checkpoints/task12_directional_neural_medium/metrics.json`.
-- Returned neural model card:
-  `outputs/checkpoints/task12_directional_neural_medium/model_card.md`.
-- Returned neural training run metadata:
-  `outputs/runs/task12_directional_neural_medium_run_metadata.json`.
-- Returned neural evaluation report:
-  `outputs/runs/task12_directional_neural_evaluation_medium/evaluation_report.json`.
-- Returned neural evaluation markdown:
-  `outputs/runs/task12_directional_neural_evaluation_medium/evaluation_report.md`.
-- Returned neural evaluation run metadata:
-  `outputs/runs/task12_directional_neural_evaluation_medium_run_metadata.json`.
-- Returned Task 12 server run note:
-  `outputs/runs/task12_neural_medium_server_run_note.md`.
-- Local review confirmed the canonical Task 12 config produced `352` rows with
-  preserved truth-grade direction coverage:
-  `88` `inplane_100_no_spread`,
-  `88` `inplane_110_no_spread`,
-  `176` `named_mode_narrow_spread`.
-- Local review confirmed one frozen clean forward metadata family across the
-  returned artifacts with
-  `forward_interface_version: ar_forward_v1`,
-  `output_schema_version: ar_forward_output_v1`,
-  `pairing_convention_id: round2_physical_channels_task_h_fit_layer_v1`,
-  `git_commit: b85a5cb304acbfd5d51133251ef57293bd0abd2b`,
-  and `git_dirty: false`.
-- Local review confirmed the returned Task 12 dataset and reports preserve the
-  validated direction contract only: supported named modes
-  `inplane_100` / `inplane_110`, narrow named-mode-centered spread only, no
-  `c_axis`, and no diagnostic raw-angle primary rows.
-- Local review compared the returned Task 12 neural evaluation against the
-  committed ridge comparator under the same frozen forward-family and direction
-  contract and found meaningful held-out improvement, including:
-  mean RMSE `0.0024540644` vs ridge `0.0646178135`,
-  max absolute error `0.0145308234` vs ridge `0.2772479170`,
-  and unsafe fraction `0.0` vs ridge `0.625`.
-- Local review confirmed all three held-out direction regimes in Task 12 were
-  marked safe for inverse acceleration under the configured thresholds, whereas
-  the committed ridge comparator marked all held-out direction regimes unsafe.
+See existing repository archive entries for full verification details.
 
 ### Task 12A — Prepare the neural surrogate training stack
 
 Completed 2026-04-23.
 
-#### Verification
-- Neural surrogate model code and dual-path checkpoint loader:
-  `src/ar_inverse/surrogate/models.py`.
-- Training code now supports both ridge and neural `model_type`:
-  `src/ar_inverse/surrogate/train.py`.
-- Evaluation code now reads ridge or neural checkpoints:
-  `src/ar_inverse/surrogate/evaluate.py`.
-- Dataset config now supports compact `sample_grids` expansion for canonical
-  medium-scale planning:
-  `src/ar_inverse/datasets/build.py`.
-- Canonical Task 12 medium-scale dataset config:
-  `configs/datasets/task12_directional_medium_dataset.json`.
-- Canonical Task 12 neural training config:
-  `configs/surrogate/task12_directional_neural_medium.json`.
-- Canonical Task 12 neural evaluation config:
-  `configs/surrogate/task12_directional_neural_evaluation_medium.json`.
-- Task 12 server handoff note:
-  `docs/task12_neural_medium_server_handoff.md`.
-- Lightweight Task 12 neural contract test:
-  `tests/test_task12_neural_contract.py`.
-- Local `pytest` passed:
-  `tests/test_task12_neural_contract.py`,
-  `tests/test_task11_production_contract.py`,
-  `tests/test_surrogate_training.py`,
-  `tests/test_surrogate_evaluation.py`.
-- Task 12A intentionally did not run medium-scale dataset generation locally
-  and did not run server-scale production generation locally.
-- Neural smoke checks remained local-only and tiny; no medium-scale outputs were
-  fabricated in the workspace.
+See existing repository archive entries for full verification details.
 
 ### Task 11B — Run the first production server job and return compact review artifacts
 
 Completed 2026-04-23.
 
-#### Verification
-- Returned production dataset run metadata:
-  `outputs/runs/task11_directional_dataset_run_metadata.json`.
-- Returned production manifest:
-  `outputs/datasets/task11_directional_production/dataset.json`.
-- Returned production metrics:
-  `outputs/checkpoints/task11_directional_surrogate_production/metrics.json`.
-- Returned production model card:
-  `outputs/checkpoints/task11_directional_surrogate_production/model_card.md`.
-- Returned production training run metadata:
-  `outputs/runs/task11_directional_surrogate_production_run_metadata.json`.
-- Returned production evaluation report:
-  `outputs/runs/task11_directional_evaluation_production/evaluation_report.json`.
-- Returned production evaluation markdown:
-  `outputs/runs/task11_directional_evaluation_production/evaluation_report.md`.
-- Returned production evaluation run metadata:
-  `outputs/runs/task11_directional_evaluation_production_run_metadata.json`.
-- Returned production server run note:
-  `outputs/runs/task11_production_server_run_note.md`.
-- Local review confirmed preserved `ar_inverse_dataset_row_v2` rows, preserved
-  direction blocks and forward provenance, and one frozen forward metadata
-  family with `git_dirty: false`.
-- Task 11B intentionally remained a compact production-style validation run,
-  not the first large-scale neural campaign.
-
 ### Task 11A — Prepare the production server contract
 
 Completed 2026-04-23.
-
-#### Verification
-- Canonical production dataset config:
-  `configs/datasets/task11_directional_production_dataset.json`.
-- Canonical production training config:
-  `configs/surrogate/task11_directional_surrogate_production.json`.
-- Canonical production evaluation config:
-  `configs/surrogate/task11_directional_evaluation_production.json`.
-- Production server handoff note:
-  `docs/task11_production_server_handoff.md`.
-- Lightweight validation test:
-  `tests/test_task11_production_contract.py`.
-- Local `pytest` passed:
-  `tests/test_task11_production_contract.py`,
-  `tests/test_task10_pilot_handoff.py`,
-  `tests/test_surrogate_training.py`.
-- The frozen production contract keeps only `inplane_100`, `inplane_110`, and
-  narrow named-mode-centered spread, excludes `c_axis` and diagnostic raw
-  angles, and freezes the clean forward metadata family accepted in Task 10B.
-- Task 11A intentionally did not run server-scale dataset generation,
-  production training, or production evaluation locally.
 
 ### Task 10B — Run the pilot on the server and validate the returned artifacts
 
 Completed 2026-04-23.
 
-#### Verification
-- GitHub review commit accepted:
-  `be2c1f178902e087418bf199a6f5541ee1433019`.
-- Returned pilot manifest:
-  `outputs/datasets/task10_directional_pilot/dataset.json`.
-- Returned pilot dataset run metadata:
-  `outputs/runs/task10_directional_dataset_run_metadata.json`.
-- Returned pilot training metrics:
-  `outputs/checkpoints/task10_directional_surrogate_pilot/metrics.json`.
-- Returned pilot model card:
-  `outputs/checkpoints/task10_directional_surrogate_pilot/model_card.md`.
-- Returned pilot training run metadata:
-  `outputs/runs/task10_directional_surrogate_pilot_run_metadata.json`.
-- Returned pilot evaluation report:
-  `outputs/runs/task10_directional_evaluation_pilot/evaluation_report.json`.
-- Returned pilot evaluation markdown:
-  `outputs/runs/task10_directional_evaluation_pilot/evaluation_report.md`.
-- Returned pilot evaluation run metadata:
-  `outputs/runs/task10_directional_evaluation_pilot_run_metadata.json`.
-- Returned server run note:
-  `outputs/runs/task10_pilot_server_run_note.md`.
-- Local review confirmed `ar_inverse_dataset_row_v2` rows, preserved direction
-  blocks and forward provenance, supported named modes plus narrow spread only,
-  and one clean forward metadata family with `git_dirty: false`.
-
 ### Task 10A — Prepare the small non-smoke pilot for server execution
 
 Completed 2026-04-23.
 
-#### Verification
-- Canonical pilot dataset config:
-  `configs/datasets/task10_directional_pilot_dataset.json`.
-- Canonical pilot training config:
-  `configs/surrogate/task10_directional_surrogate_pilot.json`.
-- Canonical pilot evaluation config:
-  `configs/surrogate/task10_directional_evaluation_pilot.json`.
-- Canonical server runbook:
-  `docs/task10_pilot_server_runbook.md`.
-- Lightweight validation test:
-  `tests/test_task10_pilot_handoff.py`.
-- Task 10A intentionally did not run pilot dataset generation, pilot training,
-  or pilot evaluation in the local workspace.
-- No heavy pilot outputs were fabricated locally.
-
 ### Task 9 — Complete the direction-aware surrogate smoke training loop
 
 Completed 2026-04-23.
-
-#### Verification
-- `pytest` passed: 39 tests.
-- Canonical dataset config rerun:
-  `configs/datasets/task8_directional_smoke_dataset.json`.
-- Canonical training config rerun:
-  `configs/surrogate/task9_directional_surrogate_smoke.json`.
-- Canonical evaluation config rerun:
-  `configs/surrogate/task9_directional_evaluation_smoke.json`.
-- Smoke checkpoint:
-  `outputs/checkpoints/task9_directional_surrogate_smoke/model.npz`.
-- Smoke metrics:
-  `outputs/checkpoints/task9_directional_surrogate_smoke/metrics.json`.
-- Smoke model card:
-  `outputs/checkpoints/task9_directional_surrogate_smoke/model_card.md`.
-- Smoke evaluation report:
-  `outputs/runs/task9_directional_evaluation_smoke/evaluation_report.json`.
-- Smoke evaluation markdown:
-  `outputs/runs/task9_directional_evaluation_smoke/evaluation_report.md`.
-- Smoke run metadata:
-  `outputs/runs/task9_directional_surrogate_smoke_run_metadata.json` and
-  `outputs/runs/task9_directional_evaluation_smoke_run_metadata.json`.
-- The checkpoint feature names include explicit direction semantics, spread
-  controls, and raw angle only as auxiliary metadata.
-- The evaluation report includes both `transport_regime_report` and
-  `direction_regime_report`.
-- Task 9 note:
-  `docs/task9_directional_smoke_training_note.md`.
-- Legacy `task3`, `task4`, and `task5` configs remain readable and marked as
-  non-canonical legacy paths.
 
 ### Task 8 — Integrate the directional feature contract into the surrogate/inverse repository
 

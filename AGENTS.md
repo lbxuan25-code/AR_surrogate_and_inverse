@@ -9,39 +9,26 @@ It is not the source of truth for forward physics.
 The forward truth chain lives in the external LNO327 AR forward repository and
 must be consumed only through its stable public `forward` interface.
 
-The current development cycle has moved past workflow validation and compact
-production-style ridge baselines. The new priority is to introduce a first
-neural surrogate training stack under the same frozen direction and forward
-contracts.
+Task 13B is complete.
+The next development cycle is no longer centered on improving the already
+accepted local-surrogate accuracy inside the old baseline-neighborhood 5-control
+pairing box.
 
-Current stage note:
-- Task 9 completed the canonical direction-aware smoke loop.
-- Task 10A/10B completed the pilot preparation and pilot server validation.
-- Task 11A/11B completed the compact production-contract validation run.
-- Task 13A completed: the first high-accuracy large-scale contract, residual
-  neural path, composite loss wiring, ensemble-capable evaluation path, and
-  large-scale handoff note are now in the repository.
-- Task 13B completed: the first high-accuracy heavy surrogate campaign
-  returned large-scale compact artifacts, preserved the frozen forward-family
-  and direction contracts, passed uncertainty-aware local review, and is
-  accepted as the current high-accuracy surrogate family for later inverse
-  acceleration work.
-- Task 12B completed: the first medium-scale neural surrogate validation run
-  returned compact artifacts, preserved the frozen forward-family and direction
-  contracts, and passed local review.
-- Task 12A completed: the first neural surrogate stack, medium-scale canonical
-  configs, handoff note, and lightweight wiring tests are now in the
-  repository.
-- No active `TODO.md` task is currently assigned after Task 13B acceptance.
-- Any later large-scale heavy surrogate campaign remains subject to explicit
-  `TODO.md` promotion, the frozen forward-family and direction contracts, and
-  returned-artifact review.
+The new development cycle is centered on:
+- replacing the old 5-control pairing-input contract;
+- moving to the full projected complex 7+1 pairing representation;
+- removing only the globally redundant phase degree of freedom;
+- avoiding any further latent compression;
+- expanding the bias window beyond `[-20, 20] meV`;
+- expanding nuisance-domain coverage;
+- introducing a first TB-variation pilot;
+- and preparing an inverse-ready medium-scale contract.
 
 ## Source Of Truth
 
 Priority order:
 
-1. this repository's `TODO.md`
+1. `TODO.md`
 2. committed configs, docs, and lightweight validation tests in this repository
 3. dataset metadata, run metadata, checkpoint metadata, and forward-interface
    version metadata
@@ -53,54 +40,60 @@ Priority order:
 If local assumptions conflict with forward-interface metadata or the external
 direction contract, the external forward metadata and contract win.
 
-## Workflow Model
+## Split Workflow Model
 
-This repository uses a split execution workflow.
+This repository uses a strict split workflow.
 
-### Local Codex workspace responsibilities
+### Local Codex responsibilities
 Local Codex may:
 - edit source code;
 - edit configs;
-- edit docs and runbooks;
-- add or update lightweight validation tests;
-- add new model implementations and training/evaluation wiring;
-- prepare server commands and output expectations;
-- review compact server-returned artifacts after they are committed back.
+- edit docs and handoff notes;
+- add or update lightweight tests;
+- wire new schema fields and representation helpers;
+- prepare exact server commands and returned-artifact expectations;
+- review compact returned artifacts after the user has run the server task and
+  committed those compact artifacts back to GitHub.
 
 Local Codex must not:
-- silently run medium-scale or large-scale dataset generation;
-- silently run medium-scale or large-scale neural training;
-- silently run medium-scale or large-scale evaluation;
-- pretend a server-run task completed before returned artifacts are reviewed.
+- run medium-scale or large-scale dataset generation;
+- run surrogate training beyond tiny smoke-level local validation explicitly
+  allowed by `TODO.md`;
+- run surrogate evaluation beyond tiny smoke-level local validation explicitly
+  allowed by `TODO.md`;
+- fabricate heavy outputs under `outputs/`;
+- mark a server-run task complete before returned artifacts are reviewed.
 
-### GitHub handoff responsibilities
+### Manual server responsibilities
+The user manually executes all heavy tasks on the server.
+
+Heavy tasks include:
+- dataset generation;
+- surrogate training;
+- surrogate evaluation;
+- synthetic inverse benchmarks at medium or larger scale;
+- any run that produces large datasets, large checkpoints, or bulky spectrum
+  collections.
+
+### GitHub handoff boundary
 GitHub is the handoff boundary between:
 - local Codex preparation, and
-- manual server execution.
+- the user's manual server execution.
 
-Committed configs and runbooks are the authoritative instructions for the
-server-side run.
-
-### Server responsibilities
-The server is where heavy execution happens:
-- dataset generation
-- neural or baseline surrogate training
-- evaluation
-- large output creation
-
-The server may keep heavyweight artifacts locally. Only compact review artifacts
-should normally be brought back to GitHub.
+Committed configs and handoff notes are authoritative.
+Codex must prepare them locally.
+The user must execute them manually on the server.
 
 ## Repository Boundary
 
 This repository owns:
 - dataset orchestration;
-- sampling policies for fit-layer, transport, and supported directional regimes;
+- sampling policies for pairing, transport, TB pilot coordinates, and supported
+  directional regimes;
 - surrogate model training code;
 - surrogate evaluation and calibration code;
 - inverse search;
 - experiment-fitting reports;
-- experiment-side ingest and preprocessing metadata;
 - checkpoint and run metadata schema management;
 - server handoff notes and returned-artifact review logic.
 
@@ -167,28 +160,96 @@ This repository must follow the forward repository's current directional rules.
 - if included, they must be explicitly labeled, documented, and separated or
   down-weighted
 
-## Model-Stack Rules
+## Pairing Representation Rules
 
-The repository now has two distinct surrogate phases.
+The canonical future-facing pairing representation is no longer the old
+baseline-neighborhood 5-control local perturbation path.
 
-### Baseline phase
-The ridge-linear surrogate remains:
-- a baseline comparator,
-- a compatibility path for older tasks,
-- a simple calibration reference.
+### Canonical pairing input contract
+The canonical pairing input contract must be:
+- the full projected complex 7+1 pairing channels;
+- gauge-fixed only to remove the single globally redundant phase degree of
+  freedom;
+- otherwise left uncompressed.
 
-Do not remove it unless a later task explicitly authorizes retirement.
+### Explicit prohibition
+Do not introduce:
+- PCA compression;
+- latent manifold compression;
+- learned low-dimensional pairing coordinates;
+- any other extra lossy dimensionality reduction after the projected 7+1 pairing
+  representation has already been formed.
 
-### Neural phase
-The first neural surrogate stack must:
-- preserve the current feature contract unless a task explicitly changes it;
-- support full-spectrum prediction on a fixed bias grid;
-- record full training metadata in run artifacts;
-- produce checkpoint formats that evaluation/report code can read without
-  ambiguity.
+### Gauge-fixing rule
+Gauge-fixing is allowed and required only for the physically redundant global
+phase.
+It must:
+- use a deterministic anchor selection policy;
+- rotate all channels by one common phase only;
+- preserve all relative phase information between channels.
 
-Do not introduce a neural architecture that silently changes the meaning of the
-input feature contract or the output spectrum contract.
+Do not remove relative phase information.
+
+## RMFT Data-Source Rules
+
+Canonical future datasets must not be built primarily from the old
+`delta_from_baseline_meV` 5-control local box.
+
+Canonical future pairing samples must come primarily from:
+1. projected RMFT anchor points,
+2. local neighborhood perturbations around projected RMFT anchor points,
+3. a small number of bridge samples between sparse nearby anchors.
+
+Do not replace RMFT-driven pairing coverage with unconstrained random sampling
+over the full 7+1 complex hypercube.
+
+## Bias-Window Rules
+
+The old accepted Task 13 high-accuracy surrogate remains valid for its own
+contract, but future inverse-ready work must probe a wider bias window.
+
+The canonical next probe target is:
+- `bias_min_mev = -40.0`
+- `bias_max_mev = 40.0`
+- `num_bias = 241`
+
+Do not silently choose a different bias-window probe unless `TODO.md`
+explicitly changes it.
+
+## Nuisance-Domain Rules
+
+Future inverse-ready work must expand nuisance-domain coverage beyond the old
+structured low/high sweep.
+
+The fixed initial target ranges are:
+- `barrier_z` in `[0.10, 1.50]`
+- `gamma` in `[0.40, 1.80]`
+- `temperature_kelvin` in `[1.0, 15.0]`
+
+Use a two-tier policy:
+- dense core region;
+- sparse guard-band region.
+
+Do not silently narrow those ranges without an explicit `TODO.md` change.
+
+## TB Pilot Rules
+
+Future inverse-ready work must no longer freeze the normal state completely, but
+the first TB expansion stage must remain simple and controlled.
+
+### Fixed TB pilot coordinates
+Use exactly these five pilot coordinates:
+- `mu_shift`
+- `bandwidth_scale`
+- `interlayer_scale`
+- `orbital_splitting_shift`
+- `hybridization_scale`
+
+### Explicit prohibition
+Do not add more TB pilot coordinates before `TODO.md` explicitly promotes such a
+task.
+Do not add heavy hard band-topology filters in the first TB pilot stage.
+Only basic solver-stability and schema-validity guards may be used.
 
 ## Execution Protocol
 
@@ -196,97 +257,96 @@ At any moment, only the single task in `TODO.md -> Current Task` may be
 executed.
 
 Do not start backlog tasks early.
-Do not combine dataset generation, surrogate training, inverse search,
-experiment preprocessing, and reporting into one unverified mega-step.
+Do not merge multiple tasks into one mega-step.
 
 ### For local Codex tasks
-Before marking a preparation task complete:
-- run only the lightweight tests or checks explicitly allowed by the task;
+Before marking a local-preparation task complete:
+- run only the exact lightweight tests allowed by `TODO.md`;
 - verify config paths and docs are consistent;
 - verify no heavy output has been fabricated;
-- verify checkpoint/readback/report code is wired consistently across supported
-  `model_type` options;
+- verify schema, checkpoint, and report wiring remain consistent;
 - update `TODO.md` only after the preparation stage is genuinely complete.
 
-### For server-run tasks
-A server-run task must not be marked complete until compact returned artifacts
-have been committed back to GitHub and reviewed locally.
-
-Returned artifacts should include only compact validation evidence unless the
-task explicitly requests a larger canonical artifact.
+### For manual server tasks
+A manual server task must not be marked complete until:
+- the user has executed the run on the server,
+- compact returned artifacts are committed back to GitHub,
+- and local review has accepted those artifacts.
 
 ## Dataset And Sampling Rules
 
-Primary training datasets must be built from supported truth-grade directional
-regimes first.
+Primary future training datasets must be built from:
+- projected RMFT anchor samples,
+- local RMFT-neighborhood samples,
+- sparse bridge samples.
 
-Use this hierarchy unless the current task explicitly changes it:
-1. supported named in-plane modes without spread
-2. supported named in-plane modes with narrow spread
-3. diagnostic-only raw-angle extensions, if explicitly enabled
+Do not default back to the old baseline-neighborhood local 5-control path as
+the main pairing source.
 
-Do not mix all regimes into one undifferentiated pool by default.
-
-Sampling policy documents, configs, and returned manifests must make it clear:
-- which regimes are primary
-- which are secondary
-- which are diagnostic-only
-- which are unsupported and therefore rejected
+Do not use unsupported direction regimes in the primary truth-grade pool.
 
 ## Feature Intake Rules
 
 Direction must not be represented only as a raw continuous `interface_angle`.
 
 When direction-aware training is implemented, feature intake must distinguish:
-- discrete directional semantics
-- continuous transport controls
-- continuous spread controls
-- raw angle as auxiliary metadata when applicable
+- discrete directional semantics,
+- continuous transport controls,
+- continuous spread controls,
+- raw angle as auxiliary metadata when applicable.
 
-Do not let model code collapse supported named modes, diagnostic-only angles,
-and unsupported modes into one ambiguous feature path.
+Pairing input must now distinguish:
+- full projected gauge-fixed 7+1 complex channels,
+- gauge metadata,
+- weak-channel activation metadata.
+
+Do not collapse supported named modes, diagnostic-only angles, and unsupported
+modes into one ambiguous feature path.
 
 ## Evaluation Rules
 
-Neural-stack promotion should be judged against the ridge baseline, not only by
-whether the code runs.
+Future inverse-ready surrogate promotion must be judged against:
+- the committed ridge baseline,
+- the committed Task 12B plain neural baseline,
+- and the committed Task 13B high-accuracy heavy surrogate family.
 
-When Task 12B or later medium/large neural runs are reviewed, compare against
-the ridge baseline on at least:
-- held-out RMSE
-- held-out max absolute error
-- unsafe fraction
-- direction-regime report
-- transport-regime report
+Do not claim a later inverse-ready surrogate is validated merely because it
+trained successfully.
+It must remain accurate under the wider pairing domain, wider bias window,
+expanded nuisance domain, and TB pilot variation.
 
-Do not claim the neural stack is validated merely because it trained
-successfully. It must show meaningful improvement on at least one held-out
-metric or regime.
+Evaluation for future inverse-ready tasks must be reported by:
+- bias sub-window,
+- nuisance sub-range,
+- direction regime,
+- and TB pilot regime when applicable.
 
 ## Scientific Reporting Rules
 
-Inverse outputs must be candidate families, not unique microscopic truth claims.
+Inverse outputs must be candidate parameter families, not unique microscopic
+truth claims.
 
 Reports should say:
-- "the AR data are compatible with these feature families"
+- "the AR data are compatible with these parameter families"
 
 They should not say:
 - "the order parameter is uniquely this RMFT point"
 
 Always separate:
-- fit-layer pairing controls;
+- projected pairing-channel structure;
 - transport nuisance controls;
+- TB pilot coordinates;
 - experimental preprocessing;
 - directional priors or directional regime assumptions;
 - surrogate uncertainty;
-- final forward recheck results.
+- final direct-forward recheck results.
 
 Do not present unsupported directional interpretations as established physical
 results.
 
 ## Server Handoff Rules
 
-Every server-run task should have a committed runbook note that states:
+Every manual server task should have a committed handoff note that states:
 - exact commands to run;
 - exact config files to use;
 - expected output directories;
@@ -294,38 +354,39 @@ Every server-run task should have a committed runbook note that states:
 - which heavy artifacts should stay only on the server.
 
 Heavy outputs such as:
-- full forward-output directories
-- large raw pilot, medium-scale, or large-scale datasets
-- large checkpoints
+- full forward-output directories;
+- large raw datasets;
+- large checkpoints;
 - bulky spectrum collections
 
-should stay on the server unless the task explicitly promotes a small canonical
-example into the repository.
+should stay on the server unless `TODO.md` explicitly promotes a compact example
+into the repository.
 
 ## Storage Rules
 
-Large artifacts belong in explicit output directories, not in source code paths:
+Large artifacts belong only in explicit output directories:
 - datasets under `outputs/datasets/`
 - checkpoints under `outputs/checkpoints/`
 - training logs under `outputs/runs/`
 - inverse results under `outputs/inverse/`
 - experiment fits under `outputs/experiments/`
 
-Do not commit heavyweight generated artifacts unless the project explicitly
-decides they are small canonical examples.
+Do not commit heavyweight generated artifacts unless explicitly requested by
+`TODO.md`.
 
 ## Cleanliness Rules
 
-Do not leave behind obsolete configs, stale manifests, legacy angle-only
-assumptions, or ambiguous baseline-vs-neural code paths that can contaminate
-later tasks.
+Do not leave behind obsolete configs, stale manifests, or ambiguous dual paths
+that can contaminate later inverse-ready tasks.
 
-When replacing or extending an old training path:
+When replacing the old baseline-neighborhood pairing-input path:
 - update the docs;
 - update the config examples;
 - update tests;
-- remove or clearly deprecate the obsolete path.
+- clearly mark the old path as legacy where necessary.
 
-No silent dual-standard behavior is allowed for direction semantics, and no
-silent dual-standard behavior is allowed for ridge-vs-neural checkpoint/report
-semantics.
+No silent dual-standard behavior is allowed for:
+- direction semantics;
+- pairing representation semantics;
+- baseline-vs-neural checkpoint/report semantics;
+- local Codex vs manual server execution responsibilities.

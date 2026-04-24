@@ -8,9 +8,11 @@ from typing import Any
 
 from ar_inverse.direction import DIRECTION_SCHEMA_VERSION, direction_regime_from_block
 from ar_inverse.metadata import assert_forward_metadata_complete, missing_forward_metadata_keys
+from ar_inverse.pairing.representation import validate_serialized_gauge_fixed_pairing_channels
 
 DATASET_ROW_SCHEMA_VERSION = "ar_inverse_dataset_row_v1"
 DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION = "ar_inverse_dataset_row_v2"
+PAIRING_AWARE_DATASET_ROW_SCHEMA_VERSION = "ar_inverse_dataset_row_v3"
 DATASET_MANIFEST_SCHEMA_VERSION = "ar_inverse_dataset_manifest_v1"
 RESUMABLE_MANIFEST_SCHEMA_VERSION = "ar_inverse_resumable_manifest_v1"
 
@@ -77,13 +79,19 @@ def make_dataset_row(
     forward_metadata: dict[str, object],
     direction: dict[str, object] | None = None,
     controls: dict[str, object] | None = None,
+    pairing_representation: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Create and validate a canonical dataset row."""
 
+    if pairing_representation is not None:
+        schema_version = PAIRING_AWARE_DATASET_ROW_SCHEMA_VERSION
+    elif direction is not None:
+        schema_version = DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION
+    else:
+        schema_version = DATASET_ROW_SCHEMA_VERSION
+
     row: dict[str, object] = {
-        "dataset_row_schema_version": (
-            DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION if direction is not None else DATASET_ROW_SCHEMA_VERSION
-        ),
+        "dataset_row_schema_version": schema_version,
         "row_id": row_id,
         "sampling_policy_id": sampling_policy_id,
         "split": split,
@@ -93,8 +101,11 @@ def make_dataset_row(
     }
     if direction is not None:
         row["direction"] = direction
-    if controls is not None:
-        row["controls"] = controls
+    controls_payload = dict(controls or {})
+    if pairing_representation is not None:
+        controls_payload["pairing_representation"] = pairing_representation
+    if controls_payload:
+        row["controls"] = controls_payload
     validate_dataset_row(row)
     return row
 
@@ -109,12 +120,24 @@ def validate_dataset_row(row: dict[str, Any]) -> None:
     if row["dataset_row_schema_version"] not in (
         DATASET_ROW_SCHEMA_VERSION,
         DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION,
+        PAIRING_AWARE_DATASET_ROW_SCHEMA_VERSION,
     ):
         raise ValueError(f"Unsupported dataset row schema version: {row['dataset_row_schema_version']!r}.")
-    if row["dataset_row_schema_version"] == DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION:
+    if row["dataset_row_schema_version"] in (
+        DIRECTION_AWARE_DATASET_ROW_SCHEMA_VERSION,
+        PAIRING_AWARE_DATASET_ROW_SCHEMA_VERSION,
+    ):
         if "direction" not in row:
             raise ValueError("Direction-aware dataset row is missing required key: direction.")
         validate_direction_block(row["direction"])
+    controls = row.get("controls")
+    if controls is not None and not isinstance(controls, dict):
+        raise ValueError("Dataset row controls must be a mapping when provided.")
+    if row["dataset_row_schema_version"] == PAIRING_AWARE_DATASET_ROW_SCHEMA_VERSION:
+        if not isinstance(controls, dict) or "pairing_representation" not in controls:
+            raise ValueError("Pairing-aware dataset row is missing controls.pairing_representation.")
+    if isinstance(controls, dict) and "pairing_representation" in controls:
+        validate_pairing_representation_block(controls["pairing_representation"])
 
     if row["split"] not in SPLIT_LABELS:
         raise ValueError(f"Unsupported split label: {row['split']!r}. Expected one of {SPLIT_LABELS}.")
@@ -159,6 +182,12 @@ def validate_direction_block(direction: Any) -> None:
         raise ValueError(
             f"Dataset row direction_regime {direction['direction_regime']!r} does not match {expected_regime!r}."
         )
+
+
+def validate_pairing_representation_block(pairing_representation: Any) -> None:
+    """Validate the canonical serialized projected 7+1 pairing block."""
+
+    validate_serialized_gauge_fixed_pairing_channels(pairing_representation)
 
 
 def validate_dataset_manifest(manifest: dict[str, Any]) -> None:
