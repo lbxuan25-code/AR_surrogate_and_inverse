@@ -2,7 +2,53 @@
 
 ## Current Task
 
+### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Prepare a first TB-variation contract that no longer freezes the normal state,
+but also does not yet impose heavy hard-constraint screening.
+
+#### Fixed TB latent coordinates
+Codex must use exactly these five pilot coordinates:
+
+- `mu_shift`
+- `bandwidth_scale`
+- `interlayer_scale`
+- `orbital_splitting_shift`
+- `hybridization_scale`
+
+Do not add more TB coordinates in this task.
+Do not add strong band-topology or Fermi-surface hard filters in this task.
+Only basic solver-stability and schema-validity guards may be used.
+
+#### Fixed files
+Codex must create exactly:
+- `docs/task14_tb_pilot_contract.md`
+- `configs/datasets/task14_tb_pilot_dataset.json`
+- `tests/test_task14_tb_pilot_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task14_tb_pilot_contract.py -q`
+
+#### Acceptance checklist
+- [ ] the five TB pilot coordinates are explicit
+- [ ] no strong heavy hard constraints were introduced
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 14E is complete may Task 15A move into Current Task.
+
+---
+
+## Archive
+
 ### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
+
+Completed 2026-04-24.
 
 #### Task type
 Local Codex task only.
@@ -12,42 +58,60 @@ Replace the old low/high structured nuisance sweep with one explicit continuous
 experimental-generality nuisance contract.
 
 #### Fixed target ranges
-Codex must use these exact initial target ranges:
+Codex completed the canonical initial nuisance ranges:
 
 - `barrier_z`: continuous sampling in `[0.10, 1.50]`
 - `gamma`: continuous sampling in `[0.40, 1.80]`
 - `temperature_kelvin`: continuous sampling in `[1.0, 15.0]`
 
-Use a two-tier policy:
+The completed contract also freezes the two-tier policy:
 - dense core region;
 - sparse guard-band region.
 
-Codex must document the exact split between core and guard-band in the new
-sampling-policy note.
-
 #### Fixed files
-Codex must create or update exactly:
+Codex completed the required fixed files:
 - `docs/task14_transport_domain_contract.md`
 - `tests/test_task14_transport_domain_contract.py`
 
-and update the relevant sampling/config code paths needed for later dataset
-contracts to use those ranges.
+Codex also updated the sampling code path in
+`src/ar_inverse/datasets/sampling.py` so later dataset contracts can reuse the
+canonical transport-domain descriptor and core-versus-guard-band classifier.
 
 #### Required local validation
-Codex may run only:
+Allowed lightweight validation completed:
 - `pytest tests/test_task14_transport_domain_contract.py -q`
 
 #### Acceptance checklist
-- [ ] nuisance target ranges are explicit
-- [ ] core vs guard-band policy is explicit
-- [ ] no heavy local outputs were created
+- [x] nuisance target ranges are explicit
+- [x] core vs guard-band policy is explicit
+- [x] no heavy local outputs were created
 
-#### Promotion rule
-Only after Task 14D is complete may Task 14E move into Current Task.
+#### Verification
+- The canonical transport-domain note now exists at
+  `docs/task14_transport_domain_contract.md`.
+- The lightweight contract test now exists at
+  `tests/test_task14_transport_domain_contract.py`.
+- The canonical policy id is fixed as `task14_transport_domain_v1`.
+- The exact full nuisance ranges are frozen as:
+  `barrier_z in [0.10, 1.50]`,
+  `gamma in [0.40, 1.80]`,
+  `temperature_kelvin in [1.0, 15.0]`.
+- The exact dense-core ranges are frozen as:
+  `barrier_z in [0.25, 1.20]`,
+  `gamma in [0.55, 1.55]`,
+  `temperature_kelvin in [1.5, 10.0]`.
+- The exact two-tier split is frozen as:
+  `80%` dense core,
+  `20%` sparse guard band.
+- The sampling helper now exposes
+  `task14_transport_domain_contract`
+  and
+  `classify_task14_transport_region`
+  for later dataset contracts.
+- Lightweight validation passed:
+  `tests/test_task14_transport_domain_contract.py` (`3 passed`).
 
 ---
-
-## Archive
 
 ### Task 14C — Probe the expanded bias window contract at [-40, 40] meV
 
@@ -233,48 +297,6 @@ Allowed lightweight checks completed:
   and
   `tests/test_surrogate_training.py tests/test_surrogate_evaluation.py`
   (`11 passed`).
-
-### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Prepare a first TB-variation contract that no longer freezes the normal state,
-but also does not yet impose heavy hard-constraint screening.
-
-#### Fixed TB latent coordinates
-Codex must use exactly these five pilot coordinates:
-
-- `mu_shift`
-- `bandwidth_scale`
-- `interlayer_scale`
-- `orbital_splitting_shift`
-- `hybridization_scale`
-
-Do not add more TB coordinates in this task.
-Do not add strong band-topology or Fermi-surface hard filters in this task.
-Only basic solver-stability and schema-validity guards may be used.
-
-#### Fixed files
-Codex must create exactly:
-- `docs/task14_tb_pilot_contract.md`
-- `configs/datasets/task14_tb_pilot_dataset.json`
-- `tests/test_task14_tb_pilot_contract.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_task14_tb_pilot_contract.py -q`
-
-#### Acceptance checklist
-- [ ] the five TB pilot coordinates are explicit
-- [ ] no strong heavy hard constraints were introduced
-- [ ] no heavy local outputs were created
-
-#### Promotion rule
-Only after Task 14E is complete may Task 15A move into Current Task.
-
----
 
 ### Task 15A — Freeze the inverse-ready medium-scale contract
 

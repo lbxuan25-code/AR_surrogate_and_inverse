@@ -6,6 +6,21 @@ from dataclasses import asdict, dataclass, field
 
 SMOKE_SAMPLING_POLICY_ID = "fit_layer_transport_smoke_v1"
 DIRECTIONAL_SMOKE_SAMPLING_POLICY_ID = "directional_fit_layer_transport_smoke_v1"
+TASK14_TRANSPORT_DOMAIN_POLICY_ID = "task14_transport_domain_v1"
+
+TASK14_TRANSPORT_TARGET_RANGES: dict[str, tuple[float, float]] = {
+    "barrier_z": (0.10, 1.50),
+    "gamma": (0.40, 1.80),
+    "temperature_kelvin": (1.0, 15.0),
+}
+TASK14_TRANSPORT_CORE_RANGES: dict[str, tuple[float, float]] = {
+    "barrier_z": (0.25, 1.20),
+    "gamma": (0.55, 1.55),
+    "temperature_kelvin": (1.5, 10.0),
+}
+TASK14_TRANSPORT_CORE_FRACTION = 0.80
+TASK14_TRANSPORT_GUARD_BAND_FRACTION = 0.20
+TASK14_TRANSPORT_FIXED_NK = 41
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,6 +42,62 @@ class SmokeSampleSpec:
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
+
+
+def task14_transport_domain_contract() -> dict[str, object]:
+    """Return the canonical Task 14 nuisance-domain sampling contract."""
+
+    return {
+        "sampling_policy_id": TASK14_TRANSPORT_DOMAIN_POLICY_ID,
+        "policy_kind": "continuous_transport_two_tier",
+        "description": (
+            "Task 14 nuisance-domain contract for inverse-ready datasets. "
+            "Sample densely from a central core region and sparsely from a guard-band "
+            "region that reaches the full target nuisance envelope."
+        ),
+        "parameters": ["barrier_z", "gamma", "temperature_kelvin"],
+        "target_ranges": {
+            key: {"min": bounds[0], "max": bounds[1]} for key, bounds in TASK14_TRANSPORT_TARGET_RANGES.items()
+        },
+        "two_tier_policy": {
+            "core_region": {
+                "ranges": {
+                    key: {"min": bounds[0], "max": bounds[1]} for key, bounds in TASK14_TRANSPORT_CORE_RANGES.items()
+                },
+                "target_fraction": TASK14_TRANSPORT_CORE_FRACTION,
+                "sampling_density": "dense",
+            },
+            "guard_band_region": {
+                "ranges": {
+                    key: {"min": bounds[0], "max": bounds[1]} for key, bounds in TASK14_TRANSPORT_TARGET_RANGES.items()
+                },
+                "target_fraction": TASK14_TRANSPORT_GUARD_BAND_FRACTION,
+                "sampling_density": "sparse",
+                "membership_rule": "at least one nuisance coordinate lies outside the dense core region",
+            },
+        },
+        "fixed_nk": TASK14_TRANSPORT_FIXED_NK,
+    }
+
+
+def classify_task14_transport_region(transport_controls: dict[str, float | int]) -> str:
+    """Classify transport controls as dense-core or sparse guard-band."""
+
+    values: dict[str, float] = {}
+    for key, (minimum, maximum) in TASK14_TRANSPORT_TARGET_RANGES.items():
+        if key not in transport_controls:
+            raise ValueError(f"Task 14 transport controls are missing required key {key!r}.")
+        value = float(transport_controls[key])
+        if value < minimum or value > maximum:
+            raise ValueError(
+                f"Task 14 transport control {key!r}={value} lies outside the canonical range [{minimum}, {maximum}]."
+            )
+        values[key] = value
+
+    inside_core = all(
+        minimum <= values[key] <= maximum for key, (minimum, maximum) in TASK14_TRANSPORT_CORE_RANGES.items()
+    )
+    return "core" if inside_core else "guard_band"
 
 
 def smoke_sampling_policy() -> dict[str, object]:
