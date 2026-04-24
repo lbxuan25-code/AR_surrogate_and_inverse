@@ -2,7 +2,57 @@
 
 ## Current Task
 
+### Task 15A — Freeze the inverse-ready medium-scale contract
+
+#### Task type
+Local Codex task only.
+
+#### Goal
+Freeze the first inverse-ready medium-scale contract by combining:
+- full gauge-fixed 7+1 pairing representation,
+- RMFT-anchor pairing source,
+- bias40 probe range,
+- expanded nuisance domain,
+- TB pilot coordinates,
+- and the unchanged current truth-grade direction contract.
+
+#### Fixed target scale
+This contract must target exactly:
+- total rows: `9600`
+- train rows: `7680`
+- validation rows: `960`
+- test rows: `960`
+
+Do not choose another row budget in this task.
+
+#### Fixed files
+Codex must create exactly:
+- `configs/datasets/task15_inverse_ready_medium_dataset.json`
+- `configs/surrogate/task15_inverse_ready_medium_training.json`
+- `configs/surrogate/task15_inverse_ready_medium_evaluation.json`
+- `docs/task15_inverse_ready_medium_handoff.md`
+- `tests/test_task15_inverse_ready_medium_contract.py`
+
+#### Required local validation
+Codex may run only:
+- `pytest tests/test_task15_inverse_ready_medium_contract.py -q`
+
+#### Acceptance checklist
+- [ ] the inverse-ready medium contract is frozen
+- [ ] exact row budget is explicit
+- [ ] the current truth-grade direction contract remains explicit
+- [ ] no heavy local outputs were created
+
+#### Promotion rule
+Only after Task 15A is complete may Task 15B move into Current Task.
+
+---
+
+## Archive
+
 ### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
+
+Completed 2026-04-24.
 
 #### Task type
 Local Codex task only.
@@ -12,7 +62,7 @@ Prepare a first TB-variation contract that no longer freezes the normal state,
 but also does not yet impose heavy hard-constraint screening.
 
 #### Fixed TB latent coordinates
-Codex must use exactly these five pilot coordinates:
+Codex completed the canonical five-coordinate TB pilot contract:
 
 - `mu_shift`
 - `bandwidth_scale`
@@ -20,31 +70,64 @@ Codex must use exactly these five pilot coordinates:
 - `orbital_splitting_shift`
 - `hybridization_scale`
 
-Do not add more TB coordinates in this task.
-Do not add strong band-topology or Fermi-surface hard filters in this task.
-Only basic solver-stability and schema-validity guards may be used.
+No additional TB coordinates were introduced.
+No strong band-topology or Fermi-surface hard filters were introduced.
 
 #### Fixed files
-Codex must create exactly:
+Codex completed the required fixed files:
 - `docs/task14_tb_pilot_contract.md`
 - `configs/datasets/task14_tb_pilot_dataset.json`
 - `tests/test_task14_tb_pilot_contract.py`
 
 #### Required local validation
-Codex may run only:
+Allowed lightweight validation completed:
 - `pytest tests/test_task14_tb_pilot_contract.py -q`
 
 #### Acceptance checklist
-- [ ] the five TB pilot coordinates are explicit
-- [ ] no strong heavy hard constraints were introduced
-- [ ] no heavy local outputs were created
+- [x] the five TB pilot coordinates are explicit
+- [x] no strong heavy hard constraints were introduced
+- [x] no heavy local outputs were created
 
-#### Promotion rule
-Only after Task 14E is complete may Task 15A move into Current Task.
+#### Verification
+- The canonical TB pilot note now exists at
+  `docs/task14_tb_pilot_contract.md`.
+- The canonical TB pilot dataset contract now exists at
+  `configs/datasets/task14_tb_pilot_dataset.json`.
+- The lightweight TB pilot contract test now exists at
+  `tests/test_task14_tb_pilot_contract.py`.
+- The fixed TB coordinate-system version is
+  `task14_tb_pilot_latent_v1`.
+- The exact canonical coordinate set is frozen as:
+  `mu_shift`,
+  `bandwidth_scale`,
+  `interlayer_scale`,
+  `orbital_splitting_shift`,
+  `hybridization_scale`.
+- The canonical TB pilot envelope is frozen as:
+  `mu_shift in [-0.35, 0.35]`,
+  `bandwidth_scale in [-0.20, 0.20]`,
+  `interlayer_scale in [-0.25, 0.25]`,
+  `orbital_splitting_shift in [-0.30, 0.30]`,
+  `hybridization_scale in [-0.25, 0.25]`.
+- The canonical TB pilot split is frozen as:
+  `70%` near-baseline band,
+  `30%` edge-probe band.
+- Only the basic guards
+  `solver_stability`,
+  `finite_forward_output`,
+  and
+  `schema_validity`
+  are allowed.
+- The strong constraints
+  `band_topology_filter`,
+  `fermi_surface_filter`,
+  and
+  `manual_phase_diagram_gate`
+  are explicitly forbidden.
+- Lightweight validation passed:
+  `tests/test_task14_tb_pilot_contract.py` (`3 passed`).
 
 ---
-
-## Archive
 
 ### Task 14D — Expand nuisance-domain sampling for Z, gamma, and temperature
 
@@ -297,54 +380,6 @@ Allowed lightweight checks completed:
   and
   `tests/test_surrogate_training.py tests/test_surrogate_evaluation.py`
   (`11 passed`).
-
-### Task 15A — Freeze the inverse-ready medium-scale contract
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Freeze the first inverse-ready medium-scale contract by combining:
-- full gauge-fixed 7+1 pairing representation,
-- RMFT-anchor pairing source,
-- bias40 probe range,
-- expanded nuisance domain,
-- TB pilot coordinates,
-- and the unchanged current truth-grade direction contract.
-
-#### Fixed target scale
-This contract must target exactly:
-- total rows: `9600`
-- train rows: `7680`
-- validation rows: `960`
-- test rows: `960`
-
-Do not choose another row budget in this task.
-
-#### Fixed files
-Codex must create exactly:
-- `configs/datasets/task15_inverse_ready_medium_dataset.json`
-- `configs/surrogate/task15_inverse_ready_medium_training.json`
-- `configs/surrogate/task15_inverse_ready_medium_evaluation.json`
-- `docs/task15_inverse_ready_medium_handoff.md`
-- `tests/test_task15_inverse_ready_medium_contract.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_task15_inverse_ready_medium_contract.py -q`
-
-Do not launch the server run in this task.
-
-#### Acceptance checklist
-- [ ] the inverse-ready medium contract is frozen
-- [ ] exact row budget is explicit
-- [ ] the current truth-grade direction contract remains explicit
-- [ ] no heavy local outputs were created
-
-#### Promotion rule
-Only after Task 15A is complete may Task 15B move into Current Task.
-
----
 
 ### Task 15B — Manual server run: inverse-ready medium surrogate validation
 
