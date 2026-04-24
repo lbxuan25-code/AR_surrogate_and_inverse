@@ -10,6 +10,7 @@ TASK13_DATASET_CONFIG_PATH = Path("configs/datasets/task13_directional_large_acc
 TASK13_TRAINING_CONFIG_PATH = Path("configs/surrogate/task13_directional_high_accuracy_large.json")
 TASK13_EVALUATION_CONFIG_PATH = Path("configs/surrogate/task13_directional_high_accuracy_evaluation_large.json")
 TASK13_RUNBOOK_PATH = Path("docs/task13_high_accuracy_large_server_handoff.md")
+TASK13_LAUNCH_ADDENDUM_PATH = Path("docs/task13_high_accuracy_large_launch_addendum.md")
 
 
 def _load_json(path: Path) -> dict[str, object]:
@@ -61,21 +62,28 @@ def test_task13_training_and_evaluation_configs_record_high_accuracy_contract() 
     assert evaluation_config["dataset_manifest"] == "outputs/datasets/task13_directional_large_accuracy/dataset.json"
     assert evaluation_config["device"] == "auto"
     assert evaluation_config["held_out_splits"] == ["validation", "test"]
-    assert evaluation_config["uncertainty_contract"]["threshold_status"] == (
-        "pending_held_out_calibration_before_task13b_launch"
-    )
+    assert evaluation_config["ensemble_disagreement_thresholds"]["mean_std"] == 0.005
+    assert evaluation_config["ensemble_disagreement_thresholds"]["max_std"] == 0.025
+    assert evaluation_config["uncertainty_contract"]["threshold_status"] == "prelaunch_fixed_task13b_v1"
+    assert evaluation_config["uncertainty_contract"]["launch_addendum"] == str(TASK13_LAUNCH_ADDENDUM_PATH)
 
 
 def test_task13_runbook_records_large_scale_accuracy_handoff_requirements() -> None:
     runbook = TASK13_RUNBOOK_PATH.read_text(encoding="utf-8")
+    addendum = TASK13_LAUNCH_ADDENDUM_PATH.read_text(encoding="utf-8")
 
-    assert "Task 13A prepares the first high-accuracy large-scale surrogate contract only." in runbook
-    assert "Task 13B is the actual heavy server run." in runbook
+    assert "Task 13A completed on 2026-04-23" in runbook
+    assert "Task 13B, the first high-accuracy heavy server run." in runbook
     assert "4096" in runbook
     assert "3072 / 512 / 512" in runbook
     assert "configs/datasets/task13_directional_large_accuracy_dataset.json" in runbook
     assert "configs/surrogate/task13_directional_high_accuracy_large.json" in runbook
     assert "configs/surrogate/task13_directional_high_accuracy_evaluation_large.json" in runbook
     assert "ensemble_manifest.json" in runbook
-    assert "pending_held_out_calibration_before_task13b_launch" in runbook
+    assert "docs/task13_high_accuracy_large_launch_addendum.md" in runbook
+    assert "mean_std = 0.005" in runbook
+    assert "max_std = 0.025" in runbook
     assert "outputs/runs/task13_high_accuracy_large_server_run_note.md" in runbook
+    assert "Task 13B pre-launch gate" in addendum
+    assert "ensemble seeds = [1103, 2207, 3301]" in addendum
+    assert "direct-forward-required" in addendum

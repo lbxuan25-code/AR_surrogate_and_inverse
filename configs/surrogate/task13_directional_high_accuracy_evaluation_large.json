@@ -16,8 +16,8 @@
     "max_abs_error": 0.075
   },
   "ensemble_disagreement_thresholds": {
-    "mean_std": 0.0,
-    "max_std": 0.0
+    "mean_std": 0.005,
+    "max_std": 0.025
   },
   "device": "auto",
   "frozen_direction_contract": {
@@ -34,7 +34,8 @@
   "uncertainty_contract": {
     "ensemble_enabled": true,
     "disagreement_summary": "per_spectrum_mean_std_and_max_std",
-    "threshold_status": "pending_held_out_calibration_before_task13b_launch"
+    "threshold_status": "prelaunch_fixed_task13b_v1",
+    "launch_addendum": "docs/task13_high_accuracy_large_launch_addendum.md"
   },
   "frozen_forward_metadata_family": {
     "forward_interface_version": "ar_forward_v1",

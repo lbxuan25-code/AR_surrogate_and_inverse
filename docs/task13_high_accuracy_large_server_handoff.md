@@ -85,13 +85,29 @@ The Task 13A evaluation path now supports:
 - row-level `mean_std` and `max_std` reporting
 - uncertainty diagnostics in evaluation artifacts
 
-Current Task 13A policy:
+Current Task 13B launch policy:
 
 - disagreement summaries must be produced for every held-out spectrum
-- direct-forward fallback thresholds for disagreement remain
-  `pending_held_out_calibration_before_task13b_launch`
+- the Task 13B launch addendum exists at
+  `docs/task13_high_accuracy_large_launch_addendum.md`
+- disagreement-trigger thresholds are fixed to `mean_std = 0.005` and
+  `max_std = 0.025`
+- held-out rows above either disagreement threshold must be marked
+  `direct-forward-required`
 - error-based fallback remains active through the configured held-out error
   thresholds
+
+## Task 13B Launch Addendum
+
+The Task 13B pre-launch addendum is now committed:
+
+- `docs/task13_high_accuracy_large_launch_addendum.md`
+- the evaluation config no longer uses a pending disagreement threshold state
+- the fixed pre-launch disagreement thresholds are `mean_std = 0.005` and
+  `max_std = 0.025`
+- the server run must use
+  `configs/surrogate/task13_directional_high_accuracy_evaluation_large.json`
+  after this addendum
 
 ## Server Preconditions
 
@@ -193,8 +209,8 @@ server and return it to GitHub. It should record:
 - exact commands run
 - output directories used
 - whether the full dataset manifest or a compact family metadata artifact was returned
-- whether a pre-launch addendum changed any launch-only training hyperparameters
-  or disagreement-trigger thresholds relative to the committed Task 13A note
+- confirmation that the committed Task 13B launch addendum was used for the
+  evaluation config and disagreement-trigger thresholds
 
 ## Review Boundary
 
