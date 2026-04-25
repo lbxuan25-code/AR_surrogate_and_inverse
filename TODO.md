@@ -2,7 +2,53 @@
 
 ## Current Task
 
+### Task 15B — Manual server run: inverse-ready medium surrogate validation
+
+#### Task type
+Manual server task only. Codex must not execute it locally.
+
+#### Goal
+Execute the frozen Task 15A inverse-ready medium contract on the server and
+return compact review artifacts to GitHub for local acceptance review.
+
+#### Exact configs to run
+The server run must use exactly:
+
+- `configs/datasets/task15_inverse_ready_medium_dataset.json`
+- `configs/surrogate/task15_inverse_ready_medium_training.json`
+- `configs/surrogate/task15_inverse_ready_medium_evaluation.json`
+- `docs/task15_inverse_ready_medium_handoff.md`
+
+#### Required returned artifacts
+The server run is not reviewable until GitHub contains:
+
+- `outputs/datasets/task15_inverse_ready_medium/dataset.json`
+- `outputs/runs/task15_inverse_ready_medium_dataset_run_metadata.json`
+- `outputs/checkpoints/task15_inverse_ready_medium/ensemble_manifest.json`
+- `outputs/checkpoints/task15_inverse_ready_medium/metrics.json`
+- `outputs/checkpoints/task15_inverse_ready_medium/model_card.md`
+- `outputs/runs/task15_inverse_ready_medium_training_run_metadata.json`
+- `outputs/runs/task15_inverse_ready_medium_evaluation/evaluation_report.json`
+- `outputs/runs/task15_inverse_ready_medium_evaluation/evaluation_report.md`
+- `outputs/runs/task15_inverse_ready_medium_evaluation_run_metadata.json`
+- `outputs/runs/task15_inverse_ready_medium_server_run_note.md`
+
+#### Acceptance checklist
+- [ ] server run completed with the exact frozen Task 15A contract
+- [ ] compact returned artifacts are committed back to GitHub
+- [ ] local review confirms the returned artifacts are internally consistent
+- [ ] local review compares held-out results against the committed baseline families
+
+#### Promotion rule
+Only after Task 15B is accepted may later inverse or reporting tasks be promoted.
+
+---
+
+## Archive
+
 ### Task 15A — Freeze the inverse-ready medium-scale contract
+
+Completed 2026-04-25.
 
 #### Task type
 Local Codex task only.
@@ -17,16 +63,14 @@ Freeze the first inverse-ready medium-scale contract by combining:
 - and the unchanged current truth-grade direction contract.
 
 #### Fixed target scale
-This contract must target exactly:
+Codex completed the canonical inverse-ready medium row budget:
 - total rows: `9600`
 - train rows: `7680`
 - validation rows: `960`
 - test rows: `960`
 
-Do not choose another row budget in this task.
-
 #### Fixed files
-Codex must create exactly:
+Codex completed the required fixed files:
 - `configs/datasets/task15_inverse_ready_medium_dataset.json`
 - `configs/surrogate/task15_inverse_ready_medium_training.json`
 - `configs/surrogate/task15_inverse_ready_medium_evaluation.json`
@@ -34,21 +78,45 @@ Codex must create exactly:
 - `tests/test_task15_inverse_ready_medium_contract.py`
 
 #### Required local validation
-Codex may run only:
+Allowed lightweight validation completed:
 - `pytest tests/test_task15_inverse_ready_medium_contract.py -q`
 
 #### Acceptance checklist
-- [ ] the inverse-ready medium contract is frozen
-- [ ] exact row budget is explicit
-- [ ] the current truth-grade direction contract remains explicit
-- [ ] no heavy local outputs were created
+- [x] the inverse-ready medium contract is frozen
+- [x] exact row budget is explicit
+- [x] the current truth-grade direction contract remains explicit
+- [x] no heavy local outputs were created
 
-#### Promotion rule
-Only after Task 15A is complete may Task 15B move into Current Task.
+#### Verification
+- The canonical medium dataset contract now exists at
+  `configs/datasets/task15_inverse_ready_medium_dataset.json`.
+- The canonical medium training contract now exists at
+  `configs/surrogate/task15_inverse_ready_medium_training.json`.
+- The canonical medium evaluation contract now exists at
+  `configs/surrogate/task15_inverse_ready_medium_evaluation.json`.
+- The canonical handoff note now exists at
+  `docs/task15_inverse_ready_medium_handoff.md`.
+- The lightweight contract test now exists at
+  `tests/test_task15_inverse_ready_medium_contract.py`.
+- The exact row budget is frozen as:
+  `9600 total`,
+  `7680 train`,
+  `960 validation`,
+  `960 test`.
+- The medium contract explicitly preserves:
+  the RMFT anchor / neighborhood / bridge pairing source,
+  the projected 7+1 pairing representation,
+  the `[-40, 40] meV` / `241`-point spectrum contract,
+  the widened nuisance-domain contract,
+  the five-coordinate TB pilot contract,
+  and the supported truth-grade direction modes
+  `inplane_100` / `inplane_110` plus narrow named-mode-centered spread.
+- The handoff note records the exact server commands, expected output paths,
+  returned review artifacts, and heavy-artifact boundary for Task 15B.
+- Lightweight validation passed:
+  `tests/test_task15_inverse_ready_medium_contract.py` (`3 passed`).
 
 ---
-
-## Archive
 
 ### Task 14E — Add a low-dimensional TB pilot contract without heavy hard constraints
 
@@ -380,49 +448,6 @@ Allowed lightweight checks completed:
   and
   `tests/test_surrogate_training.py tests/test_surrogate_evaluation.py`
   (`11 passed`).
-
-### Task 15B — Manual server run: inverse-ready medium surrogate validation
-
-#### Task type
-Manual server task only. Codex must not execute it locally.
-
-#### Goal
-Run the first medium-scale inverse-ready surrogate validation on the server
-using the frozen Task 15A contract.
-
-#### Manual server steps
-The user must execute on the server:
-1. dataset generation
-2. surrogate training
-3. evaluation
-4. compact artifact return to GitHub
-
-Codex's role is only:
-- prepare the handoff document before the run;
-- review returned compact artifacts after the run.
-
-#### Fixed returned artifacts
-The manual server run must return at minimum:
-- dataset run metadata
-- compact dataset manifest or compact family metadata
-- training metrics
-- model card
-- training run metadata
-- evaluation report JSON
-- evaluation report Markdown
-- evaluation run metadata
-- server run note
-
-#### Acceptance checklist
-- [ ] server run used the frozen Task 15A contract
-- [ ] returned artifacts are committed back to GitHub
-- [ ] local review confirms artifact integrity
-- [ ] only after review may Task 16A move into Current Task
-
-#### Promotion rule
-Only after Task 15B is complete and reviewed may Task 16A move into Current Task.
-
----
 
 ### Task 16A — Manual server benchmark: synthetic inverse identifiability test set
 
