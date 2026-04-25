@@ -1,10 +1,18 @@
 # Task 15 Inverse-Ready Medium Handoff
 
 Task 15A prepares the first inverse-ready medium-scale contract only.
+It is now a draft reference handoff retained for comparison during the
+surrogate-rectification program. It is not the current next server execution
+target.
 Do not generate the dataset, run the training, or run the evaluation in the
 local Codex workspace.
+Do not treat this document as an active server instruction unless a later
+`TODO.md` task explicitly re-promotes or replaces this contract after the
+rectification program.
 
-The later manual server task must use the exact files frozen here.
+Any later task that explicitly revives this contract family should start from
+the exact files frozen here, unless that later task replaces them with a new
+rectified contract.
 
 ## Canonical Configs
 
@@ -30,20 +38,21 @@ Unsupported direction modes remain out of contract:
 
 Generic raw-angle rows remain excluded from the canonical primary pool.
 
-## Fixed Row Budget
+## Draft Reference Row Budget
 
-The later manual server run must target exactly:
+The frozen draft contract targeted exactly:
 
 - total rows: `9600`
 - train rows: `7680`
 - validation rows: `960`
 - test rows: `960`
 
-The row budget is out of contract if a different total or split is used.
+The row budget is out of contract if a different total or split is used for
+this draft reference contract.
 
-## Frozen Medium-Contract Sub-Budgets
+## Frozen Draft Sub-Budgets
 
-The later server run must preserve the canonical planning targets recorded in
+The archived draft contract preserves the canonical planning targets recorded in
 the dataset config:
 
 - pairing roles:
@@ -61,9 +70,10 @@ the dataset config:
   `near_baseline = 6720`,
   `edge_probe = 2880`
 
-## Later Manual Server Commands
+## Reference Commands If This Draft Is Later Revived
 
-When Task 15B is promoted, run from the repository root:
+If a later task explicitly revives or supersedes this draft contract, the
+reference commands frozen here are:
 
 ```bash
 python scripts/datasets/build_dataset.py --config configs/datasets/task15_inverse_ready_medium_dataset.json
@@ -71,7 +81,7 @@ python scripts/surrogate/train_surrogate.py --config configs/surrogate/task15_in
 python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/task15_inverse_ready_medium_evaluation.json
 ```
 
-## Expected Output Paths
+## Reference Output Paths
 
 - `outputs/datasets/task15_inverse_ready_medium/dataset.json`
 - `outputs/runs/task15_inverse_ready_medium_dataset_run_metadata.json`
@@ -84,9 +94,10 @@ python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/task15
 - `outputs/runs/task15_inverse_ready_medium_evaluation_run_metadata.json`
 - `outputs/runs/task15_inverse_ready_medium_server_run_note.md`
 
-## Returned Artifacts For Review
+## Reference Returned Artifacts For Review
 
-Task 15B should return these compact review artifacts to GitHub:
+If a later task revives this contract family, the compact review artifacts to
+return remain:
 
 - `outputs/datasets/task15_inverse_ready_medium/dataset.json`
 - `outputs/runs/task15_inverse_ready_medium_dataset_run_metadata.json`
@@ -108,6 +119,6 @@ Heavy artifacts should stay on the server, including:
 ## Review Boundary
 
 Task 15A is not the later server run.
-It is complete only as a local preparation step that freezes the first
-inverse-ready medium-scale contract and the instructions the later Task 15B
-manual server run must follow.
+It remains complete only as a local preparation step that froze the first
+inverse-ready medium-scale contract before the repository entered the
+rectification-first phase.

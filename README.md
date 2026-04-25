@@ -9,7 +9,13 @@ It does not copy or reimplement forward physics code.
 
 ## Current Stage
 
-- No active TODO task is currently assigned after Task 13B acceptance.
+- The active roadmap is the surrogate-rectification program recorded in
+  `TODO.md`.
+- The current task after Task S3 completion is Task S4:
+  joint sampling redesign across pairing, nuisance, and TB spaces.
+- The previously frozen Task 15A medium contract remains in the repository only
+  as a draft reference handoff pending rectification. It is not the immediate
+  next server run.
 - Task 13B is complete: the first high-accuracy heavy surrogate campaign
   returned large-scale dataset metadata, high-accuracy ensemble training
   artifacts, uncertainty-aware evaluation reports, and a server run note; local
