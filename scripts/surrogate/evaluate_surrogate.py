@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+os.environ.setdefault("MPLCONFIGDIR", "/tmp/ar_inverse_matplotlib")
 LOCAL_SRC = REPO_ROOT / "src"
 local_src_text = str(LOCAL_SRC)
 if local_src_text not in sys.path:

@@ -1,0 +1,48 @@
+{
+  "config_role": "pre_s7_local_observation_training",
+  "execution_mode": "local_pre_s7_observation_run",
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "dataset_manifest": "outputs/datasets/pre_s7_local_observation/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/pre_s7_local_observation",
+  "run_metadata_path": "outputs/runs/pre_s7_local_observation/training_run_metadata.json",
+  "observability_dir": "outputs/runs/pre_s7_local_observation/training_observability",
+  "run_kind": "pre_s7_local_observation_training",
+  "model_card_title": "Pre-S7 Local Observation Residual Checkpoint",
+  "model_card_purpose_lines": [
+    "Local pre-S7 residual surrogate run for collecting real optimization and held-out observability before writing model-capacity decision rules.",
+    "This run intentionally reuses the current residual MLP family without changing width or block count."
+  ],
+  "model_card_limitations_lines": [
+    "This is a local observation run, not a promotion-quality training campaign.",
+    "Its purpose is to expose optimization and grouped-error behavior before Task S7 decides whether capacity changes are justified.",
+    "TB variation is not yet implemented in the local forward/training path, so TB grouped reporting is intentionally marked as tb_unimplemented_local."
+  ],
+  "residual_hidden_width": 384,
+  "residual_num_blocks": 5,
+  "normalization": "layernorm",
+  "activation": "gelu",
+  "optimizer": "adamw",
+  "learning_rate": 0.0004,
+  "weight_decay": 0.00005,
+  "batch_size": 24,
+  "max_epochs": 120,
+  "early_stopping_patience": 20,
+  "random_seed": 1403,
+  "device": "auto",
+  "require_cuda": true,
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "loss": {
+    "kind": "weighted_mse_plus_first_difference",
+    "reconstruction_weight": 1.0,
+    "shape_weight": 0.15,
+    "bias_weighting": {
+      "kind": "center_window",
+      "central_weight": 2.5,
+      "outer_weight": 1.0,
+      "central_bias_half_width_mev": 6.0
+    }
+  }
+}

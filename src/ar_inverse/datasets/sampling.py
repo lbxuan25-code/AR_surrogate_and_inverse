@@ -32,6 +32,7 @@ class SmokeSampleSpec:
     pairing_controls: dict[str, float]
     transport_controls: dict[str, float | int]
     direction: dict[str, object] | None = None
+    group_labels: dict[str, str] = field(default_factory=dict)
     bias_grid: dict[str, float | int] = field(
         default_factory=lambda: {
             "bias_min_mev": -20.0,

@@ -95,6 +95,19 @@ def resolve_device(device: str | None) -> str:
     return requested
 
 
+def resolve_training_device(device: str | None, *, require_cuda: bool = False) -> str:
+    """Resolve the requested training device, optionally requiring CUDA."""
+
+    requested = str(device or "auto").strip().lower()
+    if require_cuda:
+        if requested in {"cpu", "mps"}:
+            raise ValueError(f"CUDA is required for this run, but device={device!r} was requested.")
+        if not torch.cuda.is_available():
+            raise ValueError("CUDA is required for this run, but torch.cuda.is_available() is false.")
+        return "cuda" if requested == "auto" else resolve_device(requested)
+    return resolve_device(requested)
+
+
 def activation_module(name: str) -> nn.Module:
     """Construct a supported activation module."""
 
@@ -564,6 +577,7 @@ class NeuralMLPSpectrumSurrogate:
         early_stopping_patience: int = 10,
         random_seed: int = 0,
         device: str = "auto",
+        require_cuda: bool = False,
         loss_config: dict[str, Any] | None = None,
         bias_mev: list[float] | None = None,
     ) -> tuple["NeuralMLPSpectrumSurrogate", dict[str, Any]]:
@@ -605,7 +619,7 @@ class NeuralMLPSpectrumSurrogate:
             x_validation_scaled = (x_validation - feature_mean) / feature_scale
             y_validation_scaled = (y_validation - target_mean) / target_scale
 
-        resolved_device = resolve_device(device)
+        resolved_device = resolve_training_device(device, require_cuda=require_cuda)
         torch_device = torch.device(resolved_device)
 
         module, architecture_config = _build_torch_module(
@@ -658,6 +672,21 @@ class NeuralMLPSpectrumSurrogate:
         best_reconstruction_loss = float("inf")
         best_shape_loss = float("inf")
         patience = 0
+        history = {
+            "train_loss": [],
+            "validation_loss": [],
+            "reconstruction_loss": [],
+            "shape_loss": [],
+            "learning_rate": [],
+        }
+        gradient_epoch_summaries: list[dict[str, float]] = []
+        update_epoch_summaries: list[dict[str, float]] = []
+        gradient_warning_flags: list[str] = []
+        consecutive_exploding_epochs = 0
+        consecutive_vanishing_epochs = 0
+        explosion_threshold = 100.0
+        vanishing_threshold = 1.0e-8
+        warning_streak = 3
 
         epochs_completed = 0
         for epoch in range(1, int(max_epochs) + 1):
@@ -667,14 +696,28 @@ class NeuralMLPSpectrumSurrogate:
             total_reconstruction = 0.0
             total_shape = 0.0
             total_rows = 0
+            epoch_gradient_norms: list[float] = []
+            epoch_update_ratios: list[float] = []
             for batch_features, batch_targets in train_loader:
                 batch_features = batch_features.to(torch_device)
                 batch_targets = batch_targets.to(torch_device)
                 optimizer.zero_grad(set_to_none=True)
+                parameter_snapshots = [
+                    (name, parameter.detach().clone(), max(float(parameter.detach().norm().item()), 1.0e-3))
+                    for name, parameter in module.named_parameters()
+                    if parameter.requires_grad
+                ]
                 predictions = module(batch_features)
                 loss, breakdown = criterion(predictions, batch_targets)
                 loss.backward()
+                for _, parameter in module.named_parameters():
+                    if parameter.grad is not None:
+                        epoch_gradient_norms.append(float(parameter.grad.detach().norm().item()))
                 optimizer.step()
+                for name, parameter_before, parameter_norm in parameter_snapshots:
+                    parameter_after = dict(module.named_parameters())[name]
+                    update_norm = float((parameter_after.detach() - parameter_before).norm().item())
+                    epoch_update_ratios.append(update_norm / parameter_norm)
                 total_rows += int(batch_features.shape[0])
                 total_loss += float(loss.item()) * int(batch_features.shape[0])
                 total_reconstruction += float(breakdown["reconstruction_loss"]) * int(batch_features.shape[0])
@@ -692,6 +735,45 @@ class NeuralMLPSpectrumSurrogate:
                     validation_total, _ = criterion(predictions, validation_tensors[1])
                     validation_loss = float(validation_total.item())
                 monitored_loss = validation_loss
+
+            learning_rate_value = float(optimizer.param_groups[0]["lr"])
+            history["train_loss"].append(float(train_loss))
+            history["validation_loss"].append(None if validation_loss is None else float(validation_loss))
+            history["reconstruction_loss"].append(float(reconstruction_loss))
+            history["shape_loss"].append(float(shape_loss))
+            history["learning_rate"].append(learning_rate_value)
+
+            gradient_median = float(np.median(epoch_gradient_norms)) if epoch_gradient_norms else 0.0
+            gradient_max = float(np.max(epoch_gradient_norms)) if epoch_gradient_norms else 0.0
+            update_median = float(np.median(epoch_update_ratios)) if epoch_update_ratios else 0.0
+            update_max = float(np.max(epoch_update_ratios)) if epoch_update_ratios else 0.0
+            gradient_epoch_summaries.append(
+                {
+                    "epoch": int(epoch),
+                    "median_gradient_norm": gradient_median,
+                    "max_gradient_norm": gradient_max,
+                }
+            )
+            update_epoch_summaries.append(
+                {
+                    "epoch": int(epoch),
+                    "median_update_ratio": update_median,
+                    "max_update_ratio": update_max,
+                }
+            )
+
+            if gradient_max > explosion_threshold:
+                consecutive_exploding_epochs += 1
+            else:
+                consecutive_exploding_epochs = 0
+            if gradient_max < vanishing_threshold:
+                consecutive_vanishing_epochs += 1
+            else:
+                consecutive_vanishing_epochs = 0
+            if consecutive_exploding_epochs == warning_streak:
+                gradient_warning_flags.append("exploding_gradient_warning")
+            if consecutive_vanishing_epochs == warning_streak:
+                gradient_warning_flags.append("vanishing_gradient_warning")
 
             if monitored_loss < best_monitored_loss:
                 best_monitored_loss = monitored_loss
@@ -741,6 +823,26 @@ class NeuralMLPSpectrumSurrogate:
             "activation": str(activation_name),
             "model_type": canonical_model_type,
             "loss_contract": criterion.loss_contract,
+            "history": history,
+            "gradient_norm_summary": {
+                "per_epoch": gradient_epoch_summaries,
+                "median": float(np.median([entry["median_gradient_norm"] for entry in gradient_epoch_summaries]))
+                if gradient_epoch_summaries
+                else 0.0,
+                "max": float(np.max([entry["max_gradient_norm"] for entry in gradient_epoch_summaries]))
+                if gradient_epoch_summaries
+                else 0.0,
+                "warning_flags": gradient_warning_flags,
+            },
+            "parameter_update_summary": {
+                "per_epoch": update_epoch_summaries,
+                "median_update_ratio": float(np.median([entry["median_update_ratio"] for entry in update_epoch_summaries]))
+                if update_epoch_summaries
+                else 0.0,
+                "max_update_ratio": float(np.max([entry["max_update_ratio"] for entry in update_epoch_summaries]))
+                if update_epoch_summaries
+                else 0.0,
+            },
         }
         summary.update(architecture_config)
         if "hidden_layer_widths" in architecture_config:

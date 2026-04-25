@@ -1,0 +1,411 @@
+{
+  "config_role": "pre_s7_local_observation_dataset",
+  "execution_mode": "local_pre_s7_observation_run",
+  "dataset_id": "pre_s7_local_observation_v1",
+  "description": "Local pre-S7 observation dataset for residual-capacity diagnosis. This is a small real run intended to produce training and evaluation observability artifacts, not a final accuracy contract.",
+  "output_dir": "outputs/datasets/pre_s7_local_observation",
+  "run_metadata_path": "outputs/runs/pre_s7_local_observation/dataset_run_metadata.json",
+  "run_kind": "pre_s7_local_observation_dataset_generation",
+  "sampling_policy_id": "pre_s7_local_observation_v1",
+  "allow_diagnostic_raw_angles": false,
+  "num_workers": 8,
+  "expected_num_rows": 96,
+  "sampling_policy": {
+    "sampling_policy_id": "pre_s7_local_observation_v1",
+    "policy_kind": "local_rectification_observation_probe",
+    "description": "Small local observation-focused design covering anchor, neighborhood, and bridge source roles across supported named directions and narrow spread, with explicit nuisance labels for grouped review.",
+    "pairing_source_role_targets": {
+      "anchor": 32,
+      "neighborhood": 32,
+      "bridge": 32
+    },
+    "direction_regime_targets": {
+      "inplane_100_no_spread": 24,
+      "inplane_110_no_spread": 24,
+      "named_mode_narrow_spread": 48
+    },
+    "continuous_sampler": {
+      "kind": "structured_local_grid",
+      "reference_contract": "docs/contracts/sampling_policy_v2.md"
+    },
+    "nuisance_sub_range_targets": {
+      "core_window": 40,
+      "inner_shoulder_window": 32,
+      "outer_shoulder_guard_band": 24
+    },
+    "tb_regime_targets": {
+      "tb_unimplemented_local": 96
+    }
+  },
+  "sample_grids": [
+    {
+      "row_prefix": "pre_s7_train_anchor",
+      "split": "train",
+      "group_labels": {
+        "pairing_source_role": "anchor",
+        "nuisance_sub_range": "core_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.24, "delta_perp_x": -0.10},
+        {"delta_xx_s": -0.13, "delta_zx_d": 0.10},
+        {"delta_perp_z": 0.12, "delta_zz_s": 0.18}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.34, "gamma": 0.72, "temperature_kelvin": 1.8, "nk": 41},
+        {"barrier_z": 0.48, "gamma": 0.90, "temperature_kelvin": 2.8, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_train_neighborhood",
+      "split": "train",
+      "group_labels": {
+        "pairing_source_role": "neighborhood",
+        "nuisance_sub_range": "inner_shoulder_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.18, "delta_zx_d": 0.08},
+        {"delta_xx_s": -0.08, "delta_perp_z": 0.10},
+        {"delta_perp_x": 0.07, "delta_xx_s": -0.04}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.62, "gamma": 1.06, "temperature_kelvin": 4.2, "nk": 41},
+        {"barrier_z": 0.78, "gamma": 1.22, "temperature_kelvin": 5.6, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_train_bridge",
+      "split": "train",
+      "group_labels": {
+        "pairing_source_role": "bridge",
+        "nuisance_sub_range": "outer_shoulder_guard_band",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.28, "delta_perp_z": -0.06},
+        {"delta_xx_s": -0.16, "delta_perp_x": 0.12},
+        {"delta_perp_z": 0.14, "delta_zx_d": 0.14}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 1.18, "gamma": 1.46, "temperature_kelvin": 8.5, "nk": 41},
+        {"barrier_z": 1.34, "gamma": 1.62, "temperature_kelvin": 11.0, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_validation_anchor",
+      "split": "validation",
+      "group_labels": {
+        "pairing_source_role": "anchor",
+        "nuisance_sub_range": "core_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.20, "delta_perp_x": -0.05}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.40, "gamma": 0.86, "temperature_kelvin": 2.3, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_validation_neighborhood",
+      "split": "validation",
+      "group_labels": {
+        "pairing_source_role": "neighborhood",
+        "nuisance_sub_range": "inner_shoulder_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_xx_s": -0.10, "delta_zx_d": 0.09}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.74, "gamma": 1.18, "temperature_kelvin": 4.8, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_validation_bridge",
+      "split": "validation",
+      "group_labels": {
+        "pairing_source_role": "bridge",
+        "nuisance_sub_range": "outer_shoulder_guard_band",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_perp_z": 0.16, "delta_perp_x": 0.10}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 1.26, "gamma": 1.54, "temperature_kelvin": 9.6, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_test_anchor",
+      "split": "test",
+      "group_labels": {
+        "pairing_source_role": "anchor",
+        "nuisance_sub_range": "core_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_zz_s": 0.22, "delta_perp_x": -0.07}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.44, "gamma": 0.94, "temperature_kelvin": 2.6, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_test_neighborhood",
+      "split": "test",
+      "group_labels": {
+        "pairing_source_role": "neighborhood",
+        "nuisance_sub_range": "inner_shoulder_window",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_xx_s": -0.12, "delta_zx_d": 0.11}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 0.82, "gamma": 1.26, "temperature_kelvin": 5.2, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    },
+    {
+      "row_prefix": "pre_s7_test_bridge",
+      "split": "test",
+      "group_labels": {
+        "pairing_source_role": "bridge",
+        "nuisance_sub_range": "outer_shoulder_guard_band",
+        "tb_regime": "tb_unimplemented_local"
+      },
+      "pairing_controls_options": [
+        {"delta_perp_z": 0.18, "delta_perp_x": 0.08}
+      ],
+      "transport_controls_options": [
+        {"barrier_z": 1.38, "gamma": 1.66, "temperature_kelvin": 10.8, "nk": 41}
+      ],
+      "direction_options": [
+        {"direction_mode": "inplane_100"},
+        {"direction_mode": "inplane_110"},
+        {
+          "direction_mode": "inplane_100",
+          "directional_spread": {
+            "direction_mode": "inplane_100",
+            "half_width": 0.02454369260617026,
+            "num_samples": 7
+          }
+        },
+        {
+          "direction_mode": "inplane_110",
+          "directional_spread": {
+            "direction_mode": "inplane_110",
+            "half_width": 0.03681553890925539,
+            "num_samples": 9
+          }
+        }
+      ],
+      "bias_grid": {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241
+      }
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "axes": {
+    "bias_sub_window": {
+      "central_window": {
+        "max_rmse": 0.0668745333744834,
+        "mean_max_abs_error": 0.01761325187984628,
+        "mean_rmse": 0.01761325187984628,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_bridge_inplane_100_d00_p00_t00",
+          "pre_s7_test_bridge_inplane_110_spread_d03_p00_t00"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      },
+      "edge_guard": {
+        "max_rmse": 0.017695082002096796,
+        "mean_max_abs_error": 0.0020619168272735344,
+        "mean_rmse": 0.0020619168272735344,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_test_bridge_inplane_100_d00_p00_t00"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      },
+      "inner_shoulder": {
+        "max_rmse": 0.07221500972330258,
+        "mean_max_abs_error": 0.015365704773089135,
+        "mean_rmse": 0.015365704773089135,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      },
+      "outer_shoulder": {
+        "max_rmse": 0.04010310632112346,
+        "mean_max_abs_error": 0.007063638991784291,
+        "mean_rmse": 0.007063638991784291,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      }
+    },
+    "direction_regime": {
+      "inplane_100_no_spread": {
+        "max_rmse": 0.025939755913148024,
+        "mean_max_abs_error": 0.04080068185005034,
+        "mean_rmse": 0.012104391511015535,
+        "representative_row_ids": [
+          "pre_s7_test_anchor_inplane_100_d00_p00_t00",
+          "pre_s7_test_bridge_inplane_100_d00_p00_t00",
+          "pre_s7_validation_bridge_inplane_100_d00_p00_t00"
+        ],
+        "row_count": 6,
+        "warning_flags": []
+      },
+      "inplane_110_no_spread": {
+        "max_rmse": 0.027339461812714145,
+        "mean_max_abs_error": 0.04916551587074009,
+        "mean_rmse": 0.014994103713829568,
+        "representative_row_ids": [
+          "pre_s7_test_anchor_inplane_110_d01_p00_t00",
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 6,
+        "warning_flags": []
+      },
+      "named_mode_narrow_spread": {
+        "max_rmse": 0.01895808750729815,
+        "mean_max_abs_error": 0.04156594905697223,
+        "mean_rmse": 0.012321643082407572,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_validation_anchor_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_bridge_inplane_110_spread_d03_p00_t00"
+        ],
+        "row_count": 12,
+        "warning_flags": []
+      }
+    },
+    "nuisance_sub_range": {
+      "core_window": {
+        "max_rmse": 0.027339461812714145,
+        "mean_max_abs_error": 0.03320420128020882,
+        "mean_rmse": 0.013468120080664229,
+        "representative_row_ids": [
+          "pre_s7_test_anchor_inplane_110_d01_p00_t00",
+          "pre_s7_test_anchor_inplane_100_d00_p00_t00",
+          "pre_s7_validation_anchor_inplane_100_spread_d02_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      },
+      "inner_shoulder_window": {
+        "max_rmse": 0.015359546162308784,
+        "mean_max_abs_error": 0.03786843812121085,
+        "mean_rmse": 0.009761071726914015,
+        "representative_row_ids": [
+          "pre_s7_validation_neighborhood_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_neighborhood_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_neighborhood_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      },
+      "outer_shoulder_guard_band": {
+        "max_rmse": 0.01895808750729815,
+        "mean_max_abs_error": 0.058750932474631506,
+        "mean_rmse": 0.015577144234666943,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      }
+    },
+    "pairing_source_role": {
+      "anchor": {
+        "max_rmse": 0.027339461812714145,
+        "mean_max_abs_error": 0.03320420128020882,
+        "mean_rmse": 0.013468120080664229,
+        "representative_row_ids": [
+          "pre_s7_test_anchor_inplane_110_d01_p00_t00",
+          "pre_s7_test_anchor_inplane_100_d00_p00_t00",
+          "pre_s7_validation_anchor_inplane_100_spread_d02_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      },
+      "bridge": {
+        "max_rmse": 0.01895808750729815,
+        "mean_max_abs_error": 0.058750932474631506,
+        "mean_rmse": 0.015577144234666943,
+        "representative_row_ids": [
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_bridge_inplane_110_d01_p00_t00",
+          "pre_s7_validation_bridge_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      },
+      "neighborhood": {
+        "max_rmse": 0.015359546162308784,
+        "mean_max_abs_error": 0.03786843812121085,
+        "mean_rmse": 0.009761071726914015,
+        "representative_row_ids": [
+          "pre_s7_validation_neighborhood_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_neighborhood_inplane_100_spread_d02_p00_t00",
+          "pre_s7_test_neighborhood_inplane_110_d01_p00_t00"
+        ],
+        "row_count": 8,
+        "warning_flags": []
+      }
+    },
+    "tb_regime": {
+      "tb_unimplemented_local": {
+        "max_rmse": 0.027339461812714145,
+        "mean_max_abs_error": 0.043274523958683725,
+        "mean_rmse": 0.012935445347415064,
+        "representative_row_ids": [
+          "pre_s7_test_anchor_inplane_110_d01_p00_t00",
+          "pre_s7_test_anchor_inplane_100_d00_p00_t00",
+          "pre_s7_test_bridge_inplane_100_spread_d02_p00_t00"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      }
+    }
+  },
+  "grouped_error_report_id": "training_grouped_error_report_v1",
+  "required_axes": [
+    "bias_sub_window",
+    "pairing_source_role",
+    "nuisance_sub_range",
+    "tb_regime",
+    "direction_regime"
+  ]
+}

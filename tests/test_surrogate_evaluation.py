@@ -38,6 +38,10 @@ def test_evaluate_surrogate_from_config_writes_unsafe_regime_report(tmp_path) ->
     assert set(report["direction_regime_report"]) == {"inplane_110_no_spread", "named_mode_narrow_spread"}
     assert "direct_forward_required" in report["fallback_policy"]["default_action"]
     assert all(not row["safe_for_inverse_acceleration"] for row in report["row_errors"])
+    assert Path(report["grouped_error_report"]["path"]).exists()
+    assert Path(report["representative_spectra"]["best"]["figure"]).exists()
+    assert Path(report["representative_spectra"]["median"]["figure"]).exists()
+    assert Path(report["representative_spectra"]["worst"]["figure"]).exists()
 
 
 def test_repository_task9_directional_evaluation_report_identifies_unsafe_inverse_regimes() -> None:
@@ -142,3 +146,5 @@ def test_evaluate_surrogate_from_config_reads_neural_checkpoint(tmp_path) -> Non
     assert report["model"]["model_type"] == NEURAL_MLP_MODEL_TYPE
     assert run_metadata["model_type"] == NEURAL_MLP_MODEL_TYPE
     assert report["evaluation_scope"]["held_out_splits"] == ["validation", "test"]
+    assert Path(report["grouped_error_report"]["path"]).exists()
+    assert Path(run_metadata["grouped_error_report"]).exists()

@@ -43,6 +43,12 @@ def parse_args() -> argparse.Namespace:
         help="Path for local run metadata; defaults to the generator's configured smoke path.",
     )
     parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=None,
+        help="Number of dataset-generation worker processes; defaults to config num_workers or 1.",
+    )
+    parser.add_argument(
         "--force",
         action="store_true",
         help="Regenerate all rows instead of reusing completed manifest entries.",
@@ -57,6 +63,7 @@ def main() -> None:
             args.config,
             output_dir=args.output_dir,
             **({"run_metadata_path": args.run_metadata} if args.run_metadata is not None else {}),
+            **({"num_workers": args.num_workers} if args.num_workers is not None else {}),
             force=args.force,
         )
     except ForwardDependencyError as exc:

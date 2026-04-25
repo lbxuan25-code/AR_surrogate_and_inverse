@@ -22,6 +22,7 @@ from ar_inverse.surrogate.models import (
     checkpoint_filename_for_model_type,
     normalize_model_type,
 )
+from ar_inverse.training.artifacts import write_training_curve_figures
 
 DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH = Path("configs/surrogate/smoke/directional_smoke_training.json")
 DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR = Path("outputs/checkpoints/task9_directional_surrogate_smoke")
@@ -379,6 +380,38 @@ def _model_card_model_lines(config: dict[str, Any], metrics: dict[str, Any], che
     return lines
 
 
+def _write_training_observability_artifacts(
+    output_dir: Path,
+    training_summary: dict[str, Any],
+) -> dict[str, Any]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    figures_dir = output_dir / "figures"
+    history = dict(training_summary.get("history", {}))
+    curve_paths = write_training_curve_figures(history, figures_dir)
+
+    history_path = output_dir / "training_history.json"
+    gradient_summary_path = output_dir / "gradient_norm_summary.json"
+    update_summary_path = output_dir / "parameter_update_summary.json"
+
+    history_path.write_text(json.dumps(history, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    gradient_summary_path.write_text(
+        json.dumps(training_summary.get("gradient_norm_summary", {}), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    update_summary_path.write_text(
+        json.dumps(training_summary.get("parameter_update_summary", {}), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    return {
+        "output_dir": output_dir.as_posix(),
+        "training_history": history_path.as_posix(),
+        "gradient_norm_summary": gradient_summary_path.as_posix(),
+        "parameter_update_summary": update_summary_path.as_posix(),
+        "figures": curve_paths,
+    }
+
+
 def train_surrogate_from_config(
     config_path: Path | str = DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH,
 ) -> tuple[Path, Path, Path]:
@@ -433,6 +466,7 @@ def train_surrogate_from_config(
             "max_epochs": int(config.get("max_epochs", 100)),
             "early_stopping_patience": int(config.get("early_stopping_patience", 10)),
             "device": str(config.get("device", "auto")),
+            "require_cuda": bool(config.get("require_cuda", False)),
             "loss_config": dict(config.get("loss", {})) if config.get("loss") is not None else None,
             "bias_mev": list(dataset["bias_mev"]),
         }
@@ -530,6 +564,9 @@ def train_surrogate_from_config(
         metrics["ridge_alpha"] = float(training_summary["ridge_alpha"])
     else:
         metrics["training"] = training_summary
+        observability_dir = Path(config.get("observability_dir", checkpoint_dir / "observability"))
+        observability_artifacts = _write_training_observability_artifacts(observability_dir, training_summary)
+        metrics["observability"] = observability_artifacts
         if len(ensemble_seeds) > 1:
             ensemble = dict(config.get("ensemble", {}))
             metrics["ensemble"] = {
@@ -580,10 +617,12 @@ def train_surrogate_from_config(
                 "random_seed": training_summary["random_seed"],
                 "requested_device": training_summary["requested_device"],
                 "resolved_device": training_summary["resolved_device"],
+                "require_cuda": bool(config.get("require_cuda", False)),
                 "depth": training_summary["depth"],
                 "activation": training_summary["activation"],
                 "weight_decay": training_summary["weight_decay"],
                 "loss_contract": training_summary["loss_contract"],
+                "observability": observability_artifacts,
             }
         )
         if "hidden_layer_widths" in training_summary:

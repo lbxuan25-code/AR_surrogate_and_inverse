@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import concurrent.futures
 import json
+import multiprocessing
 from pathlib import Path
 from typing import Any
 
@@ -42,8 +44,7 @@ DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR = Path("outputs/datasets/task8_directional
 DEFAULT_TASK8_DIRECTIONAL_RUN_METADATA_PATH = Path("outputs/runs/task8_directional_dataset_run_metadata.json")
 
 
-def _request_from_sample(sample: SmokeSampleSpec):
-    forward = import_forward_module("forward")
+def _request_from_sample(forward: Any, sample: SmokeSampleSpec):
     transport = _transport_from_sample(forward, sample)
     return forward.FitLayerSpectrumRequest(
         pairing_controls=dict(sample.pairing_controls),
@@ -76,7 +77,7 @@ def _transport_from_sample(forward: Any, sample: SmokeSampleSpec):
 
 
 def _generate_result_from_sample(forward: Any, sample: SmokeSampleSpec):
-    request = _request_from_sample(sample)
+    request = _request_from_sample(forward, sample)
     spread = (sample.direction or {}).get("directional_spread")
     if spread:
         directional_spread = forward.DirectionalSpread(
@@ -204,6 +205,7 @@ def sample_from_config(
         pairing_controls={str(key): float(value) for key, value in dict(sample["pairing_controls"]).items()},
         transport_controls=dict(sample["transport_controls"]),
         direction=direction,
+        group_labels={str(key): str(value) for key, value in dict(sample.get("group_labels", {})).items()},
         bias_grid=dict(sample.get("bias_grid", {})) or {
             "bias_min_mev": -20.0,
             "bias_max_mev": 20.0,
@@ -266,6 +268,7 @@ def _expand_sample_grids(sample_grids: Any) -> list[dict[str, Any]]:
 
         row_prefix = str(grid["row_prefix"])
         split = str(grid["split"])
+        group_labels = {str(key): str(value) for key, value in dict(grid.get("group_labels", {})).items()}
         bias_grid = dict(grid.get("bias_grid", {})) or {
             "bias_min_mev": -20.0,
             "bias_max_mev": 20.0,
@@ -291,6 +294,7 @@ def _expand_sample_grids(sample_grids: Any) -> list[dict[str, Any]]:
                             "pairing_controls": pairing_controls,
                             "transport_controls": transport_controls,
                             "direction": direction,
+                            "group_labels": group_labels,
                             "bias_grid": bias_grid,
                         }
                     )
@@ -377,16 +381,23 @@ def _load_reusable_rows(manifest_path: Path, output_dir: Path) -> dict[str, dict
     return reusable
 
 
+def _payload_from_sample(sample: SmokeSampleSpec) -> dict[str, Any]:
+    forward = import_forward_module("forward")
+    result = _generate_result_from_sample(forward, sample)
+    return result.to_dict()
+
+
 def build_dataset_from_config(
     config_path: Path | str,
     *,
     output_dir: Path | str | None = None,
     run_metadata_path: Path | str | None = None,
+    num_workers: int | None = None,
     force: bool = False,
 ) -> tuple[Path, Path]:
     """Generate a dataset from a config, resuming completed rows when possible."""
 
-    forward = import_forward_module("forward")
+    import_forward_module("forward")
     config_file = Path(config_path)
     config = load_dataset_config(config_file)
     dataset_id = str(config["dataset_id"])
@@ -397,6 +408,9 @@ def build_dataset_from_config(
     output_path = Path(output_dir or config.get("output_dir") or DEFAULT_TASK3_SMOKE_DATASET_DIR)
     spectra_dir = output_path / "forward_outputs"
     manifest_path = output_path / "dataset.json"
+    resolved_num_workers = int(num_workers if num_workers is not None else config.get("num_workers", 1))
+    if resolved_num_workers < 1:
+        raise ValueError("num_workers must be at least 1.")
 
     output_path.mkdir(parents=True, exist_ok=True)
     spectra_dir.mkdir(parents=True, exist_ok=True)
@@ -418,8 +432,8 @@ def build_dataset_from_config(
     generated_count = 0
     reused_count = 0
 
+    pending_samples: list[tuple[int, SmokeSampleSpec]] = []
     for index, sample in enumerate(samples):
-        spectrum_path = spectra_dir / f"{sample.row_id}.json"
         reusable_row = reusable_rows.get(sample.row_id)
         if reusable_row is not None:
             rows.append(reusable_row)
@@ -443,10 +457,37 @@ def build_dataset_from_config(
             )
             continue
 
-        result = _generate_result_from_sample(forward, sample)
-        payload = result.to_dict()
+        pending_samples.append((index, sample))
+
+    pending_payloads: list[tuple[int, SmokeSampleSpec, dict[str, Any]]] = []
+    if pending_samples:
+        if resolved_num_workers == 1:
+            forward = import_forward_module("forward")
+            for index, sample in pending_samples:
+                result = _generate_result_from_sample(forward, sample)
+                pending_payloads.append((index, sample, result.to_dict()))
+        else:
+            mp_context = multiprocessing.get_context("spawn")
+            with concurrent.futures.ProcessPoolExecutor(
+                max_workers=resolved_num_workers,
+                mp_context=mp_context,
+            ) as executor:
+                payload_iter = executor.map(_payload_from_sample, [sample for _, sample in pending_samples])
+                for (index, sample), payload in zip(pending_samples, payload_iter, strict=True):
+                    pending_payloads.append((index, sample, payload))
+
+    for index, sample, payload in pending_payloads:
+        spectrum_path = spectra_dir / f"{sample.row_id}.json"
         spectrum_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
+        controls_payload: dict[str, object] = {
+            "fit_layer_pairing_controls": dict(sample.pairing_controls),
+            "transport_controls": dict(sample.transport_controls),
+            "direction": dict(sample.direction) if sample.direction is not None else None,
+            "bias_grid": dict(sample.bias_grid),
+        }
+        if sample.group_labels:
+            controls_payload["group_labels"] = dict(sample.group_labels)
         row = make_dataset_row(
             row_id=sample.row_id,
             sampling_policy_id=sampling_policy_id,
@@ -459,12 +500,7 @@ def build_dataset_from_config(
                 if sample.direction is not None
                 else None
             ),
-            controls={
-                "fit_layer_pairing_controls": dict(sample.pairing_controls),
-                "transport_controls": dict(sample.transport_controls),
-                "direction": dict(sample.direction) if sample.direction is not None else None,
-                "bias_grid": dict(sample.bias_grid),
-            },
+            controls=controls_payload,
         )
         rows.append(row)
         plan[index] = _plan_entry(
@@ -508,6 +544,7 @@ def build_dataset_from_config(
         "generated_rows": generated_count,
         "reused_rows": reused_count,
         "force": bool(force),
+        "num_workers": resolved_num_workers,
         "allow_diagnostic_raw_angles": allow_diagnostic_raw_angles,
         "forward_metadata_family": rows[0]["forward_metadata"],
     }

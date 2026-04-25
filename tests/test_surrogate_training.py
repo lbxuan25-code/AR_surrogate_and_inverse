@@ -161,9 +161,14 @@ def test_train_neural_surrogate_from_config_writes_pt_checkpoint_and_metadata(tm
     assert metrics["training"]["batch_size"] == 2
     assert metrics["training"]["random_seed"] == 7
     assert metrics["training"]["requested_device"] == "cpu"
+    assert Path(metrics["observability"]["training_history"]).exists()
+    assert Path(metrics["observability"]["gradient_norm_summary"]).exists()
+    assert Path(metrics["observability"]["parameter_update_summary"]).exists()
+    assert Path(metrics["observability"]["figures"]["train_vs_validation_loss"]).exists()
     assert run_metadata["model_type"] == NEURAL_MLP_MODEL_TYPE
     assert run_metadata["optimizer"] == "adam"
     assert run_metadata["batch_size"] == 2
     assert run_metadata["requested_device"] == "cpu"
+    assert Path(run_metadata["observability"]["output_dir"]).exists()
     assert prediction.shape == dataset["targets"].shape
     assert np.all(np.isfinite(prediction))

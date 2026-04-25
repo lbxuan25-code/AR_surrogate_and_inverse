@@ -1,0 +1,20 @@
+{
+  "config_role": "pre_s7_local_observation_evaluation",
+  "execution_mode": "local_pre_s7_observation_run",
+  "checkpoint": "outputs/checkpoints/pre_s7_local_observation/model.pt",
+  "dataset_manifest": "outputs/datasets/pre_s7_local_observation/dataset.json",
+  "report_dir": "outputs/runs/pre_s7_local_observation/evaluation",
+  "run_metadata_path": "outputs/runs/pre_s7_local_observation/evaluation_run_metadata.json",
+  "run_kind": "pre_s7_local_observation_evaluation",
+  "report_title": "Pre-S7 Local Observation Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.06,
+    "max_abs_error": 0.12
+  },
+  "device": "auto",
+  "require_cuda": true
+}
