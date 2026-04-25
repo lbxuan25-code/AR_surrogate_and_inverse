@@ -8,6 +8,12 @@
   "run_kind": "production_surrogate_v1_dataset_generation",
   "sampling_policy_id": "quality_first_rmft_sampling_v2",
   "num_workers": 8,
+  "rmft_source_projection": {
+    "projection_examples_csv": "outputs/source/round2_projection_examples.csv",
+    "projection_summary_json": "outputs/source/round2_projection_summary.json",
+    "source_repository": "external LNO327 AR forward repository",
+    "required_for_materialization": true
+  },
   "row_budget": {
     "recommended_total_rows": 8192,
     "split_targets": {

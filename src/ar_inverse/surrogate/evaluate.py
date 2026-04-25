@@ -508,8 +508,9 @@ def evaluate_surrogate_from_config(
     thresholds = _safe_thresholds(config)
     disagreement_thresholds = _disagreement_thresholds(config)
 
-    dataset = load_dataset_arrays(config["dataset_manifest"])
     checkpoint_paths, ensemble_manifest = _load_checkpoint_collection(config)
+    reference_model = load_surrogate_checkpoint(checkpoint_paths[0])
+    dataset = load_dataset_arrays(config["dataset_manifest"], feature_spec=reference_model.feature_spec)
     requested_device = str(config.get("device", "cpu"))
     require_cuda = bool(config.get("require_cuda", False))
     predictions, disagreement, member_summaries = _ensemble_prediction_summary(

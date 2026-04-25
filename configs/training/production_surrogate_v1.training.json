@@ -2,6 +2,7 @@
   "config_role": "production_surrogate_v1_training_contract",
   "execution_mode": "local_production_preparation_contract",
   "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "feature_spec_id": "projected_7plus1_complex_v1",
   "dataset_manifest": "outputs/datasets/production_surrogate_v1/dataset.json",
   "checkpoint_dir": "outputs/checkpoints/production_surrogate_v1",
   "run_metadata_path": "outputs/runs/production_surrogate_v1/training_run_metadata.json",

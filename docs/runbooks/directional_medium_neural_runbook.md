@@ -12,6 +12,14 @@ actual medium-scale server validation run. Do not launch the medium-scale
 dataset generation, neural training, or neural evaluation in the local Codex
 workspace.
 
+## Historical Artifact Availability
+
+The cleaned repository keeps Task 12 compact review artifacts and metadata, but
+does not retain bulky forward-output directories. The historical decision trail
+is summarized in `docs/archive/historical_run_summary.md`; full forward outputs
+should be regenerated from the committed config or recovered from the original
+server location only if a later audit explicitly needs them.
+
 ## Canonical Configs
 
 - Dataset config: `configs/datasets/task12_directional_medium_dataset.json`

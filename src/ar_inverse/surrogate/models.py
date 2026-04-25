@@ -52,6 +52,37 @@ DEFAULT_FEATURE_SPEC = FeatureSpec(
     )
 )
 
+PROJECTED_COMPLEX_PAIRING_FEATURE_SPEC = FeatureSpec(
+    names=tuple(
+        f"{channel}_{part}"
+        for channel in (
+            "delta_zz_s",
+            "delta_zz_d",
+            "delta_xx_s",
+            "delta_xx_d",
+            "delta_zx_d",
+            "delta_perp_z",
+            "delta_perp_x",
+            "delta_zx_s",
+        )
+        for part in ("re", "im")
+    )
+    + (
+        "direction_inplane_100",
+        "direction_inplane_110",
+        "direction_named_mode",
+        "direction_diagnostic_raw_angle",
+        "direction_has_spread",
+        "direction_spread_half_width",
+        "direction_spread_num_samples",
+        "direction_raw_interface_angle",
+        "barrier_z",
+        "gamma",
+        "temperature_kelvin",
+        "nk",
+    )
+)
+
 
 def normalize_model_type(model_type: str | None) -> str:
     """Normalize config aliases into canonical model type ids."""
@@ -787,7 +818,21 @@ class NeuralMLPSpectrumSurrogate:
             else:
                 patience += 1
                 if patience >= int(early_stopping_patience):
+                    print(
+                        f"epoch {epoch}: train_loss={train_loss:.6g} "
+                        f"validation_loss={validation_loss if validation_loss is not None else 'n/a'} "
+                        f"early_stopping_patience_reached",
+                        flush=True,
+                    )
                     break
+
+            if epoch == 1 or epoch % 10 == 0:
+                validation_text = f"{validation_loss:.6g}" if validation_loss is not None else "n/a"
+                print(
+                    f"epoch {epoch}: train_loss={train_loss:.6g} "
+                    f"validation_loss={validation_text} best_epoch={best_epoch}",
+                    flush=True,
+                )
 
         module.load_state_dict(best_state)
         module = module.to("cpu").eval()

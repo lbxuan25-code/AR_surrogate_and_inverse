@@ -1,0 +1,262 @@
+{
+  "axes": {
+    "bias_sub_window": {
+      "central_window": {
+        "max_rmse": 0.006040920385119941,
+        "mean_max_abs_error": 0.001004461954384639,
+        "mean_rmse": 0.001004461954384639,
+        "representative_row_ids": [
+          "production_v1_validation_00738",
+          "production_v1_test_00738",
+          "production_v1_validation_00892"
+        ],
+        "row_count": 2048,
+        "warning_flags": []
+      },
+      "edge_guard": {
+        "max_rmse": 0.001568071338186372,
+        "mean_max_abs_error": 0.00011395157216628344,
+        "mean_rmse": 0.00011395157216628344,
+        "representative_row_ids": [
+          "production_v1_validation_00808",
+          "production_v1_test_00808",
+          "production_v1_validation_00951"
+        ],
+        "row_count": 2048,
+        "warning_flags": []
+      },
+      "inner_shoulder": {
+        "max_rmse": 0.005240484693703085,
+        "mean_max_abs_error": 0.0009796930205484475,
+        "mean_rmse": 0.0009796930205484475,
+        "representative_row_ids": [
+          "production_v1_validation_00650",
+          "production_v1_test_00650",
+          "production_v1_validation_00738"
+        ],
+        "row_count": 2048,
+        "warning_flags": []
+      },
+      "outer_shoulder": {
+        "max_rmse": 0.0032447432132896026,
+        "mean_max_abs_error": 0.000481989839171995,
+        "mean_rmse": 0.000481989839171995,
+        "representative_row_ids": [
+          "production_v1_validation_00315",
+          "production_v1_test_00315",
+          "production_v1_validation_00141"
+        ],
+        "row_count": 2048,
+        "warning_flags": []
+      }
+    },
+    "direction_regime": {
+      "inplane_100_no_spread": {
+        "max_rmse": 0.002177349232297962,
+        "mean_max_abs_error": 0.002439053799869309,
+        "mean_rmse": 0.0008056124137861482,
+        "representative_row_ids": [
+          "production_v1_validation_00648",
+          "production_v1_test_00648",
+          "production_v1_validation_00270"
+        ],
+        "row_count": 684,
+        "warning_flags": []
+      },
+      "inplane_110_no_spread": {
+        "max_rmse": 0.0017005322369345321,
+        "mean_max_abs_error": 0.0024501510965093667,
+        "mean_rmse": 0.0007333510288724499,
+        "representative_row_ids": [
+          "production_v1_validation_00724",
+          "production_v1_test_00724",
+          "production_v1_validation_00180"
+        ],
+        "row_count": 684,
+        "warning_flags": []
+      },
+      "named_mode_narrow_spread": {
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002827633495761782,
+        "mean_rmse": 0.0008846622620025887,
+        "representative_row_ids": [
+          "production_v1_validation_00738",
+          "production_v1_test_00738",
+          "production_v1_validation_00635"
+        ],
+        "row_count": 680,
+        "warning_flags": []
+      }
+    },
+    "nuisance_sub_range": {
+      "high_barrier|high_gamma|high_temp": {
+        "max_rmse": 0.0018515893978668025,
+        "mean_max_abs_error": 0.0026100192090362105,
+        "mean_rmse": 0.0008369315891624268,
+        "representative_row_ids": [
+          "production_v1_validation_00287",
+          "production_v1_test_00287",
+          "production_v1_validation_00098"
+        ],
+        "row_count": 828,
+        "warning_flags": []
+      },
+      "high_barrier|high_gamma|low_temp": {
+        "max_rmse": 0.0010198520839617283,
+        "mean_max_abs_error": 0.0022501971184256675,
+        "mean_rmse": 0.000609616299507279,
+        "representative_row_ids": [
+          "production_v1_validation_00633",
+          "production_v1_test_00633",
+          "production_v1_validation_00545"
+        ],
+        "row_count": 10,
+        "warning_flags": []
+      },
+      "high_barrier|low_gamma|high_temp": {
+        "max_rmse": 0.0013733452570961942,
+        "mean_max_abs_error": 0.002410789412885139,
+        "mean_rmse": 0.0007403755154095732,
+        "representative_row_ids": [
+          "production_v1_validation_00211",
+          "production_v1_test_00211",
+          "production_v1_validation_00837"
+        ],
+        "row_count": 268,
+        "warning_flags": []
+      },
+      "high_barrier|low_gamma|low_temp": {
+        "max_rmse": 0.0016133980069269066,
+        "mean_max_abs_error": 0.0026269103400014086,
+        "mean_rmse": 0.0007963235717838871,
+        "representative_row_ids": [
+          "production_v1_validation_00892",
+          "production_v1_test_00892",
+          "production_v1_validation_00317"
+        ],
+        "row_count": 162,
+        "warning_flags": []
+      },
+      "low_barrier|high_gamma|high_temp": {
+        "max_rmse": 0.0018891257368107682,
+        "mean_max_abs_error": 0.00247651515920651,
+        "mean_rmse": 0.0007669778242059308,
+        "representative_row_ids": [
+          "production_v1_validation_00548",
+          "production_v1_test_00548",
+          "production_v1_validation_00579"
+        ],
+        "row_count": 230,
+        "warning_flags": []
+      },
+      "low_barrier|high_gamma|low_temp": {
+        "max_rmse": 0.0020429650850385178,
+        "mean_max_abs_error": 0.0025374333291435605,
+        "mean_rmse": 0.0008294003871879217,
+        "representative_row_ids": [
+          "production_v1_validation_00635",
+          "production_v1_test_00635",
+          "production_v1_validation_00705"
+        ],
+        "row_count": 24,
+        "warning_flags": []
+      },
+      "low_barrier|low_gamma|high_temp": {
+        "max_rmse": 0.0017005322369345321,
+        "mean_max_abs_error": 0.0023567657767861448,
+        "mean_rmse": 0.0007132979280835842,
+        "representative_row_ids": [
+          "production_v1_validation_00724",
+          "production_v1_test_00724",
+          "production_v1_validation_00148"
+        ],
+        "row_count": 134,
+        "warning_flags": []
+      },
+      "low_barrier|low_gamma|low_temp": {
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.0027179962031506515,
+        "mean_rmse": 0.0008567049136144118,
+        "representative_row_ids": [
+          "production_v1_validation_00738",
+          "production_v1_test_00738",
+          "production_v1_validation_00648"
+        ],
+        "row_count": 392,
+        "warning_flags": []
+      }
+    },
+    "pairing_source_role": {
+      "anchor": {
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002550011092288285,
+        "mean_rmse": 0.0008002562967252991,
+        "representative_row_ids": [
+          "production_v1_validation_00738",
+          "production_v1_test_00738",
+          "production_v1_validation_00648"
+        ],
+        "row_count": 684,
+        "warning_flags": []
+      },
+      "bridge": {
+        "max_rmse": 0.0020429650850385178,
+        "mean_max_abs_error": 0.002680453304680162,
+        "mean_rmse": 0.0008658650769578668,
+        "representative_row_ids": [
+          "production_v1_validation_00635",
+          "production_v1_test_00635",
+          "production_v1_validation_00548"
+        ],
+        "row_count": 682,
+        "warning_flags": []
+      },
+      "neighborhood": {
+        "max_rmse": 0.0017961145066376946,
+        "mean_max_abs_error": 0.0024849416207096313,
+        "mean_rmse": 0.0007570763101097827,
+        "representative_row_ids": [
+          "production_v1_validation_00577",
+          "production_v1_test_00577",
+          "production_v1_validation_00583"
+        ],
+        "row_count": 682,
+        "warning_flags": []
+      }
+    },
+    "tb_regime": {
+      "edge_probe": {
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002561123348051033,
+        "mean_rmse": 0.0008025273737962973,
+        "representative_row_ids": [
+          "production_v1_validation_00738",
+          "production_v1_test_00738",
+          "production_v1_validation_00635"
+        ],
+        "row_count": 972,
+        "warning_flags": []
+      },
+      "near_baseline": {
+        "max_rmse": 0.002177349232297962,
+        "mean_max_abs_error": 0.0025814080222448152,
+        "mean_rmse": 0.0008124207487084019,
+        "representative_row_ids": [
+          "production_v1_validation_00648",
+          "production_v1_test_00648",
+          "production_v1_validation_00548"
+        ],
+        "row_count": 1076,
+        "warning_flags": []
+      }
+    }
+  },
+  "grouped_error_report_id": "training_grouped_error_report_v1",
+  "required_axes": [
+    "bias_sub_window",
+    "pairing_source_role",
+    "nuisance_sub_range",
+    "tb_regime",
+    "direction_regime"
+  ]
+}

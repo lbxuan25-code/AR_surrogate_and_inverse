@@ -2,167 +2,71 @@
 
 ## Current Task
 
-### Task P1 — User-approved first production-scale surrogate run contract
+### Awaiting User Decision After P3 Review
 
 #### Task type
-Local preparation task only. Do not start heavy generation or training in this task.
-
-#### Why this task exists
-The repository completed the surrogate-rectification sequence S1-S8. Those tasks fixed or clarified:
-
-- full projected 7+1 pairing representation with only global-phase redundancy removed;
-- TB representation caution and two-level provenance/training-facing thinking;
-- sampling-quality-first policy;
-- joint sampling policy;
-- training observability standard;
-- repository layout and naming standards;
-- model-capacity decision rule: do not expand the residual MLP architecture yet;
-- active-learning roadmap as a future extension.
-
-After S8, Codex introduced S9/S10 by itself. Those tasks are not user-owned task definitions and are superseded by this TODO. The next step is not to keep following Codex-invented S-number tasks. The next step is to prepare a user-approved production-scale surrogate run contract.
+Manual rerun gate after approved local repairs.
 
 #### Goal
-Prepare the first user-approved production-scale dataset-generation, training, and evaluation contract for the rectified surrogate pipeline.
+Let the user rerun the repaired production v1 heavy pipeline from the terminal.
 
-This task must produce a production-ready handoff, but it must not execute the heavy run.
+P3 reviewed `production_surrogate_v1` and selected:
 
-#### Required decisions to freeze
-Codex must freeze all of the following in one coherent production contract:
+> revise sampling and metadata before acceptance.
 
-1. dataset generation target:
-   - row budget;
-   - train / validation / test split;
-   - pairing source composition;
-   - sampling-policy-v2 usage;
-   - joint sampling usage;
-   - CPU worker recommendation for local execution.
+Reason:
 
-2. training target:
-   - model family;
-   - residual width and depth;
-   - loss contract;
-   - optimizer;
-   - batch size;
-   - device policy;
-   - ensemble policy, if used.
+- training and held-out evaluation quality are strong;
+- no S7 model-capacity trigger was observed;
+- the materialized P2 sampling composition does not match the P1 targets;
+- the original Luo RMFT source point cloud and source-to-anchor mapping are not
+  present in P2 artifacts, so RMFT source coverage cannot be proven.
 
-3. evaluation target:
-   - held-out metrics;
-   - grouped error axes;
-   - observability artifact set;
-   - acceptance / rejection criteria.
+#### Decision evidence
 
-4. local execution target:
-   - exact dataset command;
-   - exact training command;
-   - exact evaluation command;
-   - expected output directories;
-   - compact artifacts to keep under version control;
-   - heavy artifacts that must stay local and uncommitted.
+- review:
+  `docs/reviews/production_surrogate_v1_review.md`
+- RMFT coverage audit:
+  `outputs/audits/production_surrogate_v1/rmft_source_coverage_audit.json`
+- required 2D figure:
+  `outputs/figures/production_surrogate_v1/luo_rmft_sampling_2d.png`
 
-#### Fixed user decisions
-Use these decisions unless the user explicitly changes them:
+#### Repair status
 
-- All training is intended to run on the user's local machine unless a later user-approved task says otherwise.
-- Do not revive the old Task 15A medium contract as canonical.
-- Do not use Codex-invented S9/S10 as canonical tasks.
-- Do not change model capacity yet; S7 concluded there is no sufficient evidence for immediate expansion.
-- Active learning remains a future roadmap item and is not part of the first production run.
-- Do not use feature engineering as a main strategy.
-- Sampling quality is more important than preserving any old fixed row budget.
+The user approved fixing the problems found in P3 before rerunning heavy work.
+Local code/config/doc/test repairs are complete:
 
-#### Fixed output files
-Create or update exactly these user-approved production files:
+- production v1 materialization now enforces P1 role, direction, and TB quotas
+  exactly;
+- production v1 materialization now consumes the external forward repository's
+  compact round-2 Luo/RMFT projection CSV;
+- production rows now carry source provenance and
+  `controls.pairing_representation`;
+- production training now uses `feature_spec_id =
+  projected_7plus1_complex_v1`;
+- evaluation now uses the checkpoint feature spec when rebuilding features.
 
-- `docs/runbooks/production_surrogate_v1_handoff.md`
-- `configs/datasets/production_surrogate_v1.dataset.json`
-- `configs/training/production_surrogate_v1.training.json`
-- `configs/evaluation/production_surrogate_v1.evaluation.json`
-- `tests/test_production_surrogate_v1_contract.py`
+#### Next step
 
-If the repository does not yet fully use these content-based directories, create them and avoid adding new task-number-first files.
+The user should rerun data generation, training, and evaluation manually from
+the terminal to monitor progress.
 
-#### Required local validation
-Run only lightweight checks:
-
-- `pytest tests/test_production_surrogate_v1_contract.py -q`
-
-Do not run dataset generation, training, or evaluation in this task.
-
-#### Acceptance checklist
-- [ ] production dataset contract is frozen
-- [ ] production training contract is frozen
-- [ ] production evaluation contract is frozen
-- [ ] local execution commands are written down
-- [ ] compact vs heavy artifact boundary is written down
-- [ ] old S9/S10 path is clearly superseded
-- [ ] no heavy outputs were created
-
-#### Promotion rule
-Only after P1 is accepted may P2 begin.
+Do not automatically promote active learning, model expansion, or a new
+numbered task before the repaired run is reviewed.
 
 ---
 
 ## Backlog
 
-### Task P2 — Execute the first production-scale surrogate run locally
-
-#### Task type
-Manual local execution plus local review. Heavy task.
-
-#### Goal
-Run the first user-approved production-scale rectified surrogate pipeline on the user's local machine.
-
-#### Required precondition
-P1 must be accepted. Use only the committed P1 configs and runbook.
-
-#### Required work
-Execute in order:
-
-1. dataset generation;
-2. surrogate training;
-3. surrogate evaluation;
-4. observability artifact generation;
-5. compact artifact review.
-
-#### Local execution constraints
-Use local resources deliberately:
-
-- start with 8 CPU workers for forward/data generation unless P1 specifies otherwise;
-- use CUDA GPU if available;
-- do not silently fall back to CPU for training;
-- do not run multiple ensemble members concurrently unless memory has been checked;
-- keep heavy forward outputs and bulky intermediate spectra uncommitted.
-
-#### Required returned / reviewed compact artifacts
-At minimum, P2 must produce reviewable compact artifacts covering:
-
-- dataset manifest and metadata;
-- training metrics;
-- training history;
-- loss curves;
-- gradient summary;
-- parameter update summary;
-- evaluation report;
-- grouped error report;
-- best / median / worst spectrum comparison plots;
-- model card or run summary.
-
-#### Acceptance checklist
-- [ ] dataset generation completed under P1 contract
-- [ ] training completed under P1 contract
-- [ ] evaluation completed under P1 contract
-- [ ] observability artifacts exist
-- [ ] compact artifacts are reviewable
-- [ ] heavy outputs remain local and uncommitted
-- [ ] run is explicitly accepted or rejected
-
-#### Promotion rule
-Only after P2 review may any scaling, architecture change, or active-learning task be promoted.
+No backlog task is currently promoted.
 
 ---
 
-### Task P3 — Review production run and decide next action
+## Archive
+
+### Task P3 — Review production run, audit Luo-RMFT coverage, and decide next action
+
+Completed.
 
 #### Task type
 Observation-dependent review task.
@@ -170,17 +74,28 @@ Observation-dependent review task.
 #### Goal
 Use P2 outputs to decide what to do next.
 
-#### Possible outcomes
-Exactly one primary outcome should be chosen:
+P3 must not only review surrogate training quality. It must also audit whether
+the production v1 sampling distribution broadly covers the original Luo RMFT
+parameter space.
 
-1. accept production surrogate v1 as the current baseline;
-2. revise sampling and rerun;
-3. revise training settings and rerun;
-4. scale dataset size;
-5. start an active-learning round;
-6. revisit model capacity only if S7 decision rules are triggered.
+The key additional question is:
 
-#### Required evidence
+> In the original Luo RMFT parameter space, does production_surrogate_v1 cover
+> most of the physically relevant region, or does it concentrate in only a small
+> subset of the Luo RMFT distribution?
+
+#### Required precondition
+P2 must be complete.
+
+The following P2 artifacts must exist before P3 can begin:
+
+- production v1 dataset manifest and metadata;
+- production v1 training observability artifacts;
+- production v1 evaluation report;
+- production v1 grouped error report;
+- production v1 best / median / worst spectrum comparison plots.
+
+#### Required review evidence
 The decision must be based on:
 
 - train / validation curves;
@@ -189,20 +104,163 @@ The decision must be based on:
 - worst spectrum comparisons;
 - gradient and parameter update summaries;
 - held-out metrics;
-- uncertainty / ensemble diagnostics if available.
+- uncertainty / ensemble diagnostics if available;
+- RMFT source coverage audit;
+- two-dimensional visualization of production samples inside Luo's original
+  RMFT parameter space.
 
-#### Fixed output file
+#### Required RMFT source coverage audit
+P3 must include a dedicated RMFT coverage audit section.
+
+The audit must compare:
+
+1. the original Luo RMFT parameter dataset;
+2. the RMFT anchors used by production_surrogate_v1;
+3. production_surrogate_v1 neighborhood samples;
+4. production_surrogate_v1 bridge samples.
+
+The audit must report at minimum:
+
+- total number of original Luo RMFT points available;
+- number and fraction of Luo RMFT anchor points used by production_surrogate_v1;
+- whether production samples cover the high-density body of the Luo RMFT point cloud;
+- whether production samples cover sparse / edge / boundary regions;
+- whether any obvious Luo RMFT clusters are missing;
+- whether anchor / neighborhood / bridge samples occupy distinct useful regions
+  or mostly collapse onto the same area;
+- nearest-neighbor distance statistics from Luo RMFT points to production samples;
+- marginal coverage for the main projected 7+1 gauge-fixed pairing channels;
+- a clear pass / warning / fail judgment for RMFT coverage.
+
+#### Required 2D Luo-parameter-space visualization
+P3 must generate at least one clear two-dimensional figure showing the production
+sampling distribution inside Luo's original RMFT parameter space.
+
+The preferred figure is:
+
+- background: all original Luo RMFT points, plotted in light gray;
+- overlay 1: production v1 anchor samples;
+- overlay 2: production v1 neighborhood samples;
+- overlay 3: production v1 bridge samples;
+- axes: two physically meaningful Luo RMFT coordinates if available;
+- otherwise axes: the first two principal components of the original Luo RMFT
+  parameter vectors or the full projected 7+1 gauge-fixed pairing representation.
+
+The figure must be saved as:
+
+- `outputs/figures/production_surrogate_v1/luo_rmft_sampling_2d.png`
+
+and referenced from:
+
 - `docs/reviews/production_surrogate_v1_review.md`
 
-#### Acceptance checklist
-- [ ] P2 artifacts were reviewed
-- [ ] decision is evidence-based
-- [ ] next task is explicitly user-approved
-- [ ] no Codex-invented task is promoted automatically
+If PCA is used for the 2D visualization, the review must also report:
 
----
+- which input vector was used for PCA;
+- explained variance ratio of PC1 and PC2;
+- whether the 2D projection is only a visualization aid, not a replacement for
+  the full high-dimensional coverage audit.
 
-## Archive
+#### Required optional diagnostic figures
+If implementation is straightforward, P3 should also generate:
+
+- `outputs/figures/production_surrogate_v1/luo_rmft_sampling_density_2d.png`
+- `outputs/figures/production_surrogate_v1/luo_rmft_nearest_neighbor_distance.png`
+- `outputs/figures/production_surrogate_v1/luo_rmft_channel_marginal_coverage.png`
+
+These optional figures are not required to complete P3, but should be generated
+if the necessary metadata are already available.
+
+#### Fixed output files
+P3 must create or update:
+
+- `docs/reviews/production_surrogate_v1_review.md`
+- `outputs/figures/production_surrogate_v1/luo_rmft_sampling_2d.png`
+
+If a separate machine-readable audit artifact is useful, create:
+
+- `outputs/audits/production_surrogate_v1/rmft_source_coverage_audit.json`
+
+#### Possible outcomes
+Exactly one primary outcome should be chosen:
+
+1. accept production_surrogate_v1 as the current baseline;
+2. revise sampling and rerun because Luo RMFT coverage is insufficient;
+3. revise training settings and rerun;
+4. scale dataset size using the same sampling policy;
+5. start an active-learning round;
+6. revisit model capacity only if S7 decision rules are triggered.
+
+#### Decision rules
+P3 must prioritize decisions in this order:
+
+1. If Luo RMFT coverage is clearly insufficient, revise sampling before active
+   learning, model expansion, or acceptance.
+2. If Luo RMFT coverage is broad but certain regimes still fail, consider
+   active learning or targeted densification.
+3. If coverage is broad and errors are acceptable, accept production_surrogate_v1
+   as the current baseline.
+4. If train / validation curves or gradient diagnostics show instability, revise
+   training settings before changing the model architecture.
+5. Revisit model capacity only if the S7 capacity decision rules are clearly
+   triggered.
+
+#### Completion summary
+
+P3 reviewed P2 compact artifacts and generated:
+
+- `docs/reviews/production_surrogate_v1_review.md`
+- `outputs/audits/production_surrogate_v1/rmft_source_coverage_audit.json`
+- `outputs/figures/production_surrogate_v1/luo_rmft_sampling_2d.png`
+- `outputs/figures/production_surrogate_v1/luo_rmft_sampling_density_2d.png`
+- `outputs/figures/production_surrogate_v1/luo_rmft_nearest_neighbor_distance.png`
+- `outputs/figures/production_surrogate_v1/luo_rmft_channel_marginal_coverage.png`
+
+Decision:
+
+- training/evaluation quality: acceptable under the materialized dataset;
+- model capacity: do not change;
+- active learning: do not start yet;
+- RMFT coverage: warning, because original Luo source artifacts are missing;
+- sampling contract: warning, because P2 materialized composition does not match
+  P1 targets;
+- primary outcome: revise sampling and metadata before accepting v1 as the
+  current baseline.
+
+Validation completed:
+
+- `pytest tests/test_production_surrogate_v1_review.py tests/test_production_surrogate_v1_contract.py tests/test_repository_cleanup_paths.py -q`
+
+### Task P2 — Execute the first production-scale surrogate run locally
+
+Completed.
+
+P2 executed the first user-approved production-scale rectified surrogate run on
+the local machine using the P1 configs.
+
+Completion summary:
+
+- dataset generation completed under P1 contract;
+- training completed under P1 contract;
+- evaluation completed under P1 contract;
+- observability artifacts exist;
+- compact artifacts are reviewable;
+- heavy outputs remain local and uncommitted;
+- explicit accept/reject decision was deferred to P3.
+
+### Task P1 — User-approved first production-scale surrogate run contract
+
+Completed.
+
+P1 froze the first user-approved production-scale dataset-generation, training,
+and evaluation contract for the rectified surrogate pipeline. It produced the
+content-based P1 runbook, dataset config, training config, evaluation config,
+and lightweight contract test. It did not run heavy generation, training, or
+evaluation.
+
+Validation completed:
+
+- `pytest tests/test_production_surrogate_v1_contract.py -q`
 
 ### Tasks S1-S8 — Surrogate rectification sequence
 

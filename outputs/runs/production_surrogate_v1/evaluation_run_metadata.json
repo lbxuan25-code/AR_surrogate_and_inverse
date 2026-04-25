@@ -1,0 +1,151 @@
+{
+  "checkpoint": "outputs/checkpoints/production_surrogate_v1/model.pt",
+  "config": "configs/evaluation/production_surrogate_v1.evaluation.json",
+  "dataset_manifest": "outputs/datasets/production_surrogate_v1/dataset.json",
+  "disagreement_thresholds": {
+    "max_std": 0.0,
+    "mean_std": 0.0
+  },
+  "forward_metadata_family": {
+    "allow_weak_delta_zx_s": false,
+    "fit_layer_policy": {
+      "default_complex_phase_policy": "fixed_real_controls_in_projection_gauge",
+      "free_channels": [
+        "delta_zz_s",
+        "delta_xx_s",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "strongly_regularized_channels": [
+        "delta_zz_d",
+        "delta_xx_d"
+      ],
+      "weak_optional_channels": [
+        "delta_zx_s"
+      ]
+    },
+    "fit_layer_request_label": "production_v1_train_00003",
+    "formal_baseline_record": "outputs/source/round2_baseline_selection.json",
+    "formal_baseline_role": "authoritative_formal_round2_baseline",
+    "formal_baseline_selection_rule": "temperature sweep RMFT pairing data, charge-balanced p\u22480 branch, temperature_eV <= 1.0e-3, first 8 samples sorted by temperature",
+    "forward_interface_version": "ar_forward_v1",
+    "git_commit": "b85a5cb304acbfd5d51133251ef57293bd0abd2b",
+    "git_dirty": false,
+    "normal_state_family": "base",
+    "normal_state_policy": "repository_fixed_base_normal_state",
+    "output_schema_version": "ar_forward_output_v1",
+    "pairing_control_mode": "delta_from_baseline_meV",
+    "pairing_convention_id": "round2_physical_channels_task_h_fit_layer_v1",
+    "pairing_source": "task_h_fit_layer_controls",
+    "projection_config": {
+      "ar_interface_angles": [
+        0.0,
+        0.7853981633974483
+      ],
+      "ar_reference_nk": 61,
+      "ar_supported_entry_weight_floor": 0.75,
+      "ar_unsupported_entry_weight": 0.15,
+      "block_weights": {
+        "delta_x": 1.0,
+        "delta_y": 1.0,
+        "delta_z": 1.15
+      },
+      "channel_regularization": {
+        "delta_perp_x": 0.00075,
+        "delta_perp_z": 0.0001,
+        "delta_xx_d": 0.0001,
+        "delta_xx_s": 0.0001,
+        "delta_zx_d": 0.00075,
+        "delta_zx_s": 0.005,
+        "delta_zz_d": 0.0002,
+        "delta_zz_s": 0.0001
+      },
+      "core_channels": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x"
+      ],
+      "freeze_optional_weak_channel_by_default": true,
+      "gauge_anchor_priority": [
+        "delta_zz_s",
+        "delta_zz_d",
+        "delta_xx_s",
+        "delta_xx_d",
+        "delta_zx_d",
+        "delta_perp_z",
+        "delta_perp_x",
+        "delta_zx_s"
+      ],
+      "gauge_min_anchor_abs": 1e-10,
+      "optional_channel_activation_min_relative_magnitude": 0.08,
+      "optional_channel_activation_min_residual_reduction": 0.01,
+      "optional_channels": [
+        "delta_zx_s"
+      ],
+      "optional_weak_channel_name": "delta_zx_s",
+      "source_entry_weight_mode": "uniform"
+    },
+    "truth_layer": "round2_physical_pairing_channels",
+    "weak_channel_policy": {
+      "channel": "delta_zx_s",
+      "default_task_c_freeze_applied": true,
+      "default_value": {
+        "im": 0.0,
+        "re": 0.0
+      }
+    }
+  },
+  "grouped_error_report": "outputs/runs/production_surrogate_v1/evaluation/grouped_error_report.json",
+  "markdown_report": "outputs/runs/production_surrogate_v1/evaluation/evaluation_report.md",
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "report": "outputs/runs/production_surrogate_v1/evaluation/evaluation_report.json",
+  "representative_spectra": {
+    "best": {
+      "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/best_spectrum_comparison.png",
+      "metrics": {
+        "mae": 0.00024104257854199116,
+        "max_abs_error": 0.0014105522115577251,
+        "rmse": 0.0003505829604444738
+      },
+      "row_id": "production_v1_validation_00507",
+      "split": "validation"
+    },
+    "median": {
+      "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/median_spectrum_comparison.png",
+      "metrics": {
+        "mae": 0.0004993629364816418,
+        "max_abs_error": 0.002237648440662987,
+        "rmse": 0.0007380585637926197
+      },
+      "row_id": "production_v1_validation_00720",
+      "split": "validation"
+    },
+    "worst": {
+      "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/worst_spectrum_comparison.png",
+      "metrics": {
+        "mae": 0.0016392039512474331,
+        "max_abs_error": 0.006040920385119941,
+        "rmse": 0.002416150475494303
+      },
+      "row_id": "production_v1_test_00738",
+      "split": "test"
+    }
+  },
+  "require_cuda": true,
+  "run_kind": "production_surrogate_v1_evaluation",
+  "uncertainty_diagnostics": {
+    "high_disagreement_fraction": 0.0,
+    "max_member_std": 0.0,
+    "max_std_threshold": 0.0,
+    "mean_member_std": 0.0,
+    "mean_std_threshold": 0.0,
+    "num_rows": 2048
+  },
+  "unsafe_direction_regimes": [],
+  "unsafe_transport_regimes": []
+}

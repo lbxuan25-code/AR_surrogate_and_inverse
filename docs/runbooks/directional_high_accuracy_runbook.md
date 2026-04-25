@@ -5,6 +5,19 @@ runbook for Task 13B, the first high-accuracy heavy server run.
 Do not launch the large-scale dataset generation, heavy training, or heavy
 evaluation in the local Codex workspace.
 
+## Historical Artifact Availability
+
+The cleaned repository keeps Task 13 compact review artifacts, metrics,
+ensemble manifests, model cards, and evaluation reports, but no longer retains
+bulky member checkpoints, copied forward-output directories, stale rerun logs,
+or the notebook that depended on a specific retained forward-output file.
+
+The historical result is summarized in
+`docs/archive/historical_run_summary.md`. If a later audit needs full spectra or
+member checkpoint bytes, regenerate them from the committed configs or recover
+them from the original server location rather than treating the cleaned local
+repository as a heavyweight artifact store.
+
 ## Canonical Configs
 
 - Dataset config: `configs/datasets/task13_directional_large_accuracy_dataset.json`

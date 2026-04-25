@@ -1,6 +1,11 @@
 {
   "config_role": "pre_s7_local_observation_evaluation",
   "execution_mode": "local_pre_s7_observation_run",
+  "artifact_availability": {
+    "status": "archived_observation_contract",
+    "checkpoint_retained_in_repo": false,
+    "checkpoint_cleanup_note": "The historical model checkpoint was removed after its metrics, model card, observability outputs, and evaluation reports were summarized in docs/archive/historical_run_summary.md. Rerun the paired dataset/training configs before using this evaluation config again."
+  },
   "checkpoint": "outputs/checkpoints/pre_s7_local_observation/model.pt",
   "dataset_manifest": "outputs/datasets/pre_s7_local_observation/dataset.json",
   "report_dir": "outputs/runs/pre_s7_local_observation/evaluation",

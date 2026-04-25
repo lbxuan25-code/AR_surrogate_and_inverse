@@ -1,7 +1,7 @@
 {
   "config_role": "production_surrogate_v1_evaluation_contract",
   "execution_mode": "local_production_preparation_contract",
-  "checkpoint": "outputs/checkpoints/production_surrogate_v1/checkpoint.pt",
+  "checkpoint": "outputs/checkpoints/production_surrogate_v1/model.pt",
   "dataset_manifest": "outputs/datasets/production_surrogate_v1/dataset.json",
   "report_dir": "outputs/runs/production_surrogate_v1/evaluation",
   "run_metadata_path": "outputs/runs/production_surrogate_v1/evaluation_run_metadata.json",

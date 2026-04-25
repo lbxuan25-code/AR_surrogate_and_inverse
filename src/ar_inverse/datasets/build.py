@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import concurrent.futures
+import csv
 import json
+import math
 import multiprocessing
+import os
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +36,11 @@ from ar_inverse.datasets.schema import (
     validate_resumable_manifest,
 )
 from ar_inverse.forward_dependency import import_forward_module
+from ar_inverse.pairing.representation import (
+    CANONICAL_PAIRING_CHANNEL_ORDER,
+    gauge_fix_pairing_channels,
+    serialize_gauge_fixed_pairing_channels,
+)
 
 DEFAULT_TASK2_SMOKE_DATASET_DIR = Path("outputs/datasets/task2_smoke_fit_layer")
 DEFAULT_TASK2_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task2_smoke_dataset_run_metadata.json")
@@ -48,8 +56,8 @@ def _request_from_sample(forward: Any, sample: SmokeSampleSpec):
     transport = _transport_from_sample(forward, sample)
     return forward.FitLayerSpectrumRequest(
         pairing_controls=dict(sample.pairing_controls),
-        pairing_control_mode="delta_from_baseline_meV",
-        allow_weak_delta_zx_s=False,
+        pairing_control_mode=str(sample.pairing_control_mode),
+        allow_weak_delta_zx_s=bool(sample.allow_weak_delta_zx_s),
         transport=transport,
         bias_grid=forward.BiasGrid(**sample.bias_grid),
         request_label=sample.row_id,
@@ -181,7 +189,10 @@ def load_dataset_config(path: Path | str) -> dict[str, Any]:
         raise ValueError(f"Dataset config is missing required key(s): {', '.join(missing)}.")
     has_samples = isinstance(config.get("samples"), list) and bool(config.get("samples"))
     has_sample_grids = isinstance(config.get("sample_grids"), list) and bool(config.get("sample_grids"))
-    if not has_samples and not has_sample_grids:
+    has_production_v1_blueprint = str(config.get("dataset_id")) == "production_surrogate_v1" and isinstance(
+        config.get("row_budget"), dict
+    )
+    if not has_samples and not has_sample_grids and not has_production_v1_blueprint:
         raise ValueError("Dataset config must contain a non-empty samples list or sample_grids list.")
     return config
 
@@ -206,6 +217,10 @@ def sample_from_config(
         transport_controls=dict(sample["transport_controls"]),
         direction=direction,
         group_labels={str(key): str(value) for key, value in dict(sample.get("group_labels", {})).items()},
+        pairing_control_mode=str(sample.get("pairing_control_mode", "delta_from_baseline_meV")),
+        allow_weak_delta_zx_s=bool(sample.get("allow_weak_delta_zx_s", False)),
+        pairing_representation=dict(sample["pairing_representation"]) if isinstance(sample.get("pairing_representation"), dict) else None,
+        source_provenance=dict(sample["source_provenance"]) if isinstance(sample.get("source_provenance"), dict) else None,
         bias_grid=dict(sample.get("bias_grid", {})) or {
             "bias_min_mev": -20.0,
             "bias_max_mev": 20.0,
@@ -224,6 +239,8 @@ def materialize_dataset_samples(config: dict[str, Any]) -> list[SmokeSampleSpec]
             raise ValueError("Dataset config sample entries must be JSON objects.")
         sample_entries.append(sample)
     sample_entries.extend(_expand_sample_grids(config.get("sample_grids", [])))
+    if not sample_entries and str(config.get("dataset_id")) == "production_surrogate_v1":
+        sample_entries.extend(_expand_production_surrogate_v1_blueprint(config))
     if not sample_entries:
         raise ValueError("Dataset config did not materialize any samples.")
     samples = [
@@ -239,6 +256,268 @@ def materialize_dataset_samples(config: dict[str, Any]) -> list[SmokeSampleSpec]
     if len(set(row_ids)) != len(row_ids):
         raise ValueError("Dataset config materialized duplicate row_id values.")
     return samples
+
+
+def _expand_production_surrogate_v1_blueprint(config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Materialize the P1 production contract into executable local samples."""
+
+    row_budget = dict(config.get("row_budget", {}))
+    split_targets = dict(row_budget.get("split_targets", {}))
+    required_splits = ("train", "validation", "test")
+    missing_splits = [split for split in required_splits if split not in split_targets]
+    if missing_splits:
+        raise ValueError(f"production_surrogate_v1 row_budget is missing split target(s): {missing_splits}.")
+
+    total_rows = int(row_budget.get("recommended_total_rows", 0))
+    split_total = sum(int(split_targets[split]) for split in required_splits)
+    if total_rows != split_total:
+        raise ValueError(
+            f"production_surrogate_v1 recommended_total_rows={total_rows} but split targets sum to {split_total}."
+        )
+
+    bias_grid = dict(config.get("fixed_bias_grid", {})) or {
+        "bias_min_mev": -40.0,
+        "bias_max_mev": 40.0,
+        "num_bias": 241,
+    }
+    nuisance_regimes = (
+        "core_sharp",
+        "core_transition",
+        "core_broad",
+        "guard_band_sharp",
+        "guard_band_transition",
+        "guard_band_broad",
+    )
+    pairing_roles = _quota_sequence(dict(config.get("pairing_source_composition", {})), total_rows, label="pairing_source_composition")
+    direction_regimes = _quota_sequence(
+        dict(config.get("direction_contract", {}).get("direction_regime_targets", {})),
+        total_rows,
+        label="direction_regime_targets",
+    )
+    tb_regimes = _quota_sequence(dict(config.get("tb_regime_targets", {})), total_rows, label="tb_regime_targets")
+    source_records = _load_production_v1_rmft_source_records(config)
+    role_counters = {role: 0 for role in set(pairing_roles)}
+
+    samples: list[dict[str, Any]] = []
+    global_index = 0
+    for split in required_splits:
+        for index in range(int(split_targets[split])):
+            pairing_role = pairing_roles[global_index]
+            nuisance_regime = nuisance_regimes[global_index % len(nuisance_regimes)]
+            direction_regime = direction_regimes[global_index]
+            tb_regime = tb_regimes[global_index]
+            role_index = role_counters[pairing_role]
+            role_counters[pairing_role] += 1
+            pairing_payload = _production_v1_pairing_payload(
+                pairing_role=pairing_role,
+                role_index=role_index,
+                global_index=global_index,
+                source_records=source_records,
+            )
+            samples.append(
+                {
+                    "row_id": f"production_v1_{split}_{index:05d}",
+                    "split": split,
+                    "pairing_controls": pairing_payload["pairing_controls"],
+                    "pairing_control_mode": "absolute_meV",
+                    "allow_weak_delta_zx_s": pairing_payload["allow_weak_delta_zx_s"],
+                    "pairing_representation": pairing_payload["pairing_representation"],
+                    "source_provenance": pairing_payload["source_provenance"],
+                    "transport_controls": _production_v1_transport_controls(nuisance_regime, index),
+                    "direction": _production_v1_direction(direction_regime, index),
+                    "group_labels": {
+                        "pairing_source_role": pairing_role,
+                        "nuisance_regime": nuisance_regime,
+                        "tb_regime": tb_regime,
+                        "production_contract": "production_surrogate_v1",
+                    },
+                    "bias_grid": bias_grid,
+                }
+            )
+            global_index += 1
+    return samples
+
+
+def _quota_sequence(quotas: dict[str, Any], total_rows: int, *, label: str) -> list[str]:
+    if not quotas:
+        raise ValueError(f"production_surrogate_v1 {label} must be a non-empty mapping.")
+    normalized = {str(key): int(value) for key, value in quotas.items()}
+    quota_total = sum(normalized.values())
+    if quota_total != total_rows:
+        raise ValueError(f"production_surrogate_v1 {label} sums to {quota_total}, expected {total_rows}.")
+    sequence: list[str] = []
+    for key, count in normalized.items():
+        if count < 0:
+            raise ValueError(f"production_surrogate_v1 {label} contains negative count for {key!r}.")
+        sequence.extend([key] * count)
+    return sequence
+
+
+def _forward_repo_root_from_config(config: dict[str, Any]) -> Path:
+    source_config = dict(config.get("rmft_source_projection", {}))
+    if source_config.get("forward_repo_root"):
+        return Path(str(source_config["forward_repo_root"]))
+    if os.environ.get("LNO327_FORWARD_REPO"):
+        return Path(os.environ["LNO327_FORWARD_REPO"])
+    if os.environ.get("LNO327_FORWARD_SRC"):
+        src_path = Path(os.environ["LNO327_FORWARD_SRC"])
+        return src_path.parent if src_path.name == "src" else src_path
+    return Path("/home/liubx25/Ni_Research/Projects/AR")
+
+
+def _load_production_v1_rmft_source_records(config: dict[str, Any]) -> list[dict[str, Any]]:
+    source_config = dict(config.get("rmft_source_projection", {}))
+    relative_csv = str(source_config.get("projection_examples_csv", "outputs/source/round2_projection_examples.csv"))
+    csv_path = _forward_repo_root_from_config(config) / relative_csv
+    if not csv_path.exists():
+        raise ValueError(
+            "production_surrogate_v1 requires the forward repository round-2 projection CSV for "
+            f"RMFT-source-aware sampling, but it was not found at {csv_path}."
+        )
+
+    records: list[dict[str, Any]] = []
+    with csv_path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            channels = {
+                channel: complex(str(row[channel]).strip())
+                for channel in CANONICAL_PAIRING_CHANNEL_ORDER
+                if channel in row and str(row[channel]).strip()
+            }
+            if len(channels) != len(CANONICAL_PAIRING_CHANNEL_ORDER):
+                continue
+            records.append(
+                {
+                    "source_sample_id": str(row["sample_id"]),
+                    "channels": channels,
+                }
+            )
+    if not records:
+        raise ValueError(f"No usable RMFT projection records found in {csv_path}.")
+    return records
+
+
+def _production_v1_pairing_payload(
+    *,
+    pairing_role: str,
+    role_index: int,
+    global_index: int,
+    source_records: list[dict[str, Any]],
+) -> dict[str, Any]:
+    if pairing_role == "anchor":
+        source_indices = [role_index % len(source_records)]
+        channels = dict(source_records[source_indices[0]]["channels"])
+    elif pairing_role == "neighborhood":
+        source_indices = [role_index % len(source_records)]
+        channels = _neighborhood_channels(dict(source_records[source_indices[0]]["channels"]), role_index)
+    elif pairing_role == "bridge":
+        first = (role_index * 7) % len(source_records)
+        second = (first + 97 + (role_index % 29)) % len(source_records)
+        source_indices = [first, second]
+        channels = {
+            channel: 0.5 * (
+                complex(source_records[first]["channels"][channel])
+                + complex(source_records[second]["channels"][channel])
+            )
+            for channel in CANONICAL_PAIRING_CHANNEL_ORDER
+        }
+    else:
+        raise ValueError(f"Unsupported production pairing_source_role {pairing_role!r}.")
+
+    gauge_fixed = gauge_fix_pairing_channels(channels)
+    pairing_representation = serialize_gauge_fixed_pairing_channels(
+        gauge_fixed["channels"],
+        gauge_anchor_channel=gauge_fixed["gauge_anchor_channel"],
+        global_phase_rotation_rad=float(gauge_fixed["global_phase_rotation_rad"]),
+        weak_channel_active=bool(gauge_fixed["weak_channel_active"]),
+    )
+    pairing_controls = {
+        channel: float(pairing_representation["channels"][channel]["re"])
+        for channel in CANONICAL_PAIRING_CHANNEL_ORDER
+    }
+    source_sample_ids = [str(source_records[index]["source_sample_id"]) for index in source_indices]
+    return {
+        "pairing_controls": pairing_controls,
+        "allow_weak_delta_zx_s": abs(pairing_controls.get("delta_zx_s", 0.0)) > 0.0,
+        "pairing_representation": pairing_representation,
+        "source_provenance": {
+            "source_family": "Luo RMFT round2 projection examples",
+            "source_sample_ids": source_sample_ids,
+            "source_indices": source_indices,
+            "pairing_source_role": pairing_role,
+            "global_materialization_index": global_index,
+            "forward_pairing_control_mode": "absolute_meV_real_projection_gauge",
+        },
+    }
+
+
+def _neighborhood_channels(channels: dict[str, complex], role_index: int) -> dict[str, complex]:
+    scale = 1.0 + _cycle_value(role_index, modulus=17, low=-0.035, high=0.035, offset=5)
+    phase = _cycle_value(role_index, modulus=19, low=-0.025, high=0.025, offset=7)
+    rotation = complex(math.cos(phase), math.sin(phase))
+    return {
+        channel: complex(value) * scale * rotation
+        for channel, value in channels.items()
+    }
+
+
+def _cycle_value(index: int, *, modulus: int, low: float, high: float, offset: int = 0) -> float:
+    step = ((index + offset) % modulus) / max(modulus - 1, 1)
+    return low + (high - low) * step
+
+
+def _production_v1_pairing_controls(pairing_role: str, index: int) -> dict[str, float]:
+    if pairing_role == "anchor":
+        return {
+            "delta_zz_s": _cycle_value(index, modulus=17, low=0.16, high=0.30),
+            "delta_perp_x": _cycle_value(index, modulus=13, low=-0.12, high=0.08, offset=3),
+        }
+    if pairing_role == "neighborhood":
+        return {
+            "delta_xx_s": _cycle_value(index, modulus=19, low=-0.16, high=-0.03, offset=5),
+            "delta_zx_d": _cycle_value(index, modulus=17, low=0.04, high=0.15, offset=7),
+        }
+    return {
+        "delta_perp_z": _cycle_value(index, modulus=23, low=0.06, high=0.18, offset=11),
+        "delta_perp_x": _cycle_value(index, modulus=17, low=-0.08, high=0.14, offset=13),
+        "delta_zx_d": _cycle_value(index, modulus=13, low=0.03, high=0.16, offset=2),
+    }
+
+
+def _production_v1_transport_controls(nuisance_regime: str, index: int) -> dict[str, float | int]:
+    nuisance_windows = {
+        "core_sharp": (0.22, 0.45, 0.55, 0.80, 1.4, 2.8),
+        "core_transition": (0.35, 0.65, 0.82, 1.10, 2.4, 4.8),
+        "core_broad": (0.45, 0.78, 1.12, 1.42, 4.5, 7.0),
+        "guard_band_sharp": (0.78, 1.05, 0.60, 0.88, 2.0, 4.2),
+        "guard_band_transition": (0.92, 1.22, 0.95, 1.30, 4.0, 7.5),
+        "guard_band_broad": (1.08, 1.45, 1.32, 1.75, 7.0, 12.0),
+    }
+    z_low, z_high, gamma_low, gamma_high, temp_low, temp_high = nuisance_windows[nuisance_regime]
+    return {
+        "barrier_z": _cycle_value(index, modulus=29, low=z_low, high=z_high, offset=3),
+        "gamma": _cycle_value(index, modulus=31, low=gamma_low, high=gamma_high, offset=7),
+        "temperature_kelvin": _cycle_value(index, modulus=23, low=temp_low, high=temp_high, offset=11),
+        "nk": 41,
+    }
+
+
+def _production_v1_direction(direction_regime: str, index: int) -> dict[str, Any]:
+    if direction_regime == "inplane_100_no_spread":
+        return {"direction_mode": "inplane_100"}
+    if direction_regime == "inplane_110_no_spread":
+        return {"direction_mode": "inplane_110"}
+    mode = "inplane_100" if index % 2 == 0 else "inplane_110"
+    half_width = 0.02454369260617026 if index % 4 in (0, 1) else 0.03681553890925539
+    num_samples = 7 if half_width < 0.03 else 9
+    return {
+        "direction_mode": mode,
+        "directional_spread": {
+            "direction_mode": mode,
+            "half_width": half_width,
+            "num_samples": num_samples,
+        },
+    }
 
 
 def _expand_sample_grids(sample_grids: Any) -> list[dict[str, Any]]:
@@ -435,6 +714,10 @@ def build_dataset_from_config(
     pending_samples: list[tuple[int, SmokeSampleSpec]] = []
     for index, sample in enumerate(samples):
         reusable_row = reusable_rows.get(sample.row_id)
+        if reusable_row is not None and sample.pairing_representation is not None:
+            reusable_controls = reusable_row.get("controls")
+            if not isinstance(reusable_controls, dict) or reusable_controls.get("pairing_representation") != sample.pairing_representation:
+                reusable_row = None
         if reusable_row is not None:
             rows.append(reusable_row)
             plan[index] = _plan_entry(
@@ -459,35 +742,23 @@ def build_dataset_from_config(
 
         pending_samples.append((index, sample))
 
-    pending_payloads: list[tuple[int, SmokeSampleSpec, dict[str, Any]]] = []
-    if pending_samples:
-        if resolved_num_workers == 1:
-            forward = import_forward_module("forward")
-            for index, sample in pending_samples:
-                result = _generate_result_from_sample(forward, sample)
-                pending_payloads.append((index, sample, result.to_dict()))
-        else:
-            mp_context = multiprocessing.get_context("spawn")
-            with concurrent.futures.ProcessPoolExecutor(
-                max_workers=resolved_num_workers,
-                mp_context=mp_context,
-            ) as executor:
-                payload_iter = executor.map(_payload_from_sample, [sample for _, sample in pending_samples])
-                for (index, sample), payload in zip(pending_samples, payload_iter, strict=True):
-                    pending_payloads.append((index, sample, payload))
-
-    for index, sample, payload in pending_payloads:
+    def record_completed_payload(index: int, sample: SmokeSampleSpec, payload: dict[str, Any]) -> None:
+        nonlocal generated_count
         spectrum_path = spectra_dir / f"{sample.row_id}.json"
         spectrum_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
         controls_payload: dict[str, object] = {
             "fit_layer_pairing_controls": dict(sample.pairing_controls),
+            "pairing_control_mode": str(sample.pairing_control_mode),
+            "allow_weak_delta_zx_s": bool(sample.allow_weak_delta_zx_s),
             "transport_controls": dict(sample.transport_controls),
             "direction": dict(sample.direction) if sample.direction is not None else None,
             "bias_grid": dict(sample.bias_grid),
         }
         if sample.group_labels:
             controls_payload["group_labels"] = dict(sample.group_labels)
+        if sample.source_provenance:
+            controls_payload["source_provenance"] = dict(sample.source_provenance)
         row = make_dataset_row(
             row_id=sample.row_id,
             sampling_policy_id=sampling_policy_id,
@@ -501,6 +772,7 @@ def build_dataset_from_config(
                 else None
             ),
             controls=controls_payload,
+            pairing_representation=sample.pairing_representation,
         )
         rows.append(row)
         plan[index] = _plan_entry(
@@ -521,6 +793,31 @@ def build_dataset_from_config(
             plan=plan,
             rows=rows,
         )
+        if generated_count == 1 or generated_count % 100 == 0 or generated_count == len(pending_samples):
+            print(
+                f"generated {generated_count}/{len(pending_samples)} pending rows "
+                f"({generated_count + reused_count}/{len(samples)} total)",
+                flush=True,
+            )
+
+    if pending_samples:
+        if resolved_num_workers == 1:
+            forward = import_forward_module("forward")
+            for index, sample in pending_samples:
+                result = _generate_result_from_sample(forward, sample)
+                record_completed_payload(index, sample, result.to_dict())
+        else:
+            mp_context = multiprocessing.get_context("spawn")
+            with concurrent.futures.ProcessPoolExecutor(
+                max_workers=resolved_num_workers,
+                mp_context=mp_context,
+            ) as executor:
+                future_to_sample = {
+                    executor.submit(_payload_from_sample, sample): (index, sample) for index, sample in pending_samples
+                }
+                for future in concurrent.futures.as_completed(future_to_sample):
+                    index, sample = future_to_sample[future]
+                    record_completed_payload(index, sample, future.result())
 
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     validate_resumable_manifest(manifest)

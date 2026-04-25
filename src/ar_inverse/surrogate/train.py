@@ -16,7 +16,9 @@ from ar_inverse.surrogate.models import (
     DEFAULT_FEATURE_SPEC,
     NEURAL_MLP_MODEL_TYPE,
     NEURAL_RESIDUAL_MLP_MODEL_TYPE,
+    PROJECTED_COMPLEX_PAIRING_FEATURE_SPEC,
     RIDGE_MODEL_TYPE,
+    FeatureSpec,
     NeuralMLPSpectrumSurrogate,
     RidgeLinearSpectrumSurrogate,
     checkpoint_filename_for_model_type,
@@ -68,17 +70,40 @@ def _row_output_payload(dataset_dir: Path, row: dict[str, Any]) -> dict[str, Any
     return payload
 
 
-def _feature_from_row(row: dict[str, Any]) -> np.ndarray:
+def feature_spec_from_config(config: dict[str, Any] | None = None) -> FeatureSpec:
+    """Resolve the training feature contract."""
+
+    config = dict(config or {})
+    feature_spec_id = str(config.get("feature_spec_id", "legacy_fit_layer_real_v1"))
+    if feature_spec_id == "legacy_fit_layer_real_v1":
+        return DEFAULT_FEATURE_SPEC
+    if feature_spec_id == "projected_7plus1_complex_v1":
+        return PROJECTED_COMPLEX_PAIRING_FEATURE_SPEC
+    raise ValueError(f"Unsupported feature_spec_id {feature_spec_id!r}.")
+
+
+def _feature_from_row(row: dict[str, Any], feature_spec: FeatureSpec = DEFAULT_FEATURE_SPEC) -> np.ndarray:
     controls = row.get("controls")
     if not isinstance(controls, dict):
         raise ValueError(f"Dataset row {row['row_id']} is missing controls.")
 
     pairing_controls = dict(controls.get("fit_layer_pairing_controls", {}))
+    pairing_representation = controls.get("pairing_representation")
+    pairing_channels: dict[str, dict[str, float]] = {}
+    if isinstance(pairing_representation, dict) and isinstance(pairing_representation.get("channels"), dict):
+        pairing_channels = dict(pairing_representation["channels"])
     transport_controls = dict(controls.get("transport_controls", {}))
     direction_features = _direction_feature_values(row, transport_controls)
     values: list[float] = []
-    for name in DEFAULT_FEATURE_SPEC.names:
-        if name in pairing_controls:
+    for name in feature_spec.names:
+        if name.endswith("_re") or name.endswith("_im"):
+            channel_name, part = name.rsplit("_", 1)
+            channel = pairing_channels.get(channel_name)
+            if isinstance(channel, dict) and part in channel:
+                values.append(float(channel[part]))
+            else:
+                values.append(0.0)
+        elif name in pairing_controls:
             values.append(float(pairing_controls[name]))
         elif name in direction_features:
             values.append(float(direction_features[name]))
@@ -122,7 +147,11 @@ def _direction_feature_values(row: dict[str, Any], transport_controls: dict[str,
     }
 
 
-def load_dataset_arrays(manifest_path: Path | str) -> dict[str, Any]:
+def load_dataset_arrays(
+    manifest_path: Path | str,
+    *,
+    feature_spec: FeatureSpec = DEFAULT_FEATURE_SPEC,
+) -> dict[str, Any]:
     """Load feature/target arrays split by dataset row labels."""
 
     manifest_file = Path(manifest_path)
@@ -147,7 +176,7 @@ def load_dataset_arrays(manifest_path: Path | str) -> dict[str, Any]:
         elif list(payload["bias_mev"]) != bias_mev:
             raise ValueError("All rows in the baseline training dataset must share the same bias grid.")
 
-        features.append(_feature_from_row(row))
+        features.append(_feature_from_row(row, feature_spec=feature_spec))
         targets.append(np.asarray(payload["conductance"], dtype=np.float64))
         splits.append(str(row["split"]))
         row_ids.append(str(row["row_id"]))
@@ -162,6 +191,7 @@ def load_dataset_arrays(manifest_path: Path | str) -> dict[str, Any]:
         "row_ids": row_ids,
         "bias_mev": bias_mev or [],
         "forward_metadata_by_row": forward_metadata_by_row,
+        "feature_spec": feature_spec,
     }
 
 
@@ -320,7 +350,7 @@ def _model_card_model_lines(config: dict[str, Any], metrics: dict[str, Any], che
     lines = [
         f"- Type: `{model_type}`",
         f"- Checkpoint: `{checkpoint_path.as_posix()}`",
-        f"- Feature order: `{', '.join(DEFAULT_FEATURE_SPEC.names)}`",
+        f"- Feature order: `{', '.join(metrics['feature_spec']['names'])}`",
     ]
     if model_type == RIDGE_MODEL_TYPE:
         lines.insert(1, f"- Ridge alpha: `{config.get('ridge_alpha', 1.0e-6)}`")
@@ -419,7 +449,8 @@ def train_surrogate_from_config(
 
     config_file = Path(config_path)
     config = load_training_config(config_file)
-    dataset = load_dataset_arrays(config["dataset_manifest"])
+    feature_spec = feature_spec_from_config(config)
+    dataset = load_dataset_arrays(config["dataset_manifest"], feature_spec=feature_spec)
 
     features = dataset["features"]
     targets = dataset["targets"]
@@ -440,6 +471,7 @@ def train_surrogate_from_config(
         model = RidgeLinearSpectrumSurrogate.fit(
             features[train_mask],
             targets[train_mask],
+            feature_spec=feature_spec,
             ridge_alpha=ridge_alpha,
         )
         training_summary = {
@@ -476,6 +508,7 @@ def train_surrogate_from_config(
             model, training_summary = NeuralMLPSpectrumSurrogate.fit(
                 features[train_mask],
                 targets[train_mask],
+                feature_spec=feature_spec,
                 random_seed=int(ensemble_seeds[0]),
                 **shared_fit_kwargs,
             )
@@ -491,6 +524,7 @@ def train_surrogate_from_config(
                 member_model, member_training_summary = NeuralMLPSpectrumSurrogate.fit(
                     features[train_mask],
                     targets[train_mask],
+                    feature_spec=feature_spec,
                     random_seed=int(seed),
                     **shared_fit_kwargs,
                 )
@@ -553,7 +587,7 @@ def train_surrogate_from_config(
         "model_type": model_type,
         "dataset_manifest": str(dataset["manifest_path"]),
         "dataset_id": dataset["manifest"]["dataset_id"],
-        "feature_spec": DEFAULT_FEATURE_SPEC.to_dict(),
+        "feature_spec": feature_spec.to_dict(),
         "bias_mev": dataset["bias_mev"],
         "direction_support": _direction_support_summary(dataset["manifest"]["rows"]),
         "splits": split_metrics,

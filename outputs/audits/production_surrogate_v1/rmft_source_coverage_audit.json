@@ -1,0 +1,546 @@
+{
+  "artifact_scope": "P3 local review; no new generation/training/evaluation run",
+  "audit_id": "production_surrogate_v1_rmft_source_coverage_audit",
+  "available_proxy_vector": {
+    "channels": [
+      "delta_zz_s",
+      "delta_xx_s",
+      "delta_zx_d",
+      "delta_perp_z",
+      "delta_perp_x",
+      "delta_zz_d",
+      "delta_xx_d",
+      "delta_zx_s"
+    ],
+    "description": "8-channel fit_layer_pairing_controls vector with absent channels filled as zero; used only because original Luo RMFT point cloud is absent.",
+    "pca_explained_variance_ratio_pc1_pc2": [
+      0.4718601120432901,
+      0.2986823791353314
+    ],
+    "pca_input": "production rows controls.fit_layer_pairing_controls, not a replacement for full projected 7+1 RMFT audit"
+  },
+  "channel_marginal_proxy": {
+    "anchor": {
+      "delta_perp_x": {
+        "max": 0.08000000000000002,
+        "median": -0.01999999999999999,
+        "min": -0.12,
+        "nonzero_fraction": 1.0,
+        "p05": -0.12,
+        "p95": 0.08000000000000002
+      },
+      "delta_perp_z": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_xx_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_xx_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zx_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zx_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_s": {
+        "max": 0.3,
+        "median": 0.22999999999999998,
+        "min": 0.16,
+        "nonzero_fraction": 1.0,
+        "p05": 0.16,
+        "p95": 0.3
+      }
+    },
+    "bridge": {
+      "delta_perp_x": {
+        "max": 0.14,
+        "median": 0.030000000000000013,
+        "min": -0.08,
+        "nonzero_fraction": 1.0,
+        "p05": -0.08,
+        "p95": 0.14
+      },
+      "delta_perp_z": {
+        "max": 0.18,
+        "median": 0.12,
+        "min": 0.06,
+        "nonzero_fraction": 1.0,
+        "p05": 0.06545454545454545,
+        "p95": 0.17454545454545456
+      },
+      "delta_xx_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_xx_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zx_d": {
+        "max": 0.16,
+        "median": 0.095,
+        "min": 0.03,
+        "nonzero_fraction": 1.0,
+        "p05": 0.03,
+        "p95": 0.16
+      },
+      "delta_zx_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      }
+    },
+    "neighborhood": {
+      "delta_perp_x": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_perp_z": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_xx_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_xx_s": {
+        "max": -0.03,
+        "median": -0.095,
+        "min": -0.16,
+        "nonzero_fraction": 1.0,
+        "p05": -0.16,
+        "p95": -0.03
+      },
+      "delta_zx_d": {
+        "max": 0.15,
+        "median": 0.095,
+        "min": 0.04,
+        "nonzero_fraction": 1.0,
+        "p05": 0.04,
+        "p95": 0.15
+      },
+      "delta_zx_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_d": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "delta_zz_s": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "nonzero_fraction": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      }
+    }
+  },
+  "contract_vs_actual_sampling": {
+    "direction_regime_actual": {
+      "inplane_100_no_spread": 2736,
+      "inplane_110_no_spread": 2736,
+      "named_mode_narrow_spread": 2720
+    },
+    "direction_regime_matches_contract": false,
+    "direction_regime_targets": {
+      "inplane_100_no_spread": 2048,
+      "inplane_110_no_spread": 2048,
+      "named_mode_narrow_spread": 4096
+    },
+    "pairing_source_role_actual": {
+      "anchor": 2732,
+      "bridge": 2730,
+      "neighborhood": 2730
+    },
+    "pairing_source_role_matches_contract": false,
+    "pairing_source_role_targets": {
+      "anchor": 3072,
+      "bridge": 2048,
+      "neighborhood": 3072
+    },
+    "review_note": "P2 materialized rows do not match the role or direction target composition frozen in the P1 dataset config.",
+    "tb_regime_actual": {
+      "edge_probe": 4038,
+      "near_baseline": 4154
+    },
+    "tb_regime_matches_contract": false,
+    "tb_regime_targets": {
+      "edge_probe": 2048,
+      "near_baseline": 6144
+    }
+  },
+  "coverage_judgment": "warning",
+  "coverage_reason": "P2 artifacts do not include the original Luo RMFT parameter point cloud or a source-to-anchor mapping. This audit can visualize and summarize production v1 samples in the available pairing-control space, but cannot prove coverage of the original Luo RMFT distribution.",
+  "dataset_id": "production_surrogate_v1",
+  "evaluation_review": {
+    "calibration_diagnostics": {
+      "max_abs_error": 0.006040920385119941,
+      "max_abs_error_threshold": 0.075,
+      "max_rmse": 0.002416150475494303,
+      "mean_max_abs_error": 0.002571780725703626,
+      "mean_rmse": 0.0008077252602247273,
+      "num_rows": 2048,
+      "rmse_threshold": 0.03,
+      "unsafe_fraction": 0.0
+    },
+    "evaluation_scope": {
+      "held_out_splits": [
+        "validation",
+        "test"
+      ],
+      "num_held_out_rows": 2048
+    },
+    "representative_spectra": {
+      "best": {
+        "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/best_spectrum_comparison.png",
+        "metrics": {
+          "mae": 0.00024104257854199116,
+          "max_abs_error": 0.0014105522115577251,
+          "rmse": 0.0003505829604444738
+        },
+        "row_id": "production_v1_validation_00507",
+        "split": "validation"
+      },
+      "median": {
+        "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/median_spectrum_comparison.png",
+        "metrics": {
+          "mae": 0.0004993629364816418,
+          "max_abs_error": 0.002237648440662987,
+          "rmse": 0.0007380585637926197
+        },
+        "row_id": "production_v1_validation_00720",
+        "split": "validation"
+      },
+      "worst": {
+        "figure": "outputs/runs/production_surrogate_v1/evaluation/figures/worst_spectrum_comparison.png",
+        "metrics": {
+          "mae": 0.0016392039512474331,
+          "max_abs_error": 0.006040920385119941,
+          "rmse": 0.002416150475494303
+        },
+        "row_id": "production_v1_test_00738",
+        "split": "test"
+      }
+    },
+    "uncertainty_diagnostics": {
+      "high_disagreement_fraction": 0.0,
+      "max_member_std": 0.0,
+      "max_std_threshold": 0.0,
+      "mean_member_std": 0.0,
+      "mean_std_threshold": 0.0,
+      "num_rows": 2048
+    },
+    "worst_groups_by_max_rmse": [
+      {
+        "axis": "bias_sub_window",
+        "group": "central_window",
+        "max_rmse": 0.006040920385119941,
+        "mean_max_abs_error": 0.001004461954384639,
+        "mean_rmse": 0.001004461954384639
+      },
+      {
+        "axis": "bias_sub_window",
+        "group": "inner_shoulder",
+        "max_rmse": 0.005240484693703085,
+        "mean_max_abs_error": 0.0009796930205484475,
+        "mean_rmse": 0.0009796930205484475
+      },
+      {
+        "axis": "bias_sub_window",
+        "group": "outer_shoulder",
+        "max_rmse": 0.0032447432132896026,
+        "mean_max_abs_error": 0.000481989839171995,
+        "mean_rmse": 0.000481989839171995
+      },
+      {
+        "axis": "direction_regime",
+        "group": "named_mode_narrow_spread",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002827633495761782,
+        "mean_rmse": 0.0008846622620025887
+      },
+      {
+        "axis": "nuisance_sub_range",
+        "group": "low_barrier|low_gamma|low_temp",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.0027179962031506515,
+        "mean_rmse": 0.0008567049136144118
+      },
+      {
+        "axis": "pairing_source_role",
+        "group": "anchor",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002550011092288285,
+        "mean_rmse": 0.0008002562967252991
+      },
+      {
+        "axis": "tb_regime",
+        "group": "edge_probe",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002561123348051033,
+        "mean_rmse": 0.0008025273737962973
+      },
+      {
+        "axis": "direction_regime",
+        "group": "inplane_100_no_spread",
+        "max_rmse": 0.002177349232297962,
+        "mean_max_abs_error": 0.002439053799869309,
+        "mean_rmse": 0.0008056124137861482
+      }
+    ],
+    "worst_groups_by_mean_rmse": [
+      {
+        "axis": "bias_sub_window",
+        "group": "central_window",
+        "max_rmse": 0.006040920385119941,
+        "mean_max_abs_error": 0.001004461954384639,
+        "mean_rmse": 0.001004461954384639
+      },
+      {
+        "axis": "bias_sub_window",
+        "group": "inner_shoulder",
+        "max_rmse": 0.005240484693703085,
+        "mean_max_abs_error": 0.0009796930205484475,
+        "mean_rmse": 0.0009796930205484475
+      },
+      {
+        "axis": "direction_regime",
+        "group": "named_mode_narrow_spread",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.002827633495761782,
+        "mean_rmse": 0.0008846622620025887
+      },
+      {
+        "axis": "pairing_source_role",
+        "group": "bridge",
+        "max_rmse": 0.0020429650850385178,
+        "mean_max_abs_error": 0.002680453304680162,
+        "mean_rmse": 0.0008658650769578668
+      },
+      {
+        "axis": "nuisance_sub_range",
+        "group": "low_barrier|low_gamma|low_temp",
+        "max_rmse": 0.002416150475494303,
+        "mean_max_abs_error": 0.0027179962031506515,
+        "mean_rmse": 0.0008567049136144118
+      },
+      {
+        "axis": "nuisance_sub_range",
+        "group": "high_barrier|high_gamma|high_temp",
+        "max_rmse": 0.0018515893978668025,
+        "mean_max_abs_error": 0.0026100192090362105,
+        "mean_rmse": 0.0008369315891624268
+      },
+      {
+        "axis": "nuisance_sub_range",
+        "group": "low_barrier|high_gamma|low_temp",
+        "max_rmse": 0.0020429650850385178,
+        "mean_max_abs_error": 0.0025374333291435605,
+        "mean_rmse": 0.0008294003871879217
+      },
+      {
+        "axis": "tb_regime",
+        "group": "near_baseline",
+        "max_rmse": 0.002177349232297962,
+        "mean_max_abs_error": 0.0025814080222448152,
+        "mean_rmse": 0.0008124207487084019
+      }
+    ]
+  },
+  "figures": {
+    "channel_marginal_coverage_proxy": "outputs/figures/production_surrogate_v1/luo_rmft_channel_marginal_coverage.png",
+    "nearest_neighbor_distance_proxy": "outputs/figures/production_surrogate_v1/luo_rmft_nearest_neighbor_distance.png",
+    "sampling_2d": "outputs/figures/production_surrogate_v1/luo_rmft_sampling_2d.png",
+    "sampling_density_2d": "outputs/figures/production_surrogate_v1/luo_rmft_sampling_density_2d.png"
+  },
+  "original_luo_rmft_source": {
+    "available_in_p2_artifacts": false,
+    "available_in_repository": false,
+    "coverage_of_original_high_density_body": "not_verifiable_from_current_artifacts",
+    "coverage_of_original_sparse_edge_regions": "not_verifiable_from_current_artifacts",
+    "missing_original_clusters": "not_verifiable_from_current_artifacts",
+    "path": null,
+    "total_points": null,
+    "used_anchor_fraction": null,
+    "used_anchor_points": null
+  },
+  "primary_p3_outcome": "revise_sampling_and_metadata_before_acceptance",
+  "production_counts": {
+    "by_direction_regime": {
+      "inplane_100_no_spread": 2736,
+      "inplane_110_no_spread": 2736,
+      "named_mode_narrow_spread": 2720
+    },
+    "by_pairing_source_role": {
+      "anchor": 2732,
+      "bridge": 2730,
+      "neighborhood": 2730
+    },
+    "by_split": {
+      "test": 1024,
+      "train": 6144,
+      "validation": 1024
+    },
+    "total_rows": 8192,
+    "unique_available_pairing_vectors_by_role": {
+      "anchor": 221,
+      "bridge": 2048,
+      "neighborhood": 323
+    }
+  },
+  "recommended_next_action": "Fix or explain the P1-vs-actual sampling composition mismatch and attach a compact original Luo RMFT source coverage artifact before accepting production_surrogate_v1 as a baseline. Current training/evaluation quality does not trigger model-capacity changes.",
+  "role_separation_proxy": {
+    "nearest_available_anchor_distance_by_role": {
+      "anchor": {
+        "count": 2732,
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0,
+        "p90": 0.0
+      },
+      "bridge": {
+        "count": 2730,
+        "max": 4.513133595191763,
+        "median": 3.1637812407728547,
+        "min": 1.8357320160176547,
+        "p90": 3.8857271959643436
+      },
+      "neighborhood": {
+        "count": 2730,
+        "max": 4.460200653414395,
+        "median": 3.085102022863375,
+        "min": 1.7254772867861456,
+        "p90": 3.8555703084616435
+      }
+    },
+    "note": "Proxy only. True Luo-RMFT-to-production nearest-neighbor distances require the original Luo RMFT source vectors."
+  },
+  "sampling_policy_id": "quality_first_rmft_sampling_v2",
+  "training_review": {
+    "gradient_norm_summary": {
+      "max": 1.205239176750183,
+      "median": 0.000458901675301604,
+      "warning_flags": []
+    },
+    "parameter_update_summary": {
+      "max_update_ratio": 7.838175632059574,
+      "median_update_ratio": 0.0006563036475833114
+    },
+    "splits": {
+      "test": {
+        "mae": 0.0005820942391155115,
+        "max_abs_error": 0.006040759875568735,
+        "num_rows": 1024,
+        "rmse": 0.0008666712076327097
+      },
+      "train": {
+        "mae": 0.0005739544691572637,
+        "max_abs_error": 0.006876025841794808,
+        "num_rows": 6144,
+        "rmse": 0.0008536915553432376
+      },
+      "validation": {
+        "mae": 0.0005820942391155115,
+        "max_abs_error": 0.006040759875568735,
+        "num_rows": 1024,
+        "rmse": 0.0008666712076327098
+      }
+    },
+    "training": {
+      "batch_size": 48,
+      "best_epoch": 126,
+      "best_reconstruction_loss": 1.9910908193310206e-05,
+      "best_shape_loss": 7.5119844993309925e-06,
+      "best_train_loss": 2.10377059346456e-05,
+      "best_validation_loss": 2.5881134206429124e-05,
+      "depth": 5,
+      "epochs_completed": 166,
+      "learning_rate": 0.0004,
+      "width": null
+    }
+  }
+}

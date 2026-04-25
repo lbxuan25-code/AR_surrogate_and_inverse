@@ -7,6 +7,17 @@ This run does not complete Task S7.
 It exists only to produce real optimization and held-out observability artifacts
 for the later S7 diagnosis.
 
+## Historical Artifact Availability
+
+The original pre-S7 checkpoint was removed from the repository after its
+compact metrics, model card, observability curves, grouped evaluation report,
+and representative comparison figures were retained and summarized in
+`docs/archive/historical_run_summary.md`.
+
+This runbook remains useful as a reproducible historical contract. To evaluate
+it again, regenerate the local dataset if needed and rerun the training command
+before using the evaluation config.
+
 ## Config Files
 
 - dataset config:
@@ -55,6 +66,7 @@ Expected training outputs:
 
 - checkpoint:
   `outputs/checkpoints/pre_s7_local_observation/model.pt`
+  (not retained in the cleaned repository)
 - metrics:
   `outputs/checkpoints/pre_s7_local_observation/metrics.json`
 - model card:

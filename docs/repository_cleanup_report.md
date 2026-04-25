@@ -1,20 +1,22 @@
 # Repository Cleanup Report
 
 This report records the real cleanup performed after the S1–S6 standards were
-frozen.
+frozen, plus the later historical-output compaction that preserved the current
+`production_surrogate_v1` run intact.
 
 The goal of this cleanup was to reduce active ambiguity in `docs/`, `configs/`,
 `tests/`, and `outputs/` without touching heavy training or dataset workflows.
 
 ## Kept
 
-Kept without relocation:
+Kept without relocation during the initial S6 cleanup:
 
 - the task-numbered server contract configs for Tasks 10–13 under `configs/`
   because they are still tied to existing returned server artifacts and
   historical runbook references;
 - all real datasets, checkpoints, evaluation reports, and run metadata under
-  `outputs/`;
+  `outputs/` until a later historical-output compaction pass could separate
+  compact evidence from bulky historical payloads;
 - the legacy Task 3/4/5 config family as compatibility-kept baseline aliases.
 
 Why:
@@ -131,7 +133,7 @@ Why:
 - these still map directly to historical run artifacts or compatibility entry
   points, so they were not moved in this minimal cleanup pass.
 
-## Deleted
+## Deleted During Initial S6 Cleanup
 
 Deleted lightweight generated or stale files:
 
@@ -145,7 +147,7 @@ Why:
 - they were not source-of-truth files;
 - and they can be regenerated locally when needed.
 
-## Not Deleted
+## Not Deleted During Initial S6 Cleanup
 
 Explicitly not deleted:
 
@@ -171,3 +173,49 @@ It prioritized:
 - keeping historical run-linked paths stable where risk was higher;
 - and making remaining task-number-heavy paths clearly legible as compatibility
   paths rather than the new naming standard.
+
+## Historical Output Compaction Addendum
+
+A later cleanup pass reduced old pre-`production_surrogate_v1` artifacts while
+leaving the current v1 dataset, checkpoint, observability outputs, evaluation
+reports, and run metadata untouched.
+
+Kept:
+
+- all `production_surrogate_v1` contents under `outputs/datasets/`,
+  `outputs/checkpoints/`, and `outputs/runs/`;
+- compact historical metrics, model cards, evaluation reports, grouped reports,
+  figures, manifests, and run metadata for pre-S7, Task 12, and Task 13;
+- committed configs and runbooks needed to reproduce historical runs;
+- historical provenance paths inside returned metadata, even when the bulky
+  payloads they point to are no longer retained locally.
+
+Condensed into `docs/archive/historical_run_summary.md`:
+
+- pre-S7 local observation results and the S7 capacity decision evidence;
+- Task 10, Task 11, Task 12, and Task 13 historical outcomes;
+- cleanup decisions for old checkpoints, forward outputs, stale logs, and
+  obsolete task-specific diagnostics.
+
+Deleted or removed from active tracking:
+
+- tracked Python bytecode caches under `__pycache__/`;
+- `DIRECTORY_PLAN.md`, which was superseded by the repository cleanup report;
+- obsolete formal-rectified S9/S10 draft handoff/config/test files after the
+  content-driven `production_surrogate_v1` handoff became the active contract;
+- bulky historical forward-output directories for pre-S7, Task 12, and Task 13;
+- bulky historical model checkpoint bytes for pre-S7 and Task 13 ensemble
+  members;
+- stale Task 13 rerun stdout/stderr/backup report files;
+- the old Task 13 notebook that depended on a specific retained forward-output
+  file.
+
+Why:
+
+- the compact historical artifacts preserve review traceability;
+- heavyweight payloads can be regenerated from committed configs or recovered
+  from server storage if a later audit truly needs them;
+- keeping old task-numbered heavy outputs beside v1 production artifacts made
+  the repository look like it had multiple active standards;
+- the current `production_surrogate_v1` evidence remains fully available for
+  P2/P3 review and was intentionally excluded from deletion.

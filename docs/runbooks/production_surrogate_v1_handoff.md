@@ -10,9 +10,9 @@ training, or evaluation. P2 may execute the heavy run only after the user
 accepts this P1 contract.
 
 This contract supersedes Codex-proposed S9/S10 production paths. The old
-`docs/formal_rectified_server_handoff.md` and
-`configs/*/production/rectified_large_production_*` drafts are historical
-references only, not the canonical P1 launch path.
+formal-rectified handoff and `rectified_large_production_*` drafts are removed
+from the active repository structure and must not be treated as the canonical P1
+launch path. They are not the canonical P1 launch path.
 
 ## Canonical P1 Files
 
@@ -62,11 +62,22 @@ Sampling composition:
 
 Diagnostic raw angles and `c_axis` are excluded from this production run.
 
+The materializer must use the external forward repository's compact round-2
+RMFT projection source:
+
+- `outputs/source/round2_projection_examples.csv`
+- `outputs/source/round2_projection_summary.json`
+
+These files stay in the forward repository. This repository consumes only the
+compact projected-source metadata needed to select anchors, neighborhoods, and
+bridges; it must not copy the authoritative RMFT source implementation.
+
 ## Training Target
 
 The frozen training target is:
 
 - model family: `neural_residual_mlp_spectrum_surrogate`
+- feature spec: `projected_7plus1_complex_v1`
 - residual hidden width: `384`
 - residual block count: `5`
 - normalization: `layernorm`
@@ -112,7 +123,8 @@ Run these commands only in P2 after the user accepts P1:
 export LNO327_FORWARD_SRC=/home/liubx25/Ni_Research/Projects/AR/src
 python scripts/datasets/build_dataset.py \
   --config configs/datasets/production_surrogate_v1.dataset.json \
-  --num-workers 8
+  --num-workers 8 \
+  --force
 python scripts/surrogate/train_surrogate.py \
   --config configs/training/production_surrogate_v1.training.json
 python scripts/surrogate/evaluate_surrogate.py \

@@ -33,6 +33,10 @@ class SmokeSampleSpec:
     transport_controls: dict[str, float | int]
     direction: dict[str, object] | None = None
     group_labels: dict[str, str] = field(default_factory=dict)
+    pairing_control_mode: str = "delta_from_baseline_meV"
+    allow_weak_delta_zx_s: bool = False
+    pairing_representation: dict[str, object] | None = None
+    source_provenance: dict[str, object] | None = None
     bias_grid: dict[str, float | int] = field(
         default_factory=lambda: {
             "bias_min_mev": -20.0,
