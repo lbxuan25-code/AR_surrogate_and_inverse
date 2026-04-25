@@ -2,108 +2,80 @@
 
 ## Current Task
 
-### Task S7 — Diagnose whether model capacity changes are actually needed
+### Task S9 — Prepare the first formal rectified dataset-generation and training handoff
 
 #### Task type
-Observation-dependent local Codex task.
+Local Codex preparation task only.
 
 #### Goal
-Do not change model depth or width by intuition alone.
-Use the observability outputs from Task S5 to determine whether the current
-residual MLP family is actually capacity-limited.
+Prepare the first formal post-rectification dataset-generation and training
+handoff so the next serious server run follows the frozen S1-S8 standards
+rather than legacy task-number drift.
 
 #### Required precondition
-This task must not begin until Task S5 has completed and the observability
-standard is available.
+This task must not begin until:
+
+- Task S7 has concluded whether immediate capacity change is justified;
+- Task S8 has frozen the active-learning roadmap;
+- and the repository has a content-based layout, observability standard, and
+  local pre-S7 observation baseline.
 
 #### Required work
 Codex must:
 
-1. Define the explicit diagnostic criteria for:
-   - likely underfitting,
-   - likely overfitting,
-   - likely optimization instability,
-   - likely regime-specific failure.
-
-2. Freeze the decision rules for whether a later model-capacity change is
-   justified.
-
-3. Explicitly state which observations would justify:
-   - widening the model,
-   - adding residual blocks,
-   - leaving the architecture unchanged.
+1. Define the first formal rectified dataset-generation target after the local
+   pre-S7 observation run.
+2. Define the matching formal training target and evaluation target.
+3. Freeze the exact config paths and exact handoff note for the server run.
+4. Explicitly state which outputs must stay on the server and which compact
+   artifacts must return to GitHub for review.
+5. Ensure the formal handoff uses the frozen representation, sampling,
+   observability, and decision-rule contracts already accepted in S1-S8.
 
 #### Fixed output files
 Codex must create exactly:
-- `docs/model_capacity_decision_rules.md`
-- `tests/test_model_capacity_decision_rules.py`
+- `docs/formal_rectified_server_handoff.md`
+- `tests/test_formal_rectified_server_handoff_contract.py`
 
 #### Required local validation
 Codex may run only:
-- `pytest tests/test_model_capacity_decision_rules.py -q`
+- `pytest tests/test_formal_rectified_server_handoff_contract.py -q`
 
 #### Acceptance checklist
-- [ ] model-capacity decision rules are explicit
-- [ ] widening / deepening conditions are explicit
-- [ ] "change the model now" is not treated as an automatic conclusion
+- [ ] the first formal rectified dataset/training/evaluation handoff is frozen
+- [ ] exact config paths and exact server commands are written down
+- [ ] returned compact artifacts are explicit
+- [ ] heavy outputs are explicitly kept on the server
 - [ ] no heavy local outputs were created
 
 #### Completion type
-This task is observation-dependent.
-It can only be meaningfully completed after observability standards exist and
-later real training observations are available.
+This task is directly completable as a preparation task.
 
 #### Promotion rule
-Only after Task S7 is complete may Task S8 move into Current Task.
+Only after Task S9 is complete may any later formal server-side rectified
+dataset-generation and surrogate-training run be promoted.
 
 ---
 
 ## Backlog
 
-### Task S8 — Add active learning to the surrogate roadmap
-
-#### Task type
-Local Codex planning task only.
-
-#### Goal
-Add active learning as an explicit future surrogate-training architecture plan.
-
-This task does not execute active learning. It defines how the loop will work.
-
-#### Required work
-Codex must complete all of the following:
-
-1. Define the initial surrogate-training stage.
-2. Define the uncertainty / difficulty trigger for selecting new points.
-3. Define how difficult points are sent back through the forward truth chain.
-4. Define how new true-labeled points are merged back into the training set.
-5. Define what returned compact artifacts must exist after each active-learning round.
-
-#### Fixed output files
-Codex must create exactly:
-- `docs/active_learning_plan.md`
-- `tests/test_active_learning_plan_contract.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_active_learning_plan_contract.py -q`
-
-#### Acceptance checklist
-- [ ] the active-learning roadmap is frozen in writing
-- [ ] the uncertainty / difficulty trigger is explicit
-- [ ] the forward-relabel / retrain loop is explicit
-- [ ] no heavy local outputs were created
-
-#### Completion type
-This task is directly completable as a planning task.
-
-#### Promotion rule
-Only after Task S8 is complete may any later server-side surrogate training task
-be promoted.
-
 ---
 
 ## Archive
+
+### Task S8 — Add active learning to the surrogate roadmap
+
+Completed previously.
+The repository now freezes the later active-learning loop in writing:
+initial stage, uncertainty / difficulty trigger, forward relabel path,
+merge-back rule, and required compact returned artifacts.
+
+### Task S7 — Diagnose whether model capacity changes are actually needed
+
+Completed previously.
+Using the real pre-S7 local observation run, the current frozen conclusion is:
+there is not yet sufficient evidence to justify immediate expansion of model
+capacity, so the residual architecture remains unchanged for now.
 
 ### Task S6 — Refactor repository layout and naming conventions
 

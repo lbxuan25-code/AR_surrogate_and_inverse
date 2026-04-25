@@ -11,8 +11,16 @@ It does not copy or reimplement forward physics code.
 
 - The active roadmap is the surrogate-rectification program recorded in
   `TODO.md`.
-- The current task after Task S6 completion is Task S7:
-  model-capacity decision rules based on observability rather than intuition.
+- The current task is Task S9:
+  prepare the first formal post-rectification dataset-generation and training
+  handoff under the frozen S1-S8 standards.
+- Task S8 is complete:
+  the active-learning roadmap is now frozen as a later-stage loop, not an
+  immediate execution task.
+- Task S7 is complete:
+  the real pre-S7 local observation run did not provide sufficient evidence to
+  justify immediate model expansion, so the current residual architecture stays
+  unchanged for now.
 - The previously frozen Task 15A medium contract remains in the repository only
   as a draft reference handoff pending rectification. It is not the immediate
   next server run.
