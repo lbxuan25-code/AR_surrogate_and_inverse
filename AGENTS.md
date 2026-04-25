@@ -1,404 +1,252 @@
 # AGENTS.md
 
+## Start Here For Any Fresh Codex Conversation
+
+The user has reset the task authority.
+
+Do not continue Codex-invented S9/S10 tasks.
+Do not invent new mainline task numbers.
+Do not promote a new Current Task unless the user explicitly approves it.
+
+The active user-approved roadmap is:
+
+1. P1 — prepare the first production-scale rectified surrogate run contract;
+2. P2 — execute that production run locally and review compact artifacts;
+3. P3 — review the run and decide the next user-approved action.
+
+The repository has completed the surrogate rectification sequence S1-S8. S9/S10 were Codex-invented and are superseded.
+
 ## Purpose
 
-This repository hosts AR surrogate training, dataset orchestration, sampling
-policy development, surrogate evaluation, training diagnostics, and
-experiment-side preparation.
+This repository hosts AR surrogate dataset orchestration, surrogate training, evaluation, observability, and production-run review.
 
-It is not the source of truth for forward physics.
-The forward truth chain lives in the external LNO327 AR forward repository and
-must be consumed only through its stable public `forward` interface.
+It is not the source of truth for forward physics. The forward truth chain lives in the external LNO327 AR forward repository and must be consumed only through its stable public `forward` interface.
 
-The repository is currently in a surrogate-rectification phase.
-Direct continuation of the previously frozen Task 15 medium server run is paused
-until representation, sampling, observability, and engineering-standard issues
-are corrected.
-The existing Task 15A handoff remains in the repository only as a draft
-reference contract. It must not be treated as an active server execution target
-unless a later `TODO.md` task explicitly re-promotes or replaces it.
+The current mission is to prepare and run the first user-approved production-scale rectified surrogate training pipeline on the user's local machine.
 
-## Start Here For A Fresh Codex Conversation
+## Task Authority Rules
 
-A fresh Codex conversation must assume the following current state:
+The user owns task definition.
 
-1. The repository already completed:
-   - Task 13B high-accuracy heavy surrogate under the older local-box contract;
-   - Task 14A–14E preparation work for:
-     - full projected 7+1 pairing representation with global-phase gauge fixing,
-     - RMFT anchor / neighborhood / bridge source concepts,
-     - widened bias40 contract,
-     - widened nuisance ranges,
-     - and a first draft TB pilot representation;
-   - Task 15A draft medium contract.
+Codex may:
+- execute the Current Task in `TODO.md`;
+- suggest possible future tasks in prose;
+- create files required by the Current Task;
+- run only the lightweight or heavy actions explicitly allowed by the Current Task.
 
-2. The user has explicitly decided that the repository must **not** continue
-   directly into the old Task 15B server run.
+Codex must not:
+- invent new mainline tasks;
+- promote backlog items to Current Task;
+- add S-number, P-number, or other numbered tasks by itself;
+- reinterpret a draft contract as canonical;
+- silently continue S9/S10;
+- start heavy training unless the Current Task explicitly allows it.
 
-3. The active mission is now surrogate rectification, not inverse execution.
+If Codex believes a new task is needed, it must state it as a proposal for the user, not edit it into the mainline task chain.
 
-4. The top rectification priorities are:
-   - reassess TB parameter representation;
-   - redesign sampling with quality prioritized over fixed row counts;
-   - define rigorous joint sampling;
-   - build proper training observability;
-   - fix repository layout and naming conventions;
-   - add active learning as a later roadmap item.
+## Current User-Approved Roadmap
 
-If you are a fresh Codex agent, do not assume the current Task 15A draft is the
-next server command target. It is a draft reference contract pending
-rectification.
+### P1
+Prepare the first production-scale rectified surrogate run contract.
 
-## Current Development Priorities
+P1 is local preparation only. It creates the production dataset, training, evaluation configs, and runbook. It does not run heavy generation or training.
 
-The active development cycle is centered on five rectification priorities:
+### P2
+Execute the first production-scale surrogate run locally and review compact artifacts.
 
-1. reassessing TB parameter representation instead of assuming the current
-   low-dimensional latent pilot is correct;
-2. redesigning sampling so sampling quality is prioritized over pre-fixed row budgets;
-3. defining rigorous joint sampling across pairing, nuisance, and TB spaces;
-4. upgrading training observability to industrial / academic diagnostic quality;
-5. fixing repository layout and naming conventions.
+P2 is the first heavy task. It may run dataset generation, training, and evaluation on the user's local machine, using only P1 configs.
 
-Active learning is a planned later addition, but it is not a substitute for
-these rectification tasks.
+### P3
+Review the production run and decide the next action.
+
+P3 is observation-dependent. It chooses whether to accept, rerun, scale, revise sampling, revise training, start active learning, or revisit capacity.
+
+## Current Scientific / Engineering Baseline
+
+The repository previously completed S1-S8:
+
+- full projected complex 7+1 pairing representation with only global-phase gauge fixing;
+- no PCA or latent compression of the pairing representation;
+- TB representation caution: low-dimensional TB pilot is not automatically canonical;
+- sampling quality comes before fixed row budgets;
+- joint sampling contract exists;
+- training observability standards exist;
+- repository layout and naming standards exist;
+- model-capacity decision rules say not to expand the residual MLP architecture yet;
+- active learning is a future roadmap item, not the first production run.
 
 ## Source Of Truth
 
 Priority order:
 
 1. `TODO.md`
-2. committed contract docs, configs, and lightweight tests in this repository
-3. dataset metadata, run metadata, checkpoint metadata, and forward-interface
-   metadata
+2. committed user-approved contracts, configs, runbooks, and tests
+3. dataset metadata, run metadata, checkpoint metadata, and forward-interface metadata
 4. the external forward repository's public `forward` API contract
 5. the external forward repository's directional capability contract
 6. local code and tests
-7. compact returned server artifacts committed back to GitHub for review
+7. compact returned artifacts committed back to GitHub for review
 
-If local assumptions conflict with forward-interface metadata or external
-direction-contract metadata, the forward repository wins.
+If local assumptions conflict with the external forward interface or directional contract, the forward repository wins.
 
-## Split Workflow Model
+## Local Execution Policy
 
-This repository uses a strict split workflow.
+The user intends to run production training locally unless a later user-approved task says otherwise.
 
-### Local Codex responsibilities
-Local Codex may:
-- edit source code;
-- edit configs;
-- edit docs, contracts, audits, and runbooks;
-- add or update lightweight validation tests;
-- define representation rules, sampling rules, and observability rules;
-- prepare exact server commands and returned-artifact expectations;
-- review compact returned artifacts after the user has run a server task.
-
-Local Codex must not:
-- run medium-scale or large-scale dataset generation;
-- run medium-scale or large-scale surrogate training;
-- run medium-scale or large-scale surrogate evaluation;
-- fabricate heavy outputs under `outputs/`;
-- mark any server-run task complete before returned artifacts are reviewed.
-
-### Manual server responsibilities
-The user manually executes all heavy tasks on the server.
-
-Heavy tasks include:
-- dataset generation;
-- surrogate training;
-- surrogate evaluation;
-- large benchmark runs;
-- any run that produces large datasets, large checkpoints, or bulky spectrum collections.
-
-### GitHub handoff boundary
-GitHub is the handoff boundary between:
-- local Codex preparation;
-- and the user's manual server execution.
-
-Committed configs and handoff notes are authoritative server instructions.
+Local execution assumptions:
+- use WSL2;
+- use CUDA GPU for training when available;
+- do not silently fall back to CPU for training;
+- begin CPU data generation with a conservative worker count, normally 8 workers;
+- do not run multiple large ensemble members concurrently unless memory has been checked;
+- keep heavy generated artifacts local and uncommitted unless explicitly promoted.
 
 ## Repository Boundary
 
 This repository owns:
 - dataset orchestration;
-- sampling policy definitions;
-- surrogate model training code;
-- surrogate evaluation and calibration code;
-- training diagnostics and observability tooling;
-- checkpoint and run metadata schema management;
-- server handoff notes and returned-artifact review logic;
-- repository layout, naming, and engineering standards.
+- sampling policy implementation;
+- surrogate model training;
+- evaluation and calibration;
+- observability tooling;
+- run metadata;
+- model cards and review reports;
+- production runbooks.
 
 This repository must not copy, fork, or silently reimplement:
-- the authoritative normal-state Hamiltonian code;
-- the authoritative pairing-matrix code;
+- authoritative normal-state Hamiltonian code;
+- authoritative pairing-matrix code;
 - RMFT source projection code;
 - interface matching code;
 - BTK solver code;
-- authoritative formal baseline files;
+- formal baseline files;
 - forward-side directional truth logic.
 
-Use the external forward repository as the forward engine and as the authority
-for directional support and forward metadata.
-
-## Required Forward Dependency
-
-All generated data must record the forward metadata emitted by the external
-forward repository, including:
-- `forward_interface_version`
-- `output_schema_version`
-- `pairing_convention_id`
-- `formal_baseline_record`
-- `formal_baseline_selection_rule`
-- `projection_config`
-- `git_commit`
-- `git_dirty`
-
-Direction-aware datasets must additionally preserve forward-emitted directional
-metadata whenever available, including:
-- `direction_mode`
-- `interface_angle`
-- `direction_support_tier`
-- `direction_crystal_label`
-- `direction_dimensionality`
-- `directional_spread`
-- any other forward-side provenance fields needed to reproduce the spectrum
-
-Datasets generated under different forward metadata or different direction
-contracts must be treated as distinct dataset families.
+Use the external forward repository as the forward engine and metadata authority.
 
 ## Direction Contract Rules
 
-This repository must follow the forward repository's current directional rules.
-
-### Supported truth-grade regimes
+Supported truth-grade regimes:
 - `inplane_100`
 - `inplane_110`
 
-### Supported spread regime
-- narrow directional spread centered on supported named in-plane modes only
-- spread must stay within the forward contract
+Supported spread regime:
+- narrow named-mode-centered spread only, within the forward contract.
 
-### Unsupported regime
-- `c_axis` is not currently supported
-- do not train on it
-- do not expose it as a valid target
-- do not silently map 2D in-plane angle semantics to `c_axis`
+Unsupported:
+- `c_axis` is not supported;
+- do not train on it;
+- do not expose it as a valid target.
 
-### Diagnostic-only regime
-- generic raw in-plane angles are diagnostic-only
-- they must not be silently promoted into the primary truth-grade pool
-- if included, they must be explicitly labeled and separated
+Diagnostic-only:
+- generic raw in-plane angles must not be silently promoted into the primary truth-grade pool.
 
 ## Pairing Representation Rules
 
-The canonical future-facing pairing representation remains:
+Canonical pairing representation:
+- full projected complex 7+1 pairing channels;
+- gauge-fixed only to remove the single globally redundant phase;
+- otherwise uncompressed.
 
-- the full projected complex 7+1 pairing channels;
-- gauge-fixed only to remove the single globally redundant global phase;
-- otherwise left uncompressed.
-
-### Explicit prohibition
-Do not introduce:
+Forbidden:
 - PCA compression;
 - latent manifold compression;
 - learned low-dimensional pairing coordinates;
-- any further lossy compression after the projected 7+1 pairing representation
-  has already been formed.
+- any other lossy compression after the projected 7+1 representation.
 
-### Gauge-fixing rule
-Gauge-fixing is allowed only for the physically redundant global phase.
-It must:
-- use a deterministic anchor selection policy;
-- rotate all channels by one common phase only;
-- preserve all relative phase information.
-
-Do not remove relative phase information.
+Gauge fixing must preserve all relative phase information.
 
 ## TB Representation Rules
 
-The repository must no longer assume that the current low-dimensional TB pilot
-coordinate system is automatically correct.
+The old five-coordinate TB pilot is not automatically canonical.
 
-Until Task S2 completes:
-- treat the current TB pilot as a draft engineering convenience only;
-- do not expand that pilot into a long-term canonical TB representation;
-- do not silently assume reduced TB coordinates are better than original or
-  grouped TB parameters.
-
-TB representation decisions must be justified by audit and documented comparison.
+Future production configs must preserve original-parameter provenance and any grouped training-facing TB controls required by the S2 decision. Do not treat a reduced TB representation as valid merely because it is convenient.
 
 ## Sampling Rules
 
-The repository must not treat fixed row budgets as more important than sampling
-quality.
+Sampling-policy design comes before row-budget freezing.
 
-### Canonical principle
-Sampling-policy design comes before final row-budget freezing.
-
-### Required sampling concepts
-Future sampling design must explicitly define:
-- RMFT anchor coverage rules;
+Production configs should use the S3/S4 rectified sampling rules:
+- RMFT anchor coverage;
 - neighborhood density rules;
 - bridge triggering rules;
-- continuous-subspace sampler type;
-- physically sensitive-region densification rules;
-- and joint sampling rules across pairing, nuisance, and TB spaces.
+- explicit continuous-subspace sampler;
+- physically sensitive-region densification;
+- joint sampling across pairing, nuisance, and TB spaces.
 
-### Explicit prohibition
-Do not leave continuous-subspace sampling as vague "continuous sampling".
-Do not treat pre-fixed role quotas as a substitute for a real sampling design.
-
-## Nuisance-Domain Rules
-
-The repository currently has widened nuisance ranges, but future work must not
-stop at freezing envelopes only.
-
-Future contracts must explicitly define:
-- whether nuisance variables are sampled independently or with structured coupling;
-- how density varies across the nuisance domain;
-- and whether gamma or other coordinates use non-uniform density rules.
+Do not replace sampling strategy with arbitrary fixed quotas.
 
 ## Observability Rules
 
-No future serious surrogate training run should be considered acceptable unless
-it produces the required observability outputs.
+A serious production training run must emit:
 
-At minimum, later accepted training standards must include:
 - train and validation loss curves;
 - reconstruction and shape loss curves;
-- learning-rate curves;
-- gradient norm summaries;
-- parameter update summaries;
-- grouped error reports;
-- representative direct-forward versus surrogate spectrum plots.
+- learning-rate curve;
+- gradient norm summary;
+- parameter update summary;
+- grouped error report;
+- representative best / median / worst spectrum comparisons;
+- metrics and run metadata;
+- model card or run summary.
 
-Do not treat a single `metrics.json` plus a single `evaluation_report.json` as
-sufficient industrial or academic observability.
+A single metrics file is not sufficient.
 
-## Model-Capacity Rules
+## Model Capacity Rules
 
-Do not widen or deepen the model by intuition alone.
+Do not widen or deepen the model by intuition.
 
-Model-capacity changes are allowed only after:
-- observability standards exist,
-- real training observations are available,
-- and a written decision rule shows why the architecture should change.
+The current conclusion from S7 is:
+- no sufficient evidence yet supports immediate expansion of model capacity;
+- keep the residual architecture unchanged for the first production-scale rectified run.
 
-Until then:
-- do not silently add depth;
-- do not silently widen the model;
-- do not silently replace the residual MLP family.
+Capacity changes require P3-style evidence from production observability artifacts.
 
-## Repository Layout And Naming Rules
+## Active Learning Rules
 
-The current task-number-heavy layout is no longer considered a satisfactory
-long-term structure.
+Active learning is a future roadmap item, not part of the first production run.
 
-Future repository standards must move toward:
-- content-based directory organization;
-- content-based naming conventions;
-- and a migration plan away from task-number-led file sprawl.
+Do not start active learning until a production baseline has been run and reviewed.
 
-Until Task S6 completes:
-- do not expand the current disorder further than necessary;
-- avoid introducing more ad hoc task-number-only file names when a content-based
-  name is possible.
+## File / Layout Rules
 
-## Execution Protocol
+Prefer content-based names over task-number names.
 
-At any moment, only the single task in `TODO.md -> Current Task` may be
-executed.
+For the first production contract, use:
 
-Do not start backlog tasks early.
-Do not merge multiple tasks into one unverified mega-step.
+- `docs/runbooks/production_surrogate_v1_handoff.md`
+- `configs/datasets/production_surrogate_v1.dataset.json`
+- `configs/training/production_surrogate_v1.training.json`
+- `configs/evaluation/production_surrogate_v1.evaluation.json`
+- `tests/test_production_surrogate_v1_contract.py`
 
-### For directly completable local tasks
-Before marking a task complete:
-- run only the lightweight tests explicitly allowed by `TODO.md`;
-- verify docs, configs, and tests are mutually consistent;
-- verify no heavy local outputs were fabricated;
-- record the resulting contract or audit in the specified files.
+Do not create new task-number-first files unless the user explicitly asks.
 
-### For observation-dependent tasks
-A task marked observation-dependent must not be declared complete merely because
-a document skeleton exists.
-It requires the relevant prior observations, diagnostics, or returned server
-artifacts before its decision can be finalized.
+## Heavy Artifact Policy
 
-### For manual server tasks
-A server-run task must not be marked complete until:
-- the user has executed the run on the server,
-- compact returned artifacts are committed back to GitHub,
-- and local review has accepted those artifacts.
+Heavy artifacts should stay local and uncommitted unless explicitly promoted.
 
-## Evaluation Rules
-
-Future surrogate promotion must be judged not only by successful training but by:
-- held-out error,
-- grouped regime stability,
-- observability outputs,
-- and consistency with the frozen forward / direction contracts.
-
-Do not claim a later surrogate is validated merely because it trained
-successfully.
-
-## Scientific Reporting Rules
-
-This repository is currently focused on surrogate rectification, not inverse
-claims.
-
-Any scientific report must clearly separate:
-- projected pairing structure;
-- transport nuisance controls;
-- TB parameterization or TB pilot controls;
-- directional regime assumptions;
-- surrogate uncertainty;
-- and final forward recheck results when relevant.
-
-Do not present unsupported interpretations as established physical results.
-
-## Server Handoff Rules
-
-Every later server-run task should have a committed handoff note that states:
-- exact commands;
-- exact config files;
-- expected output paths;
-- compact artifacts that must be returned for review;
-- heavy artifacts that must remain only on the server.
-
-Heavy outputs such as:
-- full forward-output directories;
-- large datasets;
+Usually do not commit:
+- full forward outputs;
+- bulky intermediate spectra;
 - large checkpoints;
-- bulky spectrum collections
+- scratch files;
+- CUDA caches;
+- profiling outputs.
 
-should remain on the server unless explicitly promoted.
+Commit or review only compact artifacts specified by the active task.
 
-## Storage Rules
+## Review Rules
 
-Large artifacts belong only in explicit output directories:
-- datasets under `outputs/datasets/`
-- checkpoints under `outputs/checkpoints/`
-- run metadata and reports under `outputs/runs/`
-- figures under `outputs/figures/`
-- compact audit artifacts under `outputs/audits/`
+After a production run, do not silently accept it.
 
-Do not commit heavyweight generated artifacts unless explicitly requested.
+Review must check:
+- held-out metrics;
+- grouped errors;
+- observability plots;
+- worst-spectrum behavior;
+- gradient and update summaries;
+- dataset/run metadata consistency;
+- forward metadata consistency.
 
-## Cleanliness Rules
-
-Do not leave behind obsolete configs, stale manifests, or ambiguous dual paths
-that can contaminate later rectification tasks.
-
-When a prior contract is demoted to draft status:
-- say so explicitly;
-- avoid silently continuing to treat it as canonical;
-- update docs, tests, and handoff notes accordingly.
-
-No silent dual-standard behavior is allowed for:
-- direction semantics;
-- pairing representation semantics;
-- TB representation semantics;
-- baseline-vs-neural checkpoint semantics;
-- local Codex vs manual server execution responsibilities.
+The next task after P2 must be explicitly user-approved based on P3 review.

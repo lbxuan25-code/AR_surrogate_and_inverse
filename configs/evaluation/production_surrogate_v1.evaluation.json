@@ -1,0 +1,47 @@
+{
+  "config_role": "production_surrogate_v1_evaluation_contract",
+  "execution_mode": "local_production_preparation_contract",
+  "checkpoint": "outputs/checkpoints/production_surrogate_v1/checkpoint.pt",
+  "dataset_manifest": "outputs/datasets/production_surrogate_v1/dataset.json",
+  "report_dir": "outputs/runs/production_surrogate_v1/evaluation",
+  "run_metadata_path": "outputs/runs/production_surrogate_v1/evaluation_run_metadata.json",
+  "run_kind": "production_surrogate_v1_evaluation",
+  "report_title": "Production Surrogate V1 Evaluation",
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "required_reports": [
+    "evaluation_report.json",
+    "evaluation_report.md",
+    "grouped_error_report.json"
+  ],
+  "required_figures": [
+    "figures/best_spectrum_comparison.png",
+    "figures/median_spectrum_comparison.png",
+    "figures/worst_spectrum_comparison.png"
+  ],
+  "grouped_error_axes": [
+    "direction_mode",
+    "direction_spread_regime",
+    "pairing_source_role",
+    "nuisance_regime",
+    "tb_regime"
+  ],
+  "safe_error_thresholds": {
+    "rmse": 0.03,
+    "max_abs_error": 0.075,
+    "group_rmse_multiplier_attention": 2.0
+  },
+  "device": "auto",
+  "require_cuda": true,
+  "observability_standard_reference": "docs/standards/training_observability_standard.md",
+  "model_capacity_decision_reference": "docs/model_capacity_decision_rules.md",
+  "active_learning_reference": {
+    "source_document": "docs/active_learning_plan.md",
+    "status": "deferred_not_part_of_production_v1"
+  },
+  "supersedes": {
+    "codex_proposed_s9_s10": "superseded_by_user_approved_p1"
+  }
+}
