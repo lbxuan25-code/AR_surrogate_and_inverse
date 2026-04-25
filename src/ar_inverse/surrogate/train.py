@@ -82,6 +82,10 @@ def feature_spec_from_config(config: dict[str, Any] | None = None) -> FeatureSpe
     raise ValueError(f"Unsupported feature_spec_id {feature_spec_id!r}.")
 
 
+def _uses_projected_complex_pairing_features(feature_spec: FeatureSpec) -> bool:
+    return any(name.endswith("_re") or name.endswith("_im") for name in feature_spec.names)
+
+
 def _feature_from_row(row: dict[str, Any], feature_spec: FeatureSpec = DEFAULT_FEATURE_SPEC) -> np.ndarray:
     controls = row.get("controls")
     if not isinstance(controls, dict):
@@ -92,6 +96,11 @@ def _feature_from_row(row: dict[str, Any], feature_spec: FeatureSpec = DEFAULT_F
     pairing_channels: dict[str, dict[str, float]] = {}
     if isinstance(pairing_representation, dict) and isinstance(pairing_representation.get("channels"), dict):
         pairing_channels = dict(pairing_representation["channels"])
+    elif _uses_projected_complex_pairing_features(feature_spec):
+        raise ValueError(
+            f"Dataset row {row['row_id']} is missing controls.pairing_representation, "
+            "but projected_7plus1_complex_v1 features were requested."
+        )
     transport_controls = dict(controls.get("transport_controls", {}))
     direction_features = _direction_feature_values(row, transport_controls)
     values: list[float] = []
@@ -102,7 +111,9 @@ def _feature_from_row(row: dict[str, Any], feature_spec: FeatureSpec = DEFAULT_F
             if isinstance(channel, dict) and part in channel:
                 values.append(float(channel[part]))
             else:
-                values.append(0.0)
+                raise ValueError(
+                    f"Dataset row {row['row_id']} is missing pairing representation channel component {name!r}."
+                )
         elif name in pairing_controls:
             values.append(float(pairing_controls[name]))
         elif name in direction_features:

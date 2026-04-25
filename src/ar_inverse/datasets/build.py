@@ -357,18 +357,25 @@ def _forward_repo_root_from_config(config: dict[str, Any]) -> Path:
     source_config = dict(config.get("rmft_source_projection", {}))
     if source_config.get("forward_repo_root"):
         return Path(str(source_config["forward_repo_root"]))
-    if os.environ.get("LNO327_FORWARD_REPO"):
-        return Path(os.environ["LNO327_FORWARD_REPO"])
-    if os.environ.get("LNO327_FORWARD_SRC"):
-        src_path = Path(os.environ["LNO327_FORWARD_SRC"])
+    repo_env_var = str(source_config.get("forward_repo_env_var", "LNO327_FORWARD_REPO"))
+    src_env_var = str(source_config.get("forward_src_env_var", "LNO327_FORWARD_SRC"))
+    if os.environ.get(repo_env_var):
+        return Path(os.environ[repo_env_var])
+    if os.environ.get(src_env_var):
+        src_path = Path(os.environ[src_env_var])
         return src_path.parent if src_path.name == "src" else src_path
-    return Path("/home/liubx25/Ni_Research/Projects/AR")
+    raise ValueError(
+        "production_surrogate_v1 requires an explicit forward repository root. "
+        f"Set {repo_env_var}, set {src_env_var}, or provide rmft_source_projection.forward_repo_root."
+    )
 
 
 def _load_production_v1_rmft_source_records(config: dict[str, Any]) -> list[dict[str, Any]]:
     source_config = dict(config.get("rmft_source_projection", {}))
     relative_csv = str(source_config.get("projection_examples_csv", "outputs/source/round2_projection_examples.csv"))
-    csv_path = _forward_repo_root_from_config(config) / relative_csv
+    csv_path = Path(relative_csv)
+    if not csv_path.is_absolute():
+        csv_path = _forward_repo_root_from_config(config) / relative_csv
     if not csv_path.exists():
         raise ValueError(
             "production_surrogate_v1 requires the forward repository round-2 projection CSV for "
@@ -436,18 +443,32 @@ def _production_v1_pairing_payload(
         for channel in CANONICAL_PAIRING_CHANNEL_ORDER
     }
     source_sample_ids = [str(source_records[index]["source_sample_id"]) for index in source_indices]
+    source_provenance: dict[str, Any] = {
+        "source_family": "Luo RMFT round2 projection examples",
+        "source_sample_ids": source_sample_ids,
+        "source_indices": source_indices,
+        "pairing_source_role": pairing_role,
+        "global_materialization_index": global_index,
+        "forward_request_mode": "fit_layer_absolute_meV_real_channels",
+        "dataset_training_representation": "projected_7plus1_complex_gauge_fixed_v1",
+        "full_complex_7plus1_forward_truth_input": False,
+        "forward_truth_input_note": (
+            "The external forward fit-layer API consumes real absolute_meV channel controls. "
+            "The full complex gauge-fixed 7+1 representation is stored for provenance and "
+            "training features, not passed as a complex forward truth input."
+        ),
+    }
+    if pairing_role in {"anchor", "neighborhood"}:
+        source_provenance["rmft_anchor_id"] = source_sample_ids[0]
+        source_provenance["neighborhood_anchor_id"] = source_sample_ids[0] if pairing_role == "neighborhood" else None
+    if pairing_role == "bridge":
+        source_provenance["bridge_endpoint_source_sample_ids"] = source_sample_ids
+        source_provenance["bridge_endpoint_source_indices"] = source_indices
     return {
         "pairing_controls": pairing_controls,
         "allow_weak_delta_zx_s": abs(pairing_controls.get("delta_zx_s", 0.0)) > 0.0,
         "pairing_representation": pairing_representation,
-        "source_provenance": {
-            "source_family": "Luo RMFT round2 projection examples",
-            "source_sample_ids": source_sample_ids,
-            "source_indices": source_indices,
-            "pairing_source_role": pairing_role,
-            "global_materialization_index": global_index,
-            "forward_pairing_control_mode": "absolute_meV_real_projection_gauge",
-        },
+        "source_provenance": source_provenance,
     }
 
 
@@ -464,24 +485,6 @@ def _neighborhood_channels(channels: dict[str, complex], role_index: int) -> dic
 def _cycle_value(index: int, *, modulus: int, low: float, high: float, offset: int = 0) -> float:
     step = ((index + offset) % modulus) / max(modulus - 1, 1)
     return low + (high - low) * step
-
-
-def _production_v1_pairing_controls(pairing_role: str, index: int) -> dict[str, float]:
-    if pairing_role == "anchor":
-        return {
-            "delta_zz_s": _cycle_value(index, modulus=17, low=0.16, high=0.30),
-            "delta_perp_x": _cycle_value(index, modulus=13, low=-0.12, high=0.08, offset=3),
-        }
-    if pairing_role == "neighborhood":
-        return {
-            "delta_xx_s": _cycle_value(index, modulus=19, low=-0.16, high=-0.03, offset=5),
-            "delta_zx_d": _cycle_value(index, modulus=17, low=0.04, high=0.15, offset=7),
-        }
-    return {
-        "delta_perp_z": _cycle_value(index, modulus=23, low=0.06, high=0.18, offset=11),
-        "delta_perp_x": _cycle_value(index, modulus=17, low=-0.08, high=0.14, offset=13),
-        "delta_zx_d": _cycle_value(index, modulus=13, low=0.03, high=0.16, offset=2),
-    }
 
 
 def _production_v1_transport_controls(nuisance_regime: str, index: int) -> dict[str, float | int]:

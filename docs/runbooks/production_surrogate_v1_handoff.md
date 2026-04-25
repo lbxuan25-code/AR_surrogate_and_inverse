@@ -72,6 +72,28 @@ These files stay in the forward repository. This repository consumes only the
 compact projected-source metadata needed to select anchors, neighborhoods, and
 bridges; it must not copy the authoritative RMFT source implementation.
 
+The forward repository path must be explicit. Set either:
+
+- `LNO327_FORWARD_REPO=/path/to/AR`
+- or `LNO327_FORWARD_SRC=/path/to/AR/src`
+
+The repaired P2 materializer fails fast if the RMFT projection CSV is not
+available.
+
+Current implementation note:
+
+- role, direction, TB, and split quotas are implemented exactly;
+- anchor / neighborhood / bridge rows are deterministically materialized from
+  compact RMFT projection records;
+- the full sampling-policy-v2 ideal pieces named in the contract, including
+  scrambled Sobol continuous sampling, sensitive-region densification scoring,
+  and quality-triggered bridge selection, are not yet implemented in this P2
+  materializer.
+
+This distinction is intentional: P2 may test the repaired representation and
+quota plumbing, but P3 must not claim full sampling-policy-v2 coverage until
+those quality-triggered pieces exist.
+
 ## Training Target
 
 The frozen training target is:
@@ -95,6 +117,17 @@ The frozen training target is:
 
 The width and depth are the current retained architecture. This P1 contract does
 not authorize widening, adding blocks, or replacing the residual MLP family.
+
+Representation honesty:
+
+- dataset rows store `controls.pairing_representation` with the gauge-fixed
+  projected complex 7+1 channels;
+- training uses `feature_spec_id = projected_7plus1_complex_v1`, reading the
+  real and imaginary parts of those stored channels;
+- the external forward request still uses the stable fit-layer API with real
+  `absolute_meV` pairing controls;
+- therefore the full complex 7+1 block is the dataset/training representation
+  and provenance, not a complex-valued forward truth input.
 
 ## Evaluation Target
 

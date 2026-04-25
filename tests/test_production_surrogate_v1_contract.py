@@ -17,6 +17,25 @@ def _load_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _write_minimal_rmft_projection_source(root: Path) -> None:
+    source_dir = root / "outputs/source"
+    source_dir.mkdir(parents=True)
+    csv_path = source_dir / "round2_projection_examples.csv"
+    csv_path.write_text(
+        "\n".join(
+            [
+                "sample_id,delta_zz_s,delta_zz_d,delta_xx_s,delta_xx_d,delta_zx_d,delta_perp_z,delta_perp_x,delta_zx_s",
+                "s0,1+0j,0.1+0.2j,0.3+0j,0.4+0.1j,0.5+0j,0.6+0j,0.7+0j,0+0j",
+                "s1,2+0j,0.2+0.1j,0.4+0j,0.5+0.1j,0.6+0j,0.7+0j,0.8+0j,0.01+0j",
+                "s2,3+0j,0.3+0.1j,0.5+0j,0.6+0.1j,0.7+0j,0.8+0j,0.9+0j,0+0j",
+                "s3,4+0j,0.4+0.1j,0.6+0j,0.7+0.1j,0.8+0j,0.9+0j,1.0+0j,0+0j",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_p1_uses_user_approved_content_based_paths() -> None:
     doc = RUNBOOK_PATH.read_text(encoding="utf-8")
 
@@ -56,7 +75,10 @@ def test_dataset_contract_freezes_rectified_sampling_and_local_worker_target() -
     assert dataset["active_learning_reference"]["status"] == "deferred_until_after_production_v1_review"
 
 
-def test_dataset_contract_materializes_executable_production_samples() -> None:
+def test_dataset_contract_materializes_executable_production_samples(tmp_path, monkeypatch) -> None:
+    _write_minimal_rmft_projection_source(tmp_path)
+    monkeypatch.setenv("LNO327_FORWARD_REPO", str(tmp_path))
+
     config = load_dataset_config(DATASET_CONFIG_PATH)
     samples = materialize_dataset_samples(config)
 
@@ -133,11 +155,11 @@ def test_evaluation_contract_requires_grouped_errors_and_representative_plots() 
         "figures/worst_spectrum_comparison.png",
     ]
     assert evaluation["grouped_error_axes"] == [
-        "direction_mode",
-        "direction_spread_regime",
+        "bias_sub_window",
         "pairing_source_role",
         "nuisance_regime",
         "tb_regime",
+        "direction_regime",
     ]
     assert evaluation["safe_error_thresholds"]["rmse"] == 0.03
     assert evaluation["safe_error_thresholds"]["max_abs_error"] == 0.075

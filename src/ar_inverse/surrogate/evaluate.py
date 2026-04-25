@@ -153,7 +153,7 @@ def _row_error_record(
         "transport_regime": regime,
         "direction_regime": direction_regime,
         "pairing_source_role": str(group_labels.get("pairing_source_role", "unspecified_pairing_source_role")),
-        "nuisance_sub_range": str(group_labels.get("nuisance_sub_range", regime)),
+        "nuisance_regime": str(group_labels.get("nuisance_regime", group_labels.get("nuisance_sub_range", regime))),
         "tb_regime": str(group_labels.get("tb_regime", "tb_unimplemented_local")),
         "direction": row.get("direction"),
         "transport_controls": transport_controls,
@@ -176,8 +176,8 @@ def _group_pairing_source_records(row_records: list[dict[str, Any]]) -> dict[str
     return _group_records_by_key(row_records, "pairing_source_role")
 
 
-def _group_nuisance_sub_range_records(row_records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    return _group_records_by_key(row_records, "nuisance_sub_range")
+def _group_nuisance_regime_records(row_records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return _group_records_by_key(row_records, "nuisance_regime")
 
 
 def _group_tb_records(row_records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
@@ -278,7 +278,7 @@ def _grouped_error_report(
         )
         for label in sorted({str(record["pairing_source_role"]) for record in row_records})
     }
-    grouped["nuisance_sub_range"] = {
+    grouped["nuisance_regime"] = {
         label: _aggregate_group_metrics(
             [
                 {
@@ -287,10 +287,10 @@ def _grouped_error_report(
                     "max_abs_error": record["metrics"]["max_abs_error"],
                 }
                 for record in row_records
-                if record["nuisance_sub_range"] == label
+                if record["nuisance_regime"] == label
             ]
         )
-        for label in sorted({str(record["nuisance_sub_range"]) for record in row_records})
+        for label in sorted({str(record["nuisance_regime"]) for record in row_records})
     }
     grouped["tb_regime"] = {
         label: _aggregate_group_metrics(
@@ -346,7 +346,7 @@ def _grouped_error_report(
         "required_axes": [
             "bias_sub_window",
             "pairing_source_role",
-            "nuisance_sub_range",
+            "nuisance_regime",
             "tb_regime",
             "direction_regime",
         ],
@@ -559,7 +559,7 @@ def evaluate_surrogate_from_config(
                 "metadata_labels": {
                     "bias_sub_window": "mixed_windows",
                     "pairing_source_role": record["pairing_source_role"],
-                    "nuisance_sub_range": record["nuisance_sub_range"],
+                    "nuisance_regime": record["nuisance_regime"],
                     "tb_regime": record["tb_regime"],
                     "direction_regime": record["direction_regime"],
                 },

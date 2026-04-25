@@ -22,11 +22,11 @@
     "figures/worst_spectrum_comparison.png"
   ],
   "grouped_error_axes": [
-    "direction_mode",
-    "direction_spread_regime",
+    "bias_sub_window",
     "pairing_source_role",
     "nuisance_regime",
-    "tb_regime"
+    "tb_regime",
+    "direction_regime"
   ],
   "safe_error_thresholds": {
     "rmse": 0.03,
