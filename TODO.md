@@ -2,191 +2,6 @@
 
 ## Current Task
 
-### Task S4 — Redefine joint sampling across pairing, nuisance, and TB spaces
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Define how the repository jointly samples:
-- pairing structure,
-- nuisance variables,
-- and TB variables.
-
-Current contracts freeze ranges and some tier fractions, but do not yet define a
-sufficiently rigorous joint sampling strategy.
-
-#### Required work
-Codex must complete all of the following:
-
-1. Decide whether nuisance variables are sampled independently or with explicit
-   correlations.
-2. Decide whether TB and nuisance variables are sampled independently or with
-   structured coupling.
-3. Specify how widened bias-window training affects where sampling density must
-   increase in parameter space.
-4. Specify whether `gamma` should use:
-   - linear sampling,
-   - piecewise sampling,
-   - log-density weighting,
-   - or another explicit density rule.
-
-#### Fixed output files
-Codex must create exactly:
-- `docs/joint_sampling_contract.md`
-- `tests/test_joint_sampling_contract.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_joint_sampling_contract.py -q`
-
-#### Acceptance checklist
-- [ ] the repository has a written joint sampling contract
-- [ ] nuisance / TB independence or coupling assumptions are explicit
-- [ ] gamma sampling density policy is explicit
-- [ ] widened bias-window implications are incorporated
-- [ ] no heavy local outputs were created
-
-#### Completion type
-This task is directly completable.
-
-#### Promotion rule
-Only after Task S4 is complete may Task S5 move into Current Task.
-
----
-
-## Backlog
-
-### Task S5 — Build the training observability and diagnostics standard
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Upgrade the surrogate training pipeline from metrics-only output to a proper
-industrial / academic observability standard.
-
-The current training and evaluation outputs are not sufficient for diagnosing:
-- underfitting,
-- unstable optimization,
-- gradient pathologies,
-- input-block dominance,
-- or regime-specific failure.
-
-#### Required work
-Codex must complete all of the following:
-
-1. Freeze the required training curves:
-   - train loss,
-   - validation loss,
-   - reconstruction loss,
-   - shape loss,
-   - learning-rate curve.
-
-2. Freeze the required optimization diagnostics:
-   - per-layer gradient norm summary,
-   - parameter update magnitude summary,
-   - gradient explosion / vanishing warning logic.
-
-3. Freeze the required sensitivity diagnostics:
-   - pairing-block sensitivity,
-   - direction-block sensitivity,
-   - nuisance-block sensitivity,
-   - TB-block sensitivity.
-
-4. Freeze the required prediction-review figures:
-   - representative best rows,
-   - representative median rows,
-   - representative worst rows,
-   each with direct-forward versus surrogate spectrum comparison.
-
-5. Freeze the required grouped error outputs:
-   - by bias sub-window,
-   - by pairing-source role,
-   - by nuisance sub-range,
-   - by TB regime,
-   - by direction regime.
-
-#### Fixed output files
-Codex must create exactly:
-- `docs/training_observability_standard.md`
-- `src/ar_inverse/training/monitoring.py`
-- `src/ar_inverse/training/plots.py`
-- `tests/test_training_observability_standard.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_training_observability_standard.py -q`
-
-#### Acceptance checklist
-- [ ] the repository defines the full observability standard in writing
-- [ ] the required curves and diagnostics are frozen
-- [ ] grouped error reporting requirements are frozen
-- [ ] no heavy local outputs were created
-
-#### Completion type
-This task is directly completable.
-
-#### Promotion rule
-Only after Task S5 is complete may Task S6 move into Current Task.
-
----
-
-### Task S6 — Refactor repository layout and naming conventions
-
-#### Task type
-Local Codex task only.
-
-#### Goal
-Replace the current task-number-driven file sprawl with a stable repository
-structure and naming convention that reflects actual content.
-
-#### Required work
-Codex must complete all of the following:
-
-1. Define one stable repository layout standard for:
-   - configs,
-   - docs,
-   - outputs,
-   - figures,
-   - audits,
-   - runbooks,
-   - and contracts.
-
-2. Define one stable naming convention where file names are based on content and
-   role, not primarily on task number.
-
-3. Define one migration plan from the current task-number-heavy structure to the
-   new structure.
-
-4. Do not perform large destructive file moves yet unless they are needed for
-   the standard itself. This task freezes the standard and migration plan first.
-
-#### Fixed output files
-Codex must create exactly:
-- `docs/repository_layout_v2.md`
-- `docs/naming_convention_v2.md`
-- `docs/migration_from_task_named_layout.md`
-- `tests/test_repository_layout_standard.py`
-
-#### Required local validation
-Codex may run only:
-- `pytest tests/test_repository_layout_standard.py -q`
-
-#### Acceptance checklist
-- [ ] the repository layout standard exists
-- [ ] the naming convention standard exists
-- [ ] the migration plan exists
-- [ ] no heavy local outputs were created
-
-#### Completion type
-This task is directly completable.
-
-#### Promotion rule
-Only after Task S6 is complete may Task S7 move into Current Task.
-
----
-
 ### Task S7 — Diagnose whether model capacity changes are actually needed
 
 #### Task type
@@ -243,6 +58,8 @@ Only after Task S7 is complete may Task S8 move into Current Task.
 
 ---
 
+## Backlog
+
 ### Task S8 — Add active learning to the surrogate roadmap
 
 #### Task type
@@ -287,6 +104,27 @@ be promoted.
 ---
 
 ## Archive
+
+### Task S6 — Refactor repository layout and naming conventions
+
+Completed previously.
+The repository now freezes a content-based layout standard, a role-first naming
+convention, and a staged migration plan away from task-number-led file sprawl.
+
+### Task S5 — Build the training observability and diagnostics standard
+
+Completed previously.
+The repository now freezes mandatory curves, optimization diagnostics,
+block-level sensitivity diagnostics, representative direct-forward versus
+surrogate plots, and grouped error outputs as the minimum observability
+standard.
+
+### Task S4 — Redefine joint sampling across pairing, nuisance, and TB spaces
+
+Completed previously.
+The repository now freezes structured nuisance correlations, TB/nuisance
+coupling, widened-bias densification implications, and a piecewise `gamma`
+density policy.
 
 ### Task S3 — Redesign the surrogate sampling strategy with sampling quality prioritized over fixed row counts
 

@@ -11,8 +11,8 @@ It does not copy or reimplement forward physics code.
 
 - The active roadmap is the surrogate-rectification program recorded in
   `TODO.md`.
-- The current task after Task S3 completion is Task S4:
-  joint sampling redesign across pairing, nuisance, and TB spaces.
+- The current task after Task S6 completion is Task S7:
+  model-capacity decision rules based on observability rather than intuition.
 - The previously frozen Task 15A medium contract remains in the repository only
   as a draft reference handoff pending rectification. It is not the immediate
   next server run.
