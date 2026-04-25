@@ -11,9 +11,13 @@ It does not copy or reimplement forward physics code.
 
 - The active roadmap is the surrogate-rectification program recorded in
   `TODO.md`.
-- The current task is Task S9:
-  prepare the first formal post-rectification dataset-generation and training
-  handoff under the frozen S1-S8 standards.
+- The current task is Task S10:
+  execute and review the first formal large-scale rectified production run
+  using the committed S9 handoff.
+- Task S9 is complete:
+  the repository now contains a formal large-scale post-rectification
+  production draft with exact config paths, exact launch commands, and the
+  frozen compact-artifact return contract.
 - Task S8 is complete:
   the active-learning roadmap is now frozen as a later-stage loop, not an
   immediate execution task.

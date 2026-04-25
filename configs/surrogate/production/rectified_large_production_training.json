@@ -1,0 +1,63 @@
+{
+  "config_role": "formal_rectified_large_production_training_target",
+  "execution_mode": "manual_server_large_production_draft",
+  "model_type": "neural_residual_mlp_spectrum_surrogate",
+  "dataset_manifest": "outputs/datasets/rectified_large_production/dataset.json",
+  "checkpoint_dir": "outputs/checkpoints/rectified_large_production",
+  "run_metadata_path": "outputs/runs/rectified_large_production_training_run_metadata.json",
+  "observability_dir": "outputs/runs/rectified_large_production/training_observability",
+  "run_kind": "rectified_large_production_training",
+  "model_card_title": "Formal Rectified Large-Production Residual Checkpoint",
+  "model_card_purpose_lines": [
+    "First formal large-scale post-rectification residual surrogate training target.",
+    "This run keeps the accepted residual family unchanged while scaling the dataset under the frozen S1-S8 contracts."
+  ],
+  "model_card_limitations_lines": [
+    "This is the first formal production-scale rectified draft and must still pass the review gate before any later scale-up.",
+    "It keeps active learning deferred and does not authorize immediate model expansion."
+  ],
+  "residual_hidden_width": 384,
+  "residual_num_blocks": 5,
+  "normalization": "layernorm",
+  "activation": "gelu",
+  "optimizer": "adamw",
+  "learning_rate": 0.0004,
+  "weight_decay": 0.00005,
+  "batch_size": 48,
+  "max_epochs": 450,
+  "early_stopping_patience": 40,
+  "random_seed": 1103,
+  "device": "auto",
+  "require_cuda": true,
+  "held_out_splits": [
+    "validation",
+    "test"
+  ],
+  "loss": {
+    "kind": "weighted_mse_plus_first_difference",
+    "reconstruction_weight": 1.0,
+    "shape_weight": 0.15,
+    "bias_weighting": {
+      "kind": "center_window",
+      "central_weight": 2.5,
+      "outer_weight": 1.0,
+      "central_bias_half_width_mev": 6.0
+    }
+  },
+  "ensemble": {
+    "enabled": true,
+    "seeds": [
+      1103,
+      2207,
+      3301
+    ],
+    "aggregation": "mean",
+    "disagreement_summary": "per_spectrum_mean_std_and_max_std"
+  },
+  "observability_standard_reference": "docs/standards/training_observability_standard.md",
+  "model_capacity_decision_reference": "docs/model_capacity_decision_rules.md",
+  "active_learning_reference": {
+    "source_document": "docs/active_learning_plan.md",
+    "status": "deferred_not_part_of_this_formal_training_run"
+  }
+}

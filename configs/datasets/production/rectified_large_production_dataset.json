@@ -1,0 +1,97 @@
+{
+  "config_role": "formal_rectified_large_production_dataset_target",
+  "execution_mode": "manual_server_large_production_draft",
+  "dataset_id": "rectified_large_production_v1",
+  "description": "First formal large-scale post-rectification dataset-generation target. This contract supersedes the 96-row pre-S7 observation baseline as the intended production-scale server target while keeping the S1-S8 rectification rules frozen.",
+  "output_dir": "outputs/datasets/rectified_large_production",
+  "run_metadata_path": "outputs/runs/rectified_large_production_dataset_run_metadata.json",
+  "run_kind": "rectified_large_production_dataset_generation",
+  "sampling_policy_id": "rectified_large_production_v1",
+  "num_workers": 16,
+  "row_budget": {
+    "recommended_total_rows": 8192,
+    "split_targets": {
+      "train": 6144,
+      "validation": 1024,
+      "test": 1024
+    }
+  },
+  "pairing_representation_contract": {
+    "source_document": "docs/contracts/pairing_representation_contract.md",
+    "pairing_representation_version": "projected_7plus1_gauge_fixed_v1",
+    "storage_block": "controls.pairing_representation",
+    "global_phase_only": true,
+    "further_compression": "forbidden"
+  },
+  "tb_parameterization_contract": {
+    "source_document": "docs/contracts/tb_parameterization_decision.md",
+    "forward_provenance_block": "controls.tb_original_parameters",
+    "training_facing_block": "controls.tb_grouped_parameters",
+    "canonical_training_facing_form": "physically_grouped",
+    "legacy_tb_pilot_status": "forbidden_as_canonical"
+  },
+  "sampling_policy_contract": {
+    "source_document": "docs/contracts/sampling_policy_v2.md",
+    "sampling_policy_id": "quality_first_rmft_sampling_v2",
+    "anchor_coverage": "required_before_row_budget_lock",
+    "continuous_sampler": "scrambled_sobol_v1",
+    "bridge_triggering": "quality_triggered_not_fixed_quota"
+  },
+  "joint_sampling_contract": {
+    "source_document": "docs/contracts/joint_sampling_contract.md",
+    "pairing_roles": [
+      "anchor",
+      "neighborhood",
+      "bridge"
+    ],
+    "nuisance_regimes": [
+      "core_sharp",
+      "core_transition",
+      "core_broad",
+      "guard_band_sharp",
+      "guard_band_transition",
+      "guard_band_broad"
+    ],
+    "tb_regimes": [
+      "near_baseline",
+      "edge_probe"
+    ]
+  },
+  "recommended_role_targets": {
+    "pairing_source_role_targets": {
+      "anchor": 3072,
+      "neighborhood": 3072,
+      "bridge": 2048
+    },
+    "direction_regime_targets": {
+      "inplane_100_no_spread": 2048,
+      "inplane_110_no_spread": 2048,
+      "named_mode_narrow_spread": 4096
+    },
+    "tb_regime_targets": {
+      "near_baseline": 6144,
+      "edge_probe": 2048
+    }
+  },
+  "fixed_bias_grid": {
+    "bias_min_mev": -40.0,
+    "bias_max_mev": 40.0,
+    "num_bias": 241
+  },
+  "direction_contract": {
+    "source_document": "docs/contracts/direction_contract.md",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only",
+    "unsupported_modes": [
+      "c_axis"
+    ],
+    "diagnostic_raw_angles": "excluded from the formal production draft"
+  },
+  "active_learning_reference": {
+    "source_document": "docs/active_learning_plan.md",
+    "status": "deferred_after_first_formal_production_review"
+  }
+}

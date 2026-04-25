@@ -2,58 +2,54 @@
 
 ## Current Task
 
-### Task S9 — Prepare the first formal rectified dataset-generation and training handoff
+### Task S10 — Execute and review the first formal large-scale rectified production run
 
 #### Task type
-Local Codex preparation task only.
+Manual server task plus local review.
 
 #### Goal
-Prepare the first formal post-rectification dataset-generation and training
-handoff so the next serious server run follows the frozen S1-S8 standards
-rather than legacy task-number drift.
+Run the first formal large-scale post-rectification production draft on the
+server and review the returned compact artifacts locally before any later
+promotion.
 
 #### Required precondition
-This task must not begin until:
-
-- Task S7 has concluded whether immediate capacity change is justified;
-- Task S8 has frozen the active-learning roadmap;
-- and the repository has a content-based layout, observability standard, and
-  local pre-S7 observation baseline.
+Task S9 must already be complete.
+The committed handoff note and committed production-draft config trio must be
+accepted before the heavy run is launched.
 
 #### Required work
 Codex must:
 
-1. Define the first formal rectified dataset-generation target after the local
-   pre-S7 observation run.
-2. Define the matching formal training target and evaluation target.
-3. Freeze the exact config paths and exact handoff note for the server run.
-4. Explicitly state which outputs must stay on the server and which compact
-   artifacts must return to GitHub for review.
-5. Ensure the formal handoff uses the frozen representation, sampling,
-   observability, and decision-rule contracts already accepted in S1-S8.
+1. Use the committed S9 handoff note and committed production-draft configs on
+   the server.
+2. Complete dataset generation, training, and evaluation on the server.
+3. Commit the required compact returned artifacts back to GitHub.
+4. Review those returned artifacts locally against the frozen observability and
+   contract standards.
+5. Accept or reject the run explicitly rather than silently treating it as
+   canonical.
 
 #### Fixed output files
-Codex must create exactly:
-- `docs/formal_rectified_server_handoff.md`
-- `tests/test_formal_rectified_server_handoff_contract.py`
+This manual server task does not define new fixed local-doc output files in
+advance.
+Its required outputs are the compact returned artifacts frozen by S9.
 
 #### Required local validation
-Codex may run only:
-- `pytest tests/test_formal_rectified_server_handoff_contract.py -q`
+Local validation happens by review of the returned compact artifacts after the
+server run.
 
 #### Acceptance checklist
-- [ ] the first formal rectified dataset/training/evaluation handoff is frozen
-- [ ] exact config paths and exact server commands are written down
-- [ ] returned compact artifacts are explicit
-- [ ] heavy outputs are explicitly kept on the server
-- [ ] no heavy local outputs were created
+- [ ] the server run used the committed S9 production-draft handoff
+- [ ] required compact artifacts were returned to GitHub
+- [ ] local review accepted or rejected the run explicitly
+- [ ] heavy outputs stayed on the server
 
 #### Completion type
-This task is directly completable as a preparation task.
+This task is observation-dependent and server-executed.
 
 #### Promotion rule
-Only after Task S9 is complete may any later formal server-side rectified
-dataset-generation and surrogate-training run be promoted.
+Only after Task S10 is reviewed may any later larger production task,
+architecture revision, or active-learning stage be promoted.
 
 ---
 
@@ -62,6 +58,13 @@ dataset-generation and surrogate-training run be promoted.
 ---
 
 ## Archive
+
+### Task S9 — Prepare the first formal rectified dataset-generation and training handoff
+
+Completed previously.
+The repository now freezes the first formal large-scale post-rectification
+production draft, including the exact config trio, exact launch commands,
+recommended row budget, and the compact-artifact return contract.
 
 ### Task S8 — Add active learning to the surrogate roadmap
 
