@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 
-JOINT_SAMPLING_CONTRACT_PATH = Path("docs/joint_sampling_contract.md")
+JOINT_SAMPLING_CONTRACT_PATH = Path("docs/contracts/joint_sampling_contract.md")
 
 
 def test_joint_sampling_contract_makes_nuisance_and_tb_coupling_explicit() -> None:

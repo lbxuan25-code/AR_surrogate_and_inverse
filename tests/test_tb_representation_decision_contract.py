@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 
-AUDIT_PATH = Path("docs/tb_representation_audit.md")
-DECISION_PATH = Path("docs/tb_parameterization_decision.md")
+AUDIT_PATH = Path("docs/audits/tb_representation_audit.md")
+DECISION_PATH = Path("docs/contracts/tb_parameterization_decision.md")
 
 
 def test_tb_representation_audit_covers_required_families_and_axes() -> None:

@@ -35,7 +35,7 @@
     "ensemble_enabled": true,
     "disagreement_summary": "per_spectrum_mean_std_and_max_std",
     "threshold_status": "prelaunch_fixed_task13b_v1",
-    "launch_addendum": "docs/task13_high_accuracy_large_launch_addendum.md"
+    "launch_addendum": "docs/runbooks/directional_high_accuracy_launch_addendum.md"
   },
   "frozen_forward_metadata_family": {
     "forward_interface_version": "ar_forward_v1",

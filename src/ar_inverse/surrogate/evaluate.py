@@ -19,7 +19,7 @@ from ar_inverse.surrogate.metrics import regression_metrics
 from ar_inverse.surrogate.models import load_surrogate_checkpoint
 from ar_inverse.surrogate.train import load_dataset_arrays
 
-DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH = Path("configs/surrogate/task9_directional_evaluation_smoke.json")
+DEFAULT_DIRECTIONAL_EVALUATION_CONFIG_PATH = Path("configs/surrogate/smoke/directional_smoke_evaluation.json")
 DEFAULT_DIRECTIONAL_EVALUATION_REPORT_DIR = Path("outputs/runs/task9_directional_evaluation_smoke")
 DEFAULT_DIRECTIONAL_EVALUATION_RUN_METADATA_PATH = Path(
     "outputs/runs/task9_directional_evaluation_smoke_run_metadata.json"

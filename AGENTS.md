@@ -381,7 +381,8 @@ Large artifacts belong only in explicit output directories:
 - datasets under `outputs/datasets/`
 - checkpoints under `outputs/checkpoints/`
 - run metadata and reports under `outputs/runs/`
-- figures under an explicit figure/output path once Task S5 or S6 defines it
+- figures under `outputs/figures/`
+- compact audit artifacts under `outputs/audits/`
 
 Do not commit heavyweight generated artifacts unless explicitly requested.
 

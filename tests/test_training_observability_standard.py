@@ -4,7 +4,7 @@ import importlib.util
 from pathlib import Path
 
 
-DOC_PATH = Path("docs/training_observability_standard.md")
+DOC_PATH = Path("docs/standards/training_observability_standard.md")
 MONITORING_PATH = Path("src/ar_inverse/training/monitoring.py")
 PLOTS_PATH = Path("src/ar_inverse/training/plots.py")
 

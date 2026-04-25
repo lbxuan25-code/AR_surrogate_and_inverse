@@ -1,7 +1,7 @@
 {
   "config_role": "legacy_task4_baseline_alias",
   "lifecycle_status": "legacy_superseded",
-  "superseded_by": "configs/surrogate/task9_directional_surrogate_smoke.json",
+  "superseded_by": "configs/surrogate/smoke/directional_smoke_training.json",
   "note": "Historical Task 4 filename retained for compatibility; use the task9 directional smoke config as the current entry point.",
   "dataset_manifest": "outputs/datasets/task8_directional_smoke/dataset.json",
   "checkpoint_dir": "outputs/checkpoints/task4_linear_surrogate",

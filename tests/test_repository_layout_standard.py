@@ -3,9 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 
-LAYOUT_PATH = Path("docs/repository_layout_v2.md")
-NAMING_PATH = Path("docs/naming_convention_v2.md")
-MIGRATION_PATH = Path("docs/migration_from_task_named_layout.md")
+LAYOUT_PATH = Path("docs/standards/repository_layout_v2.md")
+NAMING_PATH = Path("docs/standards/naming_convention_v2.md")
+MIGRATION_PATH = Path("docs/standards/migration_from_task_named_layout.md")
 
 
 def test_repository_layout_standard_freezes_content_based_homes() -> None:

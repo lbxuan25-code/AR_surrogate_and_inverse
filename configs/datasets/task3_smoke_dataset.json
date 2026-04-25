@@ -1,7 +1,7 @@
 {
   "config_role": "legacy_task3_orchestration_smoke",
   "lifecycle_status": "legacy_archived",
-  "superseded_by": "configs/datasets/task8_directional_smoke_dataset.json",
+  "superseded_by": "configs/datasets/smoke/directional_smoke_dataset.json",
   "dataset_id": "task3_orchestration_smoke_v1",
   "description": "Legacy small resumable smoke dataset for archived Task 3 dataset generation orchestration.",
   "output_dir": "outputs/datasets/task3_orchestration_smoke",

@@ -37,7 +37,7 @@ DEFAULT_TASK2_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task2_smoke_dataset_r
 DEFAULT_TASK3_SMOKE_CONFIG_PATH = Path("configs/datasets/task3_smoke_dataset.json")
 DEFAULT_TASK3_SMOKE_DATASET_DIR = Path("outputs/datasets/task3_orchestration_smoke")
 DEFAULT_TASK3_SMOKE_RUN_METADATA_PATH = Path("outputs/runs/task3_dataset_generation_run_metadata.json")
-DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH = Path("configs/datasets/task8_directional_smoke_dataset.json")
+DEFAULT_TASK8_DIRECTIONAL_CONFIG_PATH = Path("configs/datasets/smoke/directional_smoke_dataset.json")
 DEFAULT_TASK8_DIRECTIONAL_DATASET_DIR = Path("outputs/datasets/task8_directional_smoke")
 DEFAULT_TASK8_DIRECTIONAL_RUN_METADATA_PATH = Path("outputs/runs/task8_directional_dataset_run_metadata.json")
 

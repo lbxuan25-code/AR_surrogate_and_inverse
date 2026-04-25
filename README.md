@@ -47,29 +47,33 @@ It does not copy or reimplement forward physics code.
 - Task 9 is complete: the direction-aware surrogate smoke training loop runs
   end to end under canonical naming.
 - The canonical smoke entry points retained for verification are:
-  `configs/datasets/task8_directional_smoke_dataset.json`,
-  `configs/surrogate/task9_directional_surrogate_smoke.json`, and
-  `configs/surrogate/task9_directional_evaluation_smoke.json`.
-- The canonical non-smoke pilot handoff entry points are:
+  `configs/datasets/smoke/directional_smoke_dataset.json`,
+  `configs/surrogate/smoke/directional_smoke_training.json`, and
+  `configs/surrogate/smoke/directional_smoke_evaluation.json`.
+- The retained server-contract compatibility entry points for the non-smoke
+  pilot are:
   `configs/datasets/task10_directional_pilot_dataset.json`,
   `configs/surrogate/task10_directional_surrogate_pilot.json`,
   `configs/surrogate/task10_directional_evaluation_pilot.json`, and
-  `docs/task10_pilot_server_runbook.md`.
-- The canonical production contract entry points are:
+  `docs/runbooks/directional_pilot_runbook.md`.
+- The retained server-contract compatibility entry points for the production
+  run are:
   `configs/datasets/task11_directional_production_dataset.json`,
   `configs/surrogate/task11_directional_surrogate_production.json`,
   `configs/surrogate/task11_directional_evaluation_production.json`, and
-  `docs/task11_production_server_handoff.md`.
-- The canonical Task 12 neural validation entry points are:
+  `docs/runbooks/directional_production_runbook.md`.
+- The retained server-contract compatibility entry points for the Task 12
+  neural validation run are:
   `configs/datasets/task12_directional_medium_dataset.json`,
   `configs/surrogate/task12_directional_neural_medium.json`,
   `configs/surrogate/task12_directional_neural_evaluation_medium.json`, and
-  `docs/task12_neural_medium_server_handoff.md`.
-- The canonical Task 13 high-accuracy large-scale entry points are:
+  `docs/runbooks/directional_medium_neural_runbook.md`.
+- The retained server-contract compatibility entry points for the Task 13
+  high-accuracy run are:
   `configs/datasets/task13_directional_large_accuracy_dataset.json`,
   `configs/surrogate/task13_directional_high_accuracy_large.json`,
   `configs/surrogate/task13_directional_high_accuracy_evaluation_large.json`,
-  and `docs/task13_high_accuracy_large_server_handoff.md`.
+  and `docs/runbooks/directional_high_accuracy_runbook.md`.
 - Historical `task3`, `task4`, and `task5` paths are legacy / archived
   baseline names. They remain loadable for compatibility but are not the current
   canonical stage names.
@@ -202,7 +206,7 @@ paths are added only when one of these environment variables is explicitly set.
 If the forward interface is unavailable, commands fail with an actionable
 `ForwardDependencyError` explaining that you must install the forward repository
 or set `LNO327_FORWARD_SRC` / `LNO327_FORWARD_REPO`. See
-[docs/forward_dependency_setup.md](docs/forward_dependency_setup.md) for the
+[docs/setup/forward_dependency_setup.md](docs/setup/forward_dependency_setup.md) for the
 full setup note.
 
 ## Direction Contract
@@ -217,7 +221,7 @@ are not included in the primary training pool unless a dataset config
 explicitly opts in and keeps them separated. Directional spread is supported
 only as narrow named-mode-centered spread with `half_width <= pi/32`.
 
-See [docs/direction_contract.md](docs/direction_contract.md) for the local
+See [docs/contracts/direction_contract.md](docs/contracts/direction_contract.md) for the local
 schema and reporting interpretation.
 
 ## Task 8 Direction-Aware Smoke Dataset
@@ -225,7 +229,7 @@ schema and reporting interpretation.
 Generate the direction-aware smoke manifest with:
 
 ```bash
-python scripts/datasets/build_dataset.py --config configs/datasets/task8_directional_smoke_dataset.json
+python scripts/datasets/build_dataset.py --config configs/datasets/smoke/directional_smoke_dataset.json
 ```
 
 This writes:
@@ -244,7 +248,7 @@ metadata.
 The current naming-clean smoke checkpoint entry is:
 
 ```bash
-python scripts/surrogate/train_surrogate.py --config configs/surrogate/task9_directional_surrogate_smoke.json
+python scripts/surrogate/train_surrogate.py --config configs/surrogate/smoke/directional_smoke_training.json
 ```
 
 It writes:
@@ -261,7 +265,7 @@ training expansion.
 Evaluate it with:
 
 ```bash
-python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/task9_directional_evaluation_smoke.json
+python scripts/surrogate/evaluate_surrogate.py --config configs/surrogate/smoke/directional_smoke_evaluation.json
 ```
 
 This writes:
@@ -281,7 +285,7 @@ running the pilot locally. Use these committed configs:
 
 The server handoff note is:
 
-- `docs/task10_pilot_server_runbook.md`
+- `docs/runbooks/directional_pilot_runbook.md`
 
 The pilot remains limited to `inplane_100`, `inplane_110`, and narrow
 named-mode-centered spread. It excludes `c_axis`, generic raw-angle primary
@@ -301,7 +305,7 @@ phase. Use these committed configs:
 
 The production server handoff note is:
 
-- `docs/task11_production_server_handoff.md`
+- `docs/runbooks/directional_production_runbook.md`
 
 The production contract remains limited to `inplane_100`, `inplane_110`, and
 narrow named-mode-centered spread. It explicitly excludes `c_axis`, diagnostic
@@ -328,7 +332,7 @@ under this same contract. The canonical configs remain:
 
 The neural server handoff note is:
 
-- `docs/task12_neural_medium_server_handoff.md`
+- `docs/runbooks/directional_medium_neural_runbook.md`
 
 The Task 12 neural stack keeps the same structured feature contract as the
 ridge baseline, preserves the same frozen direction domain, and adds a simple

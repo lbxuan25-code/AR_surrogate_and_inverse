@@ -23,7 +23,7 @@ from ar_inverse.surrogate.models import (
     normalize_model_type,
 )
 
-DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH = Path("configs/surrogate/task9_directional_surrogate_smoke.json")
+DEFAULT_DIRECTIONAL_SURROGATE_CONFIG_PATH = Path("configs/surrogate/smoke/directional_smoke_training.json")
 DEFAULT_DIRECTIONAL_SURROGATE_CHECKPOINT_DIR = Path("outputs/checkpoints/task9_directional_surrogate_smoke")
 DEFAULT_DIRECTIONAL_SURROGATE_RUN_METADATA_PATH = Path(
     "outputs/runs/task9_directional_surrogate_smoke_run_metadata.json"

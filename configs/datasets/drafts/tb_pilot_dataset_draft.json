@@ -1,0 +1,82 @@
+{
+  "config_role": "current_task14_tb_pilot_dataset_contract",
+  "execution_mode": "local_contract_only_tb_pilot_preparation",
+  "dataset_id": "task14_tb_pilot_dataset_v1",
+  "description": "Canonical Task 14 low-dimensional TB pilot contract. It introduces a modest five-coordinate normal-state variation layer on top of the already frozen RMFT-projected pairing source, widened bias window, widened nuisance domain, and truth-grade direction contract without adding strong hard band filters.",
+  "sampling_policy_id": "task14_tb_pilot_dataset_v1",
+  "upstream_pairing_source_contract": "configs/datasets/contracts/rmft_anchor_dataset_contract.json",
+  "upstream_bias_contract": "configs/datasets/contracts/bias40_probe_dataset_contract.json",
+  "upstream_transport_contract": "docs/contracts/transport_domain_contract.md",
+  "allow_diagnostic_raw_angles": false,
+  "frozen_direction_contract": {
+    "direction_schema_version": "ar_inverse_direction_v1",
+    "supported_truth_grade_modes": [
+      "inplane_100",
+      "inplane_110"
+    ],
+    "supported_spread_regime": "narrow named-mode-centered spread only, half_width <= pi/32",
+    "diagnostic_raw_angles": "excluded from this Task 14E TB pilot contract",
+    "unsupported_modes": [
+      "c_axis"
+    ]
+  },
+  "pairing_representation_contract": {
+    "pairing_representation_version": "projected_7plus1_gauge_fixed_v1",
+    "storage_block": "controls.pairing_representation",
+    "row_schema_version": "ar_inverse_dataset_row_v3",
+    "global_phase_only": true,
+    "further_compression": "forbidden"
+  },
+  "tb_pilot_contract": {
+    "tb_coordinate_system_version": "task14_tb_pilot_latent_v1",
+    "storage_block": "controls.tb_pilot_coordinates",
+    "semantics": "Low-dimensional TB pilot coordinates around the current forward baseline normal state; not a replacement for the forward-side Hamiltonian implementation.",
+    "coordinates": {
+      "mu_shift": {
+        "min": -0.35,
+        "max": 0.35,
+        "center": 0.0
+      },
+      "bandwidth_scale": {
+        "min": -0.20,
+        "max": 0.20,
+        "center": 0.0
+      },
+      "interlayer_scale": {
+        "min": -0.25,
+        "max": 0.25,
+        "center": 0.0
+      },
+      "orbital_splitting_shift": {
+        "min": -0.30,
+        "max": 0.30,
+        "center": 0.0
+      },
+      "hybridization_scale": {
+        "min": -0.25,
+        "max": 0.25,
+        "center": 0.0
+      }
+    },
+    "sampling_structure": {
+      "near_baseline_band": {
+        "target_fraction": 0.70,
+        "max_abs_coordinate": 0.15
+      },
+      "edge_probe_band": {
+        "target_fraction": 0.30,
+        "membership_rule": "at least one coordinate lies outside the near-baseline band while remaining inside the canonical pilot envelope"
+      }
+    },
+    "allowed_basic_guards": [
+      "solver_stability",
+      "finite_forward_output",
+      "schema_validity"
+    ],
+    "forbidden_strong_constraints": [
+      "band_topology_filter",
+      "fermi_surface_filter",
+      "manual_phase_diagram_gate"
+    ]
+  }
+}
